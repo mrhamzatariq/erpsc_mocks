@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fee Management — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .fee-row { display:flex; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--border-light); font-size:13px; gap:8px; }
+  .fee-row:last-child { border-bottom:none; }
+  .voucher-preview { border:2px dashed var(--border-medium); border-radius:var(--radius-lg); padding:20px; background:var(--bg-secondary); }
+  .voucher-header  { display:flex; align-items:center; gap:12px; padding-bottom:14px; border-bottom:2px solid var(--text-primary); margin-bottom:14px; }
+  .voucher-row     { display:flex; justify-content:space-between; font-size:12px; padding:4px 0; }
+  .voucher-divider { border:none; border-top:1px dashed var(--border-medium); margin:10px 0; }
+  .voucher-total   { display:flex; justify-content:space-between; font-size:14px; font-weight:700; padding:8px 0; border-top:2px solid var(--text-primary); margin-top:6px; }
+  .tab-bar { display:flex; gap:0; border-bottom:1px solid var(--border-light); margin-bottom:var(--space-5); }
+  .tab-item { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; transition:all .15s; }
+  .tab-item.active { color:var(--brand-600); border-bottom-color:var(--brand-600); }
+  .tab-item:hover:not(.active) { color:var(--text-primary); background:var(--bg-secondary); }
+  .defaulter-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border-light); font-size:13px; }
+  .defaulter-row:last-child { border-bottom:none; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">College Administration</div>
+      <div class="role-sub">GC Lahore</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="02-principal-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">Finance</div>
+      <a class="nav-item active" href="#"><span class="nav-icon">💳</span><span>Fee Management</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🧾</span><span>Voucher Generation</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📊</span><span>Collection Reports</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🔕</span><span>Fee Waivers</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">⚠️</span><span>Defaulters</span><span class="nav-badge">342</span></a>
+
+      <div class="sidebar-section-label">Students</div>
+      <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>Student List</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🎓</span><span>Admissions</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">MK</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Muhammad Kamran</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">Finance Officer</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Finance</span><span>›</span>
+        <span class="crumb-active">Fee Management</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search students, vouchers…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">MK</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Fee Management</h1>
+          <p>GC Lahore · Semester 5 · Academic Year 2024–25</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">⬇ Export dues list</button>
+          <button class="btn btn-secondary">📧 Send reminders</button>
+          <button class="btn btn-primary">+ Generate vouchers</button>
+        </div>
+      </div>
+
+      <!-- KPI strip -->
+      <div class="grid grid-4 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Total target</div>
+          <div class="metric-value">₨ 2.4 Cr</div>
+          <div class="metric-delta delta-neutral">4,820 students</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Collected</div>
+          <div class="metric-value" style="color:var(--color-success-text)">₨ 2.1 Cr</div>
+          <div class="metric-delta delta-up">▲ 87.5% — 4,217 paid</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Outstanding dues</div>
+          <div class="metric-value" style="color:var(--color-danger-text)">₨ 30.3L</div>
+          <div class="metric-delta" style="color:var(--color-danger-text)">603 defaulters</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Waivers granted</div>
+          <div class="metric-value" style="color:var(--color-warning-text)">₨ 9L</div>
+          <div class="metric-delta delta-neutral">48 students</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active">Fee collection status</div>
+        <div class="tab-item">Voucher generation</div>
+        <div class="tab-item">Defaulters list</div>
+        <div class="tab-item">Fee waivers</div>
+        <div class="tab-item">Fee structure setup</div>
+      </div>
+
+      <!-- Main content: 2 cols -->
+      <div class="grid" style="grid-template-columns:1.5fr 1fr;gap:16px">
+
+        <!-- Left: collection breakdown + defaulters preview -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+
+          <!-- Collection by program -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Collection by program</div>
+                <div class="card-subtitle">Semester 5 — 2024–25</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">⬇ Export</button>
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Program</th>
+                    <th>Students</th>
+                    <th>Paid</th>
+                    <th>Unpaid</th>
+                    <th>Amount collected</th>
+                    <th>% Rate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span style="font-weight:500">FA / F.Sc</span></td>
+                    <td>1,840</td>
+                    <td style="color:var(--color-success-text);font-weight:500">1,742</td>
+                    <td style="color:var(--color-danger-text);font-weight:500">98</td>
+                    <td style="font-weight:500">₨ 87,10,000</td>
+                    <td><span class="badge badge-success">94.7%</span></td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:500">B.Sc (Hons)</span></td>
+                    <td>1,120</td>
+                    <td style="color:var(--color-success-text);font-weight:500">984</td>
+                    <td style="color:var(--color-danger-text);font-weight:500">136</td>
+                    <td style="font-weight:500">₨ 59,04,000</td>
+                    <td><span class="badge badge-success">87.9%</span></td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:500">B.Com</span></td>
+                    <td>640</td>
+                    <td style="color:var(--color-success-text);font-weight:500">531</td>
+                    <td style="color:var(--color-warning-text);font-weight:500">109</td>
+                    <td style="font-weight:500">₨ 26,55,000</td>
+                    <td><span class="badge badge-warning">83.0%</span></td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:500">M.A / M.Sc</span></td>
+                    <td>820</td>
+                    <td style="color:var(--color-success-text);font-weight:500">641</td>
+                    <td style="color:var(--color-danger-text);font-weight:500">179</td>
+                    <td style="font-weight:500">₨ 38,46,000</td>
+                    <td><span class="badge badge-warning">78.2%</span></td>
+                  </tr>
+                  <tr>
+                    <td><span style="font-weight:500">B.Ed</span></td>
+                    <td>400</td>
+                    <td style="color:var(--color-success-text);font-weight:500">319</td>
+                    <td style="color:var(--color-danger-text);font-weight:500">81</td>
+                    <td style="font-weight:500">₨ 15,95,000</td>
+                    <td><span class="badge badge-danger">79.8%</span></td>
+                  </tr>
+                  <tr style="background:var(--bg-secondary)">
+                    <td><span style="font-weight:700">Total</span></td>
+                    <td style="font-weight:700">4,820</td>
+                    <td style="font-weight:700;color:var(--color-success-text)">4,217</td>
+                    <td style="font-weight:700;color:var(--color-danger-text)">603</td>
+                    <td style="font-weight:700">₨ 2,27,10,000</td>
+                    <td><span class="badge badge-success">87.5%</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Top defaulters -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Recent defaulters</div>
+                <div class="card-subtitle">Students with overdue payments</div>
+              </div>
+              <span class="badge badge-danger">603 total</span>
+            </div>
+            <div>
+              <div class="defaulter-row">
+                <div class="avatar sm" style="background:#E24B4A;color:#fff;font-size:10px">BA</div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Bilal Ahmed <span class="font-mono text-sm" style="font-weight:400;color:var(--text-muted)">2024-FA-0341</span></div>
+                  <div style="font-size:11px;color:var(--text-muted)">FA 1st Year · Due since: 1 Dec 2024</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-weight:600;color:var(--color-danger-text)">₨ 18,500</div>
+                  <div style="font-size:10px;color:var(--text-muted)">46 days overdue</div>
+                </div>
+                <button class="btn btn-sm" style="font-size:11px;color:var(--color-info-text);border-color:var(--color-info-border)">Notify</button>
+              </div>
+              <div class="defaulter-row">
+                <div class="avatar sm" style="background:#EF9F27;color:#fff;font-size:10px">SN</div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Sara Noor <span class="font-mono text-sm" style="font-weight:400;color:var(--text-muted)">2022-BS-0112</span></div>
+                  <div style="font-size:11px;color:var(--text-muted)">B.Sc 3rd Year · Due since: 15 Dec 2024</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-weight:600;color:var(--color-warning-text)">₨ 24,000</div>
+                  <div style="font-size:10px;color:var(--text-muted)">32 days overdue</div>
+                </div>
+                <button class="btn btn-sm" style="font-size:11px;color:var(--color-info-text);border-color:var(--color-info-border)">Notify</button>
+              </div>
+              <div class="defaulter-row">
+                <div class="avatar sm" style="background:#EF9F27;color:#fff;font-size:10px">HR</div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Hamza Raza <span class="font-mono text-sm" style="font-weight:400;color:var(--text-muted)">2024-CS-0198</span></div>
+                  <div style="font-size:11px;color:var(--text-muted)">B.Sc 1st Year · Due since: 20 Dec 2024</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-weight:600;color:var(--color-warning-text)">₨ 24,000</div>
+                  <div style="font-size:10px;color:var(--text-muted)">27 days overdue</div>
+                </div>
+                <button class="btn btn-sm" style="font-size:11px;color:var(--color-info-text);border-color:var(--color-info-border)">Notify</button>
+              </div>
+            </div>
+            <button class="btn btn-secondary" style="width:100%;margin-top:12px;font-size:12px">View all 603 defaulters →</button>
+          </div>
+
+        </div>
+
+        <!-- Right: voucher preview -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+
+          <!-- Progress ring -->
+          <div class="card" style="text-align:center">
+            <div class="card-title mb-2">Collection rate</div>
+            <div style="display:flex;justify-content:center;margin:8px 0">
+              <div style="position:relative;width:110px;height:110px">
+                <svg viewBox="0 0 36 36" style="transform:rotate(-90deg);width:110px;height:110px">
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--bg-tertiary)" stroke-width="3"/>
+                  <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--color-success-text)" stroke-width="3"
+                    stroke-dasharray="87.5 12.5" stroke-linecap="round"/>
+                </svg>
+                <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                  <div style="font-size:22px;font-weight:700;color:var(--color-success-text)">87.5%</div>
+                  <div style="font-size:10px;color:var(--text-muted)">collected</div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-around;margin-top:8px">
+              <div style="text-align:center">
+                <div style="font-size:16px;font-weight:700;color:var(--color-success-text)">4,217</div>
+                <div style="font-size:11px;color:var(--text-muted)">Paid</div>
+              </div>
+              <div style="text-align:center">
+                <div style="font-size:16px;font-weight:700;color:var(--color-danger-text)">603</div>
+                <div style="font-size:11px;color:var(--text-muted)">Unpaid</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Voucher preview -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Fee voucher preview</div>
+              <div class="card-subtitle">Sample — Semester 6</div>
+            </div>
+            <div class="voucher-preview">
+              <div class="voucher-header">
+                <div style="width:36px;height:36px;background:var(--brand-600);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;flex-shrink:0">E</div>
+                <div>
+                  <div style="font-size:13px;font-weight:700">Government College Lahore</div>
+                  <div style="font-size:10px;color:var(--text-muted)">Fee Payment Challan — Semester 6 · 2024–25</div>
+                </div>
+                <div style="margin-left:auto;text-align:right">
+                  <div style="font-size:10px;color:var(--text-muted)">Voucher No.</div>
+                  <div style="font-family:monospace;font-size:12px;font-weight:600">VCH-2025-06-001142</div>
+                </div>
+              </div>
+
+              <div class="voucher-row"><span style="color:var(--text-muted)">Student name</span><span style="font-weight:600">Zara Ahmed</span></div>
+              <div class="voucher-row"><span style="color:var(--text-muted)">Roll number</span><span class="font-mono">2024-CS-1142</span></div>
+              <div class="voucher-row"><span style="color:var(--text-muted)">Program</span><span>B.Sc Computer Science</span></div>
+              <div class="voucher-row"><span style="color:var(--text-muted)">Semester</span><span>6th Semester</span></div>
+              <div class="voucher-row"><span style="color:var(--text-muted)">Due date</span><span style="color:var(--color-danger-text);font-weight:500">31 Jan 2025</span></div>
+
+              <hr class="voucher-divider"/>
+
+              <div class="voucher-row"><span>Tuition fee</span><span>₨ 14,000</span></div>
+              <div class="voucher-row"><span>Examination fee</span><span>₨ 2,500</span></div>
+              <div class="voucher-row"><span>Sports fund</span><span>₨ 500</span></div>
+              <div class="voucher-row"><span>Library fee</span><span>₨ 300</span></div>
+              <div class="voucher-row"><span>Lab charges</span><span>₨ 1,200</span></div>
+
+              <div class="voucher-total">
+                <span>Total payable</span>
+                <span style="color:var(--brand-700)">₨ 18,500</span>
+              </div>
+
+              <div style="margin-top:10px;padding:8px;background:var(--bg-surface);border-radius:6px;font-size:10px;color:var(--text-muted);text-align:center">
+                Pay at any HBL / MCB branch · Online: portal.hed.punjab.gov.pk
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+              <button class="btn btn-secondary" style="font-size:12px;justify-content:center">🖨 Print</button>
+              <button class="btn btn-primary" style="font-size:12px;justify-content:center">⬇ Download PDF</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

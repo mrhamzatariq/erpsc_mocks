@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Attendance Marking — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .att-toggle { display:flex; border:1px solid var(--border-medium); border-radius:var(--radius-md); overflow:hidden; width:fit-content; }
+  .att-btn { padding:5px 14px; font-size:12px; font-weight:500; cursor:pointer; border:none; background:transparent; transition:all .15s; }
+  .att-btn.present { background:var(--color-success-bg); color:var(--color-success-text); }
+  .att-btn.absent  { background:var(--color-danger-bg);  color:var(--color-danger-text); }
+  .att-btn.late    { background:var(--color-warning-bg); color:var(--color-warning-text); }
+  .att-btn.leave   { background:var(--bg-tertiary);      color:var(--text-muted); }
+  .student-att-row { display:grid; grid-template-columns:32px 1fr 180px 80px; align-items:center; gap:12px; padding:10px 16px; border-bottom:1px solid var(--border-light); font-size:13px; }
+  .student-att-row:hover { background:var(--bg-secondary); }
+  .student-att-row:last-child { border-bottom:none; }
+  .att-summary-pill { padding:6px 12px; border-radius:var(--radius-full); font-size:12px; font-weight:600; }
+  .class-info-bar { background:var(--brand-900); color:#fff; border-radius:var(--radius-lg); padding:16px 20px; margin-bottom:20px; display:flex; align-items:center; gap:20px; }
+  .class-info-item { text-align:center; }
+  .class-info-item .val { font-size:20px; font-weight:700; }
+  .class-info-item .lbl { font-size:11px; opacity:.6; margin-top:1px; }
+  .class-info-divider { width:1px; background:rgba(255,255,255,.15); height:40px; }
+  .quick-mark-bar { display:flex; gap:8px; padding:12px 16px; background:var(--bg-secondary); border-bottom:1px solid var(--border-light); align-items:center; }
+  .history-dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">Faculty Member</div>
+      <div class="role-sub">Dept. Computer Science</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="03-faculty-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">Teaching</div>
+      <a class="nav-item" href="#"><span class="nav-icon">📅</span><span>My Timetable</span></a>
+      <a class="nav-item active" href="#"><span class="nav-icon">✅</span><span>Attendance</span><span class="nav-badge warn">3</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📚</span><span>My Subjects</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>My Students</span></a>
+
+      <div class="sidebar-section-label">Assessment</div>
+      <a class="nav-item" href="#"><span class="nav-icon">📝</span><span>Marks Entry</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📋</span><span>Assignments</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">AM</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Dr. Ayesha Malik</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">CS Department</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Teaching</span><span>›</span>
+        <span>Attendance</span><span>›</span>
+        <span class="crumb-active">Mark attendance</span>
+      </div>
+      <div class="topbar-actions" style="margin-left:auto">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">AM</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Mark Attendance</h1>
+          <p>Algorithms (CS-401) · Wednesday, 15 Jan 2025 · 10:00–11:00 AM</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">📊 Attendance history</button>
+          <button class="btn btn-secondary">⬇ Export sheet</button>
+          <button class="btn btn-primary">✓ Save & submit</button>
+        </div>
+      </div>
+
+      <!-- Class info banner -->
+      <div class="class-info-bar mb-6">
+        <div style="flex:1">
+          <div style="font-size:16px;font-weight:600;margin-bottom:2px">Algorithms (CS-401)</div>
+          <div style="font-size:13px;opacity:.7">BS Computer Science · 5th Semester · Room 8 · Dr. Ayesha Malik</div>
+        </div>
+        <div class="class-info-divider"></div>
+        <div class="class-info-item">
+          <div class="val">38</div>
+          <div class="lbl">Enrolled</div>
+        </div>
+        <div class="class-info-divider"></div>
+        <div class="class-info-item">
+          <div class="val" style="color:#90EE90">34</div>
+          <div class="lbl">Present</div>
+        </div>
+        <div class="class-info-divider"></div>
+        <div class="class-info-item">
+          <div class="val" style="color:#FFB3B3">2</div>
+          <div class="lbl">Absent</div>
+        </div>
+        <div class="class-info-divider"></div>
+        <div class="class-info-item">
+          <div class="val" style="color:#FFD580">1</div>
+          <div class="lbl">Late</div>
+        </div>
+        <div class="class-info-divider"></div>
+        <div class="class-info-item">
+          <div class="val" style="color:#ccc">1</div>
+          <div class="lbl">Leave</div>
+        </div>
+        <div class="class-info-divider"></div>
+        <div class="class-info-item">
+          <div class="val" style="color:#90EE90">89.5%</div>
+          <div class="lbl">Today's rate</div>
+        </div>
+      </div>
+
+      <!-- Main card -->
+      <div class="card" style="padding:0;overflow:hidden">
+
+        <!-- Toolbar -->
+        <div class="quick-mark-bar">
+          <span style="font-size:12px;font-weight:500;color:var(--text-muted)">Mark all as:</span>
+          <button class="btn btn-sm" style="background:var(--color-success-bg);color:var(--color-success-text);border-color:var(--color-success-border)">✓ All present</button>
+          <button class="btn btn-sm" style="background:var(--color-danger-bg);color:var(--color-danger-text);border-color:var(--color-danger-border)">✕ All absent</button>
+          <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+            <div style="background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:5px 10px;font-size:13px;display:flex;align-items:center;gap:6px">
+              <span>🔍</span>
+              <input type="text" placeholder="Search student…" style="border:none;background:none;outline:none;font-size:13px;width:140px"/>
+            </div>
+            <button class="btn btn-ghost btn-sm">Import from QR scanner</button>
+          </div>
+        </div>
+
+        <!-- Column headers -->
+        <div class="student-att-row" style="background:var(--bg-secondary);font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em">
+          <div>#</div>
+          <div>Student</div>
+          <div>Status</div>
+          <div>History (last 5)</div>
+        </div>
+
+        <!-- Student rows -->
+        <div class="student-att-row">
+          <div style="color:var(--text-muted);font-size:12px">01</div>
+          <div>
+            <div style="font-weight:500">Zara Ahmed</div>
+            <div style="font-size:11px;color:var(--text-muted)">2024-CS-1142</div>
+          </div>
+          <div class="att-toggle">
+            <button class="att-btn present">✓ Present</button>
+            <button class="att-btn" style="color:var(--text-muted)">Absent</button>
+            <button class="att-btn" style="color:var(--text-muted)">Late</button>
+            <button class="att-btn" style="color:var(--text-muted)">Leave</button>
+          </div>
+          <div style="display:flex;gap:3px;align-items:center">
+            <span class="history-dot" style="background:var(--color-success-text)" title="Present"></span>
+            <span class="history-dot" style="background:var(--color-success-text)" title="Present"></span>
+            <span class="history-dot" style="background:var(--color-danger-text)" title="Absent"></span>
+            <span class="history-dot" style="background:var(--color-success-text)" title="Present"></span>
+            <span class="history-dot" style="background:var(--color-success-text)" title="Present"></span>
+          </div>
+        </div>
+
+        <div class="student-att-row">
+          <div style="color:var(--text-muted);font-size:12px">02</div>
+          <div>
+            <div style="font-weight:500">Hassan Ali</div>
+            <div style="font-size:11px;color:var(--text-muted)">2024-CS-1089</div>
+          </div>
+          <div class="att-toggle">
+            <button class="att-btn present">✓ Present</button>
+            <button class="att-btn" style="color:var(--text-muted)">Absent</button>
+            <button class="att-btn" style="color:var(--text-muted)">Late</button>
+            <button class="att-btn" style="color:var(--text-muted)">Leave</button>
+          </div>
+          <div style="display:flex;gap:3px;align-items:center">
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+          </div>
+        </div>
+
+        <div class="student-att-row" style="background:var(--color-danger-bg)">
+          <div style="color:var(--text-muted);font-size:12px">03</div>
+          <div>
+            <div style="font-weight:500">Sara Noor <span class="badge badge-danger" style="font-size:10px;margin-left:4px">62% overall</span></div>
+            <div style="font-size:11px;color:var(--color-danger-text)">2022-CS-0112 · ⚠ Low attendance</div>
+          </div>
+          <div class="att-toggle">
+            <button class="att-btn" style="color:var(--text-muted)">Present</button>
+            <button class="att-btn absent">✕ Absent</button>
+            <button class="att-btn" style="color:var(--text-muted)">Late</button>
+            <button class="att-btn" style="color:var(--text-muted)">Leave</button>
+          </div>
+          <div style="display:flex;gap:3px;align-items:center">
+            <span class="history-dot" style="background:var(--color-danger-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-danger-text)"></span>
+            <span class="history-dot" style="background:var(--color-danger-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+          </div>
+        </div>
+
+        <div class="student-att-row" style="background:var(--color-warning-bg)">
+          <div style="color:var(--text-muted);font-size:12px">04</div>
+          <div>
+            <div style="font-weight:500">Hamza Raza <span class="badge badge-warning" style="font-size:10px;margin-left:4px">67% overall</span></div>
+            <div style="font-size:11px;color:var(--color-warning-text)">2024-CS-0198 · ⚠ At risk</div>
+          </div>
+          <div class="att-toggle">
+            <button class="att-btn" style="color:var(--text-muted)">Present</button>
+            <button class="att-btn" style="color:var(--text-muted)">Absent</button>
+            <button class="att-btn late">⏱ Late</button>
+            <button class="att-btn" style="color:var(--text-muted)">Leave</button>
+          </div>
+          <div style="display:flex;gap:3px;align-items:center">
+            <span class="history-dot" style="background:var(--color-warning-text)"></span>
+            <span class="history-dot" style="background:var(--color-danger-text)"></span>
+            <span class="history-dot" style="background:var(--color-warning-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-danger-text)"></span>
+          </div>
+        </div>
+
+        <div class="student-att-row">
+          <div style="color:var(--text-muted);font-size:12px">05</div>
+          <div>
+            <div style="font-weight:500">Fatima Khan</div>
+            <div style="font-size:11px;color:var(--text-muted)">2024-CS-0089</div>
+          </div>
+          <div class="att-toggle">
+            <button class="att-btn" style="color:var(--text-muted)">Present</button>
+            <button class="att-btn" style="color:var(--text-muted)">Absent</button>
+            <button class="att-btn" style="color:var(--text-muted)">Late</button>
+            <button class="att-btn leave">📋 Leave</button>
+          </div>
+          <div style="display:flex;gap:3px;align-items:center">
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--bg-tertiary);border:1px solid var(--border-medium)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+          </div>
+        </div>
+
+        <div class="student-att-row">
+          <div style="color:var(--text-muted);font-size:12px">06</div>
+          <div>
+            <div style="font-weight:500">Ali Kamran</div>
+            <div style="font-size:11px;color:var(--text-muted)">2024-CS-1301</div>
+          </div>
+          <div class="att-toggle">
+            <button class="att-btn present">✓ Present</button>
+            <button class="att-btn" style="color:var(--text-muted)">Absent</button>
+            <button class="att-btn" style="color:var(--text-muted)">Late</button>
+            <button class="att-btn" style="color:var(--text-muted)">Leave</button>
+          </div>
+          <div style="display:flex;gap:3px;align-items:center">
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-warning-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+          </div>
+        </div>
+
+        <div class="student-att-row">
+          <div style="color:var(--text-muted);font-size:12px">07</div>
+          <div>
+            <div style="font-weight:500">Umar Farooq</div>
+            <div style="font-size:11px;color:var(--text-muted)">2022-CS-0207</div>
+          </div>
+          <div class="att-toggle">
+            <button class="att-btn present">✓ Present</button>
+            <button class="att-btn" style="color:var(--text-muted)">Absent</button>
+            <button class="att-btn" style="color:var(--text-muted)">Late</button>
+            <button class="att-btn" style="color:var(--text-muted)">Leave</button>
+          </div>
+          <div style="display:flex;gap:3px;align-items:center">
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-danger-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+            <span class="history-dot" style="background:var(--color-success-text)"></span>
+          </div>
+        </div>
+
+        <!-- Dots legend + footer -->
+        <div style="padding:10px 16px;background:var(--bg-secondary);border-top:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;gap:12px;align-items:center;font-size:11px;color:var(--text-muted)">
+            <span>History legend:</span>
+            <span style="display:flex;align-items:center;gap:4px"><span class="history-dot" style="background:var(--color-success-text)"></span>Present</span>
+            <span style="display:flex;align-items:center;gap:4px"><span class="history-dot" style="background:var(--color-danger-text)"></span>Absent</span>
+            <span style="display:flex;align-items:center;gap:4px"><span class="history-dot" style="background:var(--color-warning-text)"></span>Late</span>
+            <span style="display:flex;align-items:center;gap:4px"><span class="history-dot" style="background:var(--bg-tertiary);border:1px solid var(--border-medium)"></span>Leave</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted)">Showing 7 of 38 students</div>
+        </div>
+      </div>
+
+      <!-- Save bar -->
+      <div style="position:sticky;bottom:0;background:var(--bg-surface);border-top:1px solid var(--border-light);padding:14px 0;margin-top:16px;display:flex;align-items:center;justify-content:space-between;border-radius:var(--radius-lg)">
+        <div style="display:flex;gap:16px;align-items:center;padding:0 4px">
+          <div style="display:flex;gap:8px">
+            <span class="att-summary-pill" style="background:var(--color-success-bg);color:var(--color-success-text)">✓ 34 Present</span>
+            <span class="att-summary-pill" style="background:var(--color-danger-bg);color:var(--color-danger-text)">✕ 2 Absent</span>
+            <span class="att-summary-pill" style="background:var(--color-warning-bg);color:var(--color-warning-text)">⏱ 1 Late</span>
+            <span class="att-summary-pill" style="background:var(--bg-tertiary);color:var(--text-muted)">📋 1 Leave</span>
+          </div>
+          <div style="font-size:12px;color:var(--color-success-text)">✓ Auto-saved 30s ago</div>
+        </div>
+        <div style="display:flex;gap:8px;padding:0 4px">
+          <button class="btn btn-ghost">Reset</button>
+          <button class="btn btn-secondary">Save draft</button>
+          <button class="btn btn-primary" style="padding:10px 20px">✓ Submit attendance</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Academic Structure — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar { display:flex; gap:0; border-bottom:1px solid var(--border-light); margin-bottom:var(--space-5); }
+  .tab-item { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:all .15s; }
+  .tab-item.active { color:var(--brand-600); border-bottom-color:var(--brand-600); }
+  .tab-item:hover:not(.active) { color:var(--text-primary); background:var(--bg-secondary); }
+  .tree-node { padding:10px 12px; border-radius:var(--radius-md); border:1px solid var(--border-light); margin-bottom:6px; cursor:pointer; transition:all .15s; display:flex; align-items:center; gap:10px; }
+  .tree-node:hover { border-color:var(--brand-200); background:var(--brand-50); }
+  .tree-node.active { border-color:var(--brand-400); background:var(--brand-50); }
+  .tree-child { margin-left:24px; }
+  .tree-icon { width:28px; height:28px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .prog-row { display:flex; align-items:center; gap:12px; padding:10px 12px; border-bottom:1px solid var(--border-light); font-size:13px; }
+  .prog-row:hover { background:var(--bg-secondary); }
+  .prog-row:last-child { border-bottom:none; }
+  .prog-icon { width:36px; height:36px; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+  .detail-section { margin-bottom:16px; }
+  .detail-row { display:flex; padding:7px 0; border-bottom:1px solid var(--border-light); font-size:13px; gap:8px; }
+  .detail-row:last-child { border-bottom:none; }
+  .detail-key { color:var(--text-muted); width:150px; flex-shrink:0; }
+  .subject-chip { display:inline-flex; align-items:center; gap:5px; background:var(--color-info-bg); color:var(--color-info-text); border:1px solid var(--color-info-border); border-radius:var(--radius-full); padding:3px 10px; font-size:12px; margin:3px; }
+  .curriculum-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border-light); font-size:13px; }
+  .curriculum-row:last-child { border-bottom:none; }
+  .sem-badge { background:var(--bg-tertiary); color:var(--text-muted); padding:2px 8px; border-radius:var(--radius-full); font-size:11px; font-weight:600; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">HED Super Admin</div>
+      <div class="role-sub">Provincial Administration</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="01-hed-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">Academics</div>
+      <a class="nav-item" href="#"><span class="nav-icon">🏫</span><span>Institutions</span></a>
+      <a class="nav-item active" href="#"><span class="nav-icon">📚</span><span>Academic Structure</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🎓</span><span>Admissions</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>Students</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">👨‍🏫</span><span>Faculty</span></a>
+
+      <div class="sidebar-section-label">Operations</div>
+      <a class="nav-item" href="12-examinations-results.html"><span class="nav-icon">📝</span><span>Examinations</span></a>
+      <a class="nav-item" href="11-fee-management.html"><span class="nav-icon">💳</span><span>Finance</span></a>
+
+      <div class="sidebar-section-label">System</div>
+      <a class="nav-item" href="10-reports-analytics.html"><span class="nav-icon">📊</span><span>Reports & Analytics</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🔐</span><span>User Management</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">SA</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Super Admin</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">admin@hed.punjab.gov.pk</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Academics</span><span>›</span>
+        <span class="crumb-active">Academic Structure</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search programs, subjects, departments…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">SA</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Academic Structure Management</h1>
+          <p>Province-wide programs, departments, subjects and curriculum setup</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">⬇ Export structure</button>
+          <button class="btn btn-secondary">📋 Curriculum builder</button>
+          <button class="btn btn-primary">+ Add program</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="grid grid-5 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Total programs</div>
+          <div class="metric-value">84</div>
+          <div class="metric-delta delta-up">▲ 6 new this year</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Departments</div>
+          <div class="metric-value">312</div>
+          <div class="metric-delta delta-neutral">Across all colleges</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Total subjects</div>
+          <div class="metric-value">1,847</div>
+          <div class="metric-delta delta-neutral">Active subjects</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Active sessions</div>
+          <div class="metric-value">3</div>
+          <div class="metric-delta delta-neutral">Annual + 2 semesters</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Pending program req.</div>
+          <div class="metric-value" style="color:var(--color-warning-text)">47</div>
+          <div class="metric-delta" style="color:var(--color-warning-text)">Needs review</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active">Programs</div>
+        <div class="tab-item">Departments</div>
+        <div class="tab-item">Subjects</div>
+        <div class="tab-item">Curriculum</div>
+        <div class="tab-item">Academic calendar</div>
+        <div class="tab-item">Sessions</div>
+        <div class="tab-item">Seat capacity</div>
+      </div>
+
+      <!-- Main: 3-col layout -->
+      <div class="grid" style="grid-template-columns:220px 1fr 340px;gap:16px">
+
+        <!-- Left: hierarchy tree -->
+        <div class="card" style="padding:14px">
+          <div style="font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Program hierarchy</div>
+
+          <!-- Level 1 -->
+          <div class="tree-node" style="background:var(--brand-50);border-color:var(--brand-200)">
+            <div class="tree-icon" style="background:var(--brand-100)">🏛️</div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--brand-700)">Intermediate</div>
+              <div style="font-size:10px;color:var(--text-muted)">FA, F.Sc, I.Com</div>
+            </div>
+          </div>
+
+          <div class="tree-child">
+            <div class="tree-node" style="padding:7px 10px">
+              <div style="font-size:12px;color:var(--text-secondary)">FA</div>
+              <span class="badge badge-info" style="margin-left:auto;font-size:10px">412 cols</span>
+            </div>
+            <div class="tree-node" style="padding:7px 10px">
+              <div style="font-size:12px;color:var(--text-secondary)">F.Sc (Pre-Med)</div>
+              <span class="badge badge-info" style="margin-left:auto;font-size:10px">387 cols</span>
+            </div>
+            <div class="tree-node" style="padding:7px 10px">
+              <div style="font-size:12px;color:var(--text-secondary)">F.Sc (Pre-Eng)</div>
+              <span class="badge badge-info" style="margin-left:auto;font-size:10px">394 cols</span>
+            </div>
+            <div class="tree-node" style="padding:7px 10px">
+              <div style="font-size:12px;color:var(--text-secondary)">I.Com</div>
+              <span class="badge badge-neutral" style="margin-left:auto;font-size:10px">211 cols</span>
+            </div>
+          </div>
+
+          <!-- Level 2 -->
+          <div class="tree-node active" style="margin-top:6px">
+            <div class="tree-icon" style="background:var(--color-info-bg)">🎓</div>
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--color-info-text)">Bachelor</div>
+              <div style="font-size:10px;color:var(--text-muted)">BS, B.Com, B.Ed</div>
+            </div>
+          </div>
+
+          <div class="tree-child">
+            <div class="tree-node" style="padding:7px 10px;background:var(--brand-50);border-color:var(--brand-300)">
+              <div style="font-size:12px;font-weight:600;color:var(--brand-600)">BS Computer Science</div>
+              <span class="badge badge-brand" style="margin-left:auto;font-size:10px">Active</span>
+            </div>
+            <div class="tree-node" style="padding:7px 10px">
+              <div style="font-size:12px;color:var(--text-secondary)">B.Sc (Hons) Physics</div>
+            </div>
+            <div class="tree-node" style="padding:7px 10px">
+              <div style="font-size:12px;color:var(--text-secondary)">B.Com</div>
+            </div>
+            <div class="tree-node" style="padding:7px 10px">
+              <div style="font-size:12px;color:var(--text-secondary)">B.Ed</div>
+            </div>
+          </div>
+
+          <div class="tree-node" style="margin-top:6px">
+            <div class="tree-icon" style="background:var(--color-success-bg)">🏆</div>
+            <div>
+              <div style="font-size:12px;font-weight:600">Masters</div>
+              <div style="font-size:10px;color:var(--text-muted)">M.A, M.Sc</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Centre: program list -->
+        <div class="card" style="padding:0;overflow:hidden">
+          <!-- Toolbar -->
+          <div class="grid-toolbar">
+            <div class="toolbar-search">
+              <span>🔍</span>
+              <input type="text" placeholder="Search programs…"/>
+            </div>
+            <button class="btn btn-secondary btn-sm">Level ▾</button>
+            <button class="btn btn-secondary btn-sm">Status ▾</button>
+            <div class="ml-auto" style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-sm">⬇ Export</button>
+              <button class="btn btn-primary btn-sm">+ Add program</button>
+            </div>
+          </div>
+
+          <!-- Program rows -->
+          <div>
+            <div class="prog-row" style="background:var(--brand-50)">
+              <div class="prog-icon" style="background:var(--color-info-bg)">💻</div>
+              <div style="flex:1">
+                <div style="font-weight:600">BS Computer Science</div>
+                <div style="font-size:11px;color:var(--text-muted)">4 years · 8 semesters · 130 credit hours</div>
+              </div>
+              <span class="badge badge-info">Bachelor</span>
+              <span class="badge badge-success">Active</span>
+              <div style="text-align:right;font-size:12px;min-width:80px">
+                <div style="font-weight:600">247 colleges</div>
+                <div style="color:var(--text-muted)">18,420 students</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">View →</button>
+            </div>
+
+            <div class="prog-row">
+              <div class="prog-icon" style="background:var(--color-success-bg)">🔬</div>
+              <div style="flex:1">
+                <div style="font-weight:600">B.Sc (Hons) Physics</div>
+                <div style="font-size:11px;color:var(--text-muted)">4 years · 8 semesters · 128 credit hours</div>
+              </div>
+              <span class="badge badge-info">Bachelor</span>
+              <span class="badge badge-success">Active</span>
+              <div style="text-align:right;font-size:12px;min-width:80px">
+                <div style="font-weight:600">198 colleges</div>
+                <div style="color:var(--text-muted)">14,102 students</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">View →</button>
+            </div>
+
+            <div class="prog-row">
+              <div class="prog-icon" style="background:var(--color-warning-bg)">📊</div>
+              <div style="flex:1">
+                <div style="font-weight:600">B.Com (Hons)</div>
+                <div style="font-size:11px;color:var(--text-muted)">4 years · 8 semesters · 126 credit hours</div>
+              </div>
+              <span class="badge badge-info">Bachelor</span>
+              <span class="badge badge-success">Active</span>
+              <div style="text-align:right;font-size:12px;min-width:80px">
+                <div style="font-weight:600">312 colleges</div>
+                <div style="color:var(--text-muted)">22,840 students</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">View →</button>
+            </div>
+
+            <div class="prog-row">
+              <div class="prog-icon" style="background:var(--brand-50)">🎨</div>
+              <div style="flex:1">
+                <div style="font-weight:600">B.Sc (Hons) Mathematics</div>
+                <div style="font-size:11px;color:var(--text-muted)">4 years · 8 semesters · 128 credit hours</div>
+              </div>
+              <span class="badge badge-info">Bachelor</span>
+              <span class="badge badge-success">Active</span>
+              <div style="text-align:right;font-size:12px;min-width:80px">
+                <div style="font-weight:600">176 colleges</div>
+                <div style="color:var(--text-muted)">11,240 students</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">View →</button>
+            </div>
+
+            <div class="prog-row">
+              <div class="prog-icon" style="background:var(--color-danger-bg)">⚗️</div>
+              <div style="flex:1">
+                <div style="font-weight:600">B.Sc (Hons) Chemistry</div>
+                <div style="font-size:11px;color:var(--text-muted)">4 years · 8 semesters · 130 credit hours</div>
+              </div>
+              <span class="badge badge-info">Bachelor</span>
+              <span class="badge badge-success">Active</span>
+              <div style="text-align:right;font-size:12px;min-width:80px">
+                <div style="font-weight:600">162 colleges</div>
+                <div style="color:var(--text-muted)">10,820 students</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">View →</button>
+            </div>
+
+            <div class="prog-row">
+              <div class="prog-icon" style="background:var(--bg-secondary)">📖</div>
+              <div style="flex:1">
+                <div style="font-weight:600">B.Ed (Primary)</div>
+                <div style="font-size:11px;color:var(--text-muted)">2 years · 4 semesters · 72 credit hours</div>
+              </div>
+              <span class="badge badge-info">Bachelor</span>
+              <span class="badge badge-warning">Review pending</span>
+              <div style="text-align:right;font-size:12px;min-width:80px">
+                <div style="font-weight:600">88 colleges</div>
+                <div style="color:var(--text-muted)">6,420 students</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">View →</button>
+            </div>
+
+            <div class="prog-row">
+              <div class="prog-icon" style="background:var(--color-success-bg)">🌿</div>
+              <div style="flex:1">
+                <div style="font-weight:600">B.Sc (Hons) Botany</div>
+                <div style="font-size:11px;color:var(--text-muted)">4 years · 8 semesters · 128 credit hours</div>
+              </div>
+              <span class="badge badge-info">Bachelor</span>
+              <span class="badge badge-neutral">Inactive</span>
+              <div style="text-align:right;font-size:12px;min-width:80px">
+                <div style="font-weight:600">94 colleges</div>
+                <div style="color:var(--text-muted)">7,104 students</div>
+              </div>
+              <button class="btn btn-ghost btn-sm">View →</button>
+            </div>
+          </div>
+
+          <div class="pagination">
+            <span class="text-muted text-sm">Showing 1–7 of 28 bachelor programs</span>
+            <div style="display:flex;gap:6px;margin-left:auto">
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+              <button class="page-btn">→</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: program detail panel -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+
+          <!-- Program info -->
+          <div class="card">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+              <div class="prog-icon" style="background:var(--color-info-bg);width:40px;height:40px;font-size:18px">💻</div>
+              <div>
+                <div style="font-size:14px;font-weight:700">BS Computer Science</div>
+                <div style="font-size:11px;color:var(--text-muted)">Code: BSCS-4Y · Active province-wide</div>
+              </div>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-row"><span class="detail-key">Level</span><span>Bachelor — 4 year</span></div>
+              <div class="detail-row"><span class="detail-key">Duration</span><span>4 years / 8 semesters</span></div>
+              <div class="detail-row"><span class="detail-key">Credit hours</span><span>130 total</span></div>
+              <div class="detail-row"><span class="detail-key">Seat capacity</span><span>60 per college</span></div>
+              <div class="detail-row"><span class="detail-key">Colleges offering</span><span style="color:var(--color-info-text);font-weight:600">247 colleges</span></div>
+              <div class="detail-row"><span class="detail-key">Total enrolled</span><span style="font-weight:600">18,420 students</span></div>
+              <div class="detail-row"><span class="detail-key">Approved by</span><span>HED — 14 Mar 2019</span></div>
+              <div class="detail-row"><span class="detail-key">Status</span><span class="badge badge-success">Active</span></div>
+            </div>
+
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button class="btn btn-secondary btn-sm">✏ Edit</button>
+              <button class="btn btn-secondary btn-sm">📋 Curriculum</button>
+              <button class="btn btn-ghost btn-sm" style="color:var(--color-danger-text)">Deactivate</button>
+            </div>
+          </div>
+
+          <!-- Curriculum preview -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Curriculum — Semester 5</div>
+              <button class="btn btn-ghost btn-sm">View all →</button>
+            </div>
+            <div>
+              <div class="curriculum-row">
+                <span class="sem-badge">Comp</span>
+                <div style="flex:1">
+                  <div style="font-weight:500;font-size:13px">Data Structures</div>
+                  <div style="font-size:11px;color:var(--text-muted)">CS-301 · 3 credit hours</div>
+                </div>
+                <span class="badge badge-info">Core</span>
+              </div>
+              <div class="curriculum-row">
+                <span class="sem-badge">Comp</span>
+                <div style="flex:1">
+                  <div style="font-weight:500;font-size:13px">Algorithms</div>
+                  <div style="font-size:11px;color:var(--text-muted)">CS-401 · 3 credit hours</div>
+                </div>
+                <span class="badge badge-info">Core</span>
+              </div>
+              <div class="curriculum-row">
+                <span class="sem-badge">Lab</span>
+                <div style="flex:1">
+                  <div style="font-weight:500;font-size:13px">OOP Lab</div>
+                  <div style="font-size:11px;color:var(--text-muted)">CS-211L · 1 credit hour</div>
+                </div>
+                <span class="badge badge-brand">Practical</span>
+              </div>
+              <div class="curriculum-row">
+                <span class="sem-badge">Hum</span>
+                <div style="flex:1">
+                  <div style="font-weight:500;font-size:13px">Islamic Studies</div>
+                  <div style="font-size:11px;color:var(--text-muted)">HU-201 · 2 credit hours</div>
+                </div>
+                <span class="badge badge-neutral">Elective</span>
+              </div>
+              <div class="curriculum-row">
+                <span class="sem-badge">Hum</span>
+                <div style="flex:1">
+                  <div style="font-weight:500;font-size:13px">Pakistan Studies</div>
+                  <div style="font-size:11px;color:var(--text-muted)">HU-101 · 2 credit hours</div>
+                </div>
+                <span class="badge badge-neutral">Compulsory</span>
+              </div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-light);display:flex;justify-content:space-between;font-size:12px">
+              <span style="color:var(--text-muted)">Semester 5 total</span>
+              <span style="font-weight:600">14 credit hours</span>
+            </div>
+          </div>
+
+          <!-- Subject combinations -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Subject combinations</div>
+            </div>
+            <div style="margin-bottom:6px;font-size:12px;color:var(--text-muted)">Eligible admission combinations:</div>
+            <div>
+              <span class="subject-chip">Pre-Engineering</span>
+              <span class="subject-chip">Computer Science</span>
+              <span class="subject-chip">Pre-Medical (with CS)</span>
+              <span class="subject-chip">ICS (Math)</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

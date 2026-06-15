@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>College Profile — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar { display:flex; gap:0; border-bottom:1px solid var(--border-light); margin-bottom:var(--space-5); }
+  .tab-item { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; }
+  .tab-item.active { color:var(--brand-600); border-bottom-color:var(--brand-600); }
+  .info-row { display:flex; padding:8px 0; border-bottom:1px solid var(--border-light); font-size:13px; gap:8px; }
+  .info-row:last-child { border-bottom:none; }
+  .info-key { color:var(--text-muted); width:180px; flex-shrink:0; }
+  .facility-card { border:1px solid var(--border-light); border-radius:var(--radius-md); padding:14px; }
+  .facility-card .fc-icon { font-size:24px; margin-bottom:8px; }
+  .facility-card .fc-name { font-size:13px; font-weight:600; margin-bottom:2px; }
+  .facility-card .fc-stat { font-size:11px; color:var(--text-muted); }
+  .prog-offered { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border-light); font-size:13px; }
+  .prog-offered:last-child { border-bottom:none; }
+  .banner-bar { background:linear-gradient(135deg,var(--brand-900),var(--brand-700)); border-radius:var(--radius-xl); padding:24px 28px; margin-bottom:20px; color:#fff; display:flex; align-items:center; gap:20px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">College Principal</div>
+      <div class="role-sub">GC Lahore</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="02-principal-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+      <div class="sidebar-section-label">Institution</div>
+      <a class="nav-item active" href="#"><span class="nav-icon">🏫</span><span>College Profile</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🏗</span><span>Facilities</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🎓</span><span>Accreditation</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">⚙️</span><span>Configuration</span></a>
+      <div class="sidebar-section-label">Academics</div>
+      <a class="nav-item" href="17-academic-structure.html"><span class="nav-icon">📚</span><span>Academic Structure</span></a>
+      <a class="nav-item" href="05-admissions-grid.html"><span class="nav-icon">🎓</span><span>Admissions</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">👨‍🏫</span><span>Faculty</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">DR</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Dr. Raza Ahmed</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">Principal</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Institution</span><span>›</span>
+        <span class="crumb-active">College Profile</span>
+      </div>
+      <div class="topbar-actions" style="margin-left:auto">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">DR</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>College Profile</h1>
+          <p>Institutional information, facilities, programs and accreditation</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">✏ Edit profile</button>
+          <button class="btn btn-secondary">⬇ Download profile</button>
+          <button class="btn btn-primary">📋 Submit update request</button>
+        </div>
+      </div>
+
+      <!-- College banner -->
+      <div class="banner-bar">
+        <div style="width:56px;height:56px;background:rgba(255,255,255,.15);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0">🏛️</div>
+        <div style="flex:1">
+          <div style="font-size:20px;font-weight:700;margin-bottom:3px">Government College Lahore</div>
+          <div style="font-size:13px;opacity:.7">Est. 1864 &nbsp;·&nbsp; DPI Code: GCL-001 &nbsp;·&nbsp; Lahore Division &nbsp;·&nbsp; Punjab</div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <span style="background:rgba(255,255,255,.12);padding:3px 10px;border-radius:20px;font-size:11px">📍 Lahore, Punjab</span>
+            <span style="background:rgba(255,255,255,.12);padding:3px 10px;border-radius:20px;font-size:11px">📞 042-99213312</span>
+            <span style="background:rgba(255,255,255,.12);padding:3px 10px;border-radius:20px;font-size:11px">🌐 gcl.edu.pk</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:0">
+          <div style="text-align:center;padding:0 20px;border-right:1px solid rgba(255,255,255,.2)">
+            <div style="font-size:22px;font-weight:700">4,820</div>
+            <div style="font-size:11px;opacity:.6">Students</div>
+          </div>
+          <div style="text-align:center;padding:0 20px;border-right:1px solid rgba(255,255,255,.2)">
+            <div style="font-size:22px;font-weight:700">184</div>
+            <div style="font-size:11px;opacity:.6">Faculty</div>
+          </div>
+          <div style="text-align:center;padding:0 20px">
+            <div style="font-size:22px;font-weight:700" style="color:#90EE90">A+</div>
+            <div style="font-size:11px;opacity:.6">Grade</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active">General info</div>
+        <div class="tab-item">Facilities</div>
+        <div class="tab-item">Programs offered</div>
+        <div class="tab-item">Accreditation</div>
+        <div class="tab-item">Configuration</div>
+        <div class="tab-item">Documents</div>
+      </div>
+
+      <!-- Main grid -->
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+
+        <!-- Basic info -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Basic information</div><button class="btn btn-ghost btn-sm">✏ Edit</button></div>
+          <div>
+            <div class="info-row"><span class="info-key">College name</span><span style="font-weight:500">Government College Lahore</span></div>
+            <div class="info-row"><span class="info-key">Short name</span><span style="font-weight:500">GC Lahore</span></div>
+            <div class="info-row"><span class="info-key">DPI code</span><span style="font-weight:500;font-family:monospace">GCL-001</span></div>
+            <div class="info-row"><span class="info-key">Type</span><span class="badge badge-brand">Government Boys</span></div>
+            <div class="info-row"><span class="info-key">Category</span><span class="badge badge-success">Grade A+</span></div>
+            <div class="info-row"><span class="info-key">Establishment year</span><span style="font-weight:500">1864</span></div>
+            <div class="info-row"><span class="info-key">Campus area</span><span style="font-weight:500">42 acres</span></div>
+            <div class="info-row"><span class="info-key">Division</span><span style="font-weight:500">Lahore</span></div>
+            <div class="info-row"><span class="info-key">District</span><span style="font-weight:500">Lahore</span></div>
+            <div class="info-row"><span class="info-key">Tehsil</span><span style="font-weight:500">Model Town</span></div>
+            <div class="info-row"><span class="info-key">Address</span><span style="font-weight:500">The Mall, Lahore, Punjab 54000</span></div>
+          </div>
+        </div>
+
+        <!-- Contact & administration -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Contact & administration</div><button class="btn btn-ghost btn-sm">✏ Edit</button></div>
+          <div>
+            <div class="info-row"><span class="info-key">Principal</span><span style="font-weight:500">Dr. Raza Ahmed</span></div>
+            <div class="info-row"><span class="info-key">Principal CNIC</span><span style="font-weight:500;font-family:monospace">35202-1234567-1</span></div>
+            <div class="info-row"><span class="info-key">Phone (office)</span><span style="font-weight:500">042-99213312</span></div>
+            <div class="info-row"><span class="info-key">Phone (mobile)</span><span style="font-weight:500">0300-XXXXXXX</span></div>
+            <div class="info-row"><span class="info-key">Official email</span><span style="font-weight:500">principal@gcl.edu.pk</span></div>
+            <div class="info-row"><span class="info-key">Website</span><span style="font-weight:500;color:var(--color-info-text)">gcl.edu.pk</span></div>
+            <div class="info-row"><span class="info-key">Fax</span><span style="font-weight:500">042-99213411</span></div>
+            <div class="info-row"><span class="info-key">DPI assigned</span><span style="font-weight:500">DPI Centre — Dr. Raza Khan</span></div>
+            <div class="info-row"><span class="info-key">Directorate</span><span style="font-weight:500">Directorate of Colleges, Punjab</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Facilities grid -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <div class="card-title">Facilities</div>
+          <button class="btn btn-ghost btn-sm">✏ Update facilities</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">
+          <div class="facility-card">
+            <div class="fc-icon">🏫</div>
+            <div class="fc-name">Classrooms</div>
+            <div class="fc-stat">48 rooms · 60 capacity each</div>
+            <span class="badge badge-success" style="margin-top:6px;font-size:10px">Good condition</span>
+          </div>
+          <div class="facility-card">
+            <div class="fc-icon">💻</div>
+            <div class="fc-name">Computer Labs</div>
+            <div class="fc-stat">3 labs · 60 workstations each</div>
+            <span class="badge badge-success" style="margin-top:6px;font-size:10px">Operational</span>
+          </div>
+          <div class="facility-card">
+            <div class="fc-icon">🔬</div>
+            <div class="fc-name">Science Labs</div>
+            <div class="fc-stat">Physics, Chem, Bio, Zoom</div>
+            <span class="badge badge-success" style="margin-top:6px;font-size:10px">4 labs</span>
+          </div>
+          <div class="facility-card">
+            <div class="fc-icon">📚</div>
+            <div class="fc-name">Library</div>
+            <div class="fc-stat">42,000 books · 200 seats</div>
+            <span class="badge badge-success" style="margin-top:6px;font-size:10px">Operational</span>
+          </div>
+          <div class="facility-card">
+            <div class="fc-icon">🏥</div>
+            <div class="fc-name">Medical Room</div>
+            <div class="fc-stat">1 doctor · Part-time nurse</div>
+            <span class="badge badge-warning" style="margin-top:6px;font-size:10px">Partial</span>
+          </div>
+          <div class="facility-card">
+            <div class="fc-icon">🏟</div>
+            <div class="fc-name">Sports Ground</div>
+            <div class="fc-stat">Cricket + Football + Athletics</div>
+            <span class="badge badge-success" style="margin-top:6px;font-size:10px">Available</span>
+          </div>
+          <div class="facility-card">
+            <div class="fc-icon">🕌</div>
+            <div class="fc-name">Mosque</div>
+            <div class="fc-stat">Capacity: 500 persons</div>
+            <span class="badge badge-success" style="margin-top:6px;font-size:10px">Operational</span>
+          </div>
+          <div class="facility-card">
+            <div class="fc-icon">🚌</div>
+            <div class="fc-name">Transport</div>
+            <div class="fc-stat">No college transport</div>
+            <span class="badge badge-neutral" style="margin-top:6px;font-size:10px">Not available</span>
+          </div>
+          <div class="facility-card">
+            <div class="fc-icon">🏠</div>
+            <div class="fc-name">Hostel</div>
+            <div class="fc-stat">280 beds · Boys only</div>
+            <span class="badge badge-warning" style="margin-top:6px;font-size:10px">Partially full</span>
+          </div>
+          <div class="facility-card">
+            <div class="fc-icon">🍽</div>
+            <div class="fc-name">Canteen</div>
+            <div class="fc-stat">2 canteens · Subsidised meals</div>
+            <span class="badge badge-success" style="margin-top:6px;font-size:10px">Operational</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Programs offered -->
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center">
+          <div class="card-title">Programs offered</div>
+          <button class="btn btn-primary btn-sm">+ Request new program</button>
+        </div>
+        <div>
+          <div class="prog-offered" style="padding-left:16px;padding-right:16px">
+            <div style="width:32px;height:32px;background:var(--color-info-bg);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">📖</div>
+            <div style="flex:1"><div style="font-weight:600">FA (Arts)</div><div style="font-size:11px;color:var(--text-muted)">Intermediate · 2 years · Annual</div></div>
+            <div style="text-align:right;font-size:12px"><div style="font-weight:600">340 seats</div><div style="color:var(--text-muted)">320 filled</div></div>
+            <span class="badge badge-success">Active</span>
+          </div>
+          <div class="prog-offered" style="padding-left:16px;padding-right:16px">
+            <div style="width:32px;height:32px;background:var(--color-success-bg);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🔬</div>
+            <div style="flex:1"><div style="font-weight:600">F.Sc (Pre-Engineering)</div><div style="font-size:11px;color:var(--text-muted)">Intermediate · 2 years · Annual</div></div>
+            <div style="text-align:right;font-size:12px"><div style="font-weight:600">280 seats</div><div style="color:var(--text-muted)">267 filled</div></div>
+            <span class="badge badge-success">Active</span>
+          </div>
+          <div class="prog-offered" style="padding-left:16px;padding-right:16px">
+            <div style="width:32px;height:32px;background:var(--color-warning-bg);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🧬</div>
+            <div style="flex:1"><div style="font-weight:600">F.Sc (Pre-Medical)</div><div style="font-size:11px;color:var(--text-muted)">Intermediate · 2 years · Annual</div></div>
+            <div style="text-align:right;font-size:12px"><div style="font-weight:600">280 seats</div><div style="color:var(--text-muted)">271 filled</div></div>
+            <span class="badge badge-success">Active</span>
+          </div>
+          <div class="prog-offered" style="padding-left:16px;padding-right:16px">
+            <div style="width:32px;height:32px;background:var(--color-info-bg);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">💻</div>
+            <div style="flex:1"><div style="font-weight:600">BS Computer Science</div><div style="font-size:11px;color:var(--text-muted)">Bachelor · 4 years · Semester</div></div>
+            <div style="text-align:right;font-size:12px"><div style="font-weight:600">120 seats</div><div style="color:var(--text-muted)">108 filled</div></div>
+            <span class="badge badge-success">Active</span>
+          </div>
+          <div class="prog-offered" style="padding-left:16px;padding-right:16px">
+            <div style="width:32px;height:32px;background:var(--brand-50);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">📊</div>
+            <div style="flex:1"><div style="font-weight:600">M.A Economics</div><div style="font-size:11px;color:var(--text-muted)">Masters · 2 years · Annual</div></div>
+            <div style="text-align:right;font-size:12px"><div style="font-weight:600">60 seats</div><div style="color:var(--text-muted)">34 filled</div></div>
+            <span class="badge badge-warning">Low intake</span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

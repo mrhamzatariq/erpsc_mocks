@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Transport Management — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border-light);margin-bottom:var(--space-5)}
+  .tab-item{padding:10px 18px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+  .tab-item.active{color:var(--brand-600);border-bottom-color:var(--brand-600)}
+  .vehicle-card{border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:all .15s;position:relative}
+  .vehicle-card:hover{border-color:var(--brand-300);box-shadow:var(--shadow-sm)}
+  .vehicle-card.active-route{border-left:3px solid var(--color-success-text)}
+  .vehicle-card.maintenance{border-left:3px solid var(--color-danger-text)}
+  .vehicle-card.idle{border-left:3px solid var(--border-medium)}
+  .vehicle-icon{font-size:28px;margin-bottom:8px}
+  .vehicle-num{font-size:14px;font-weight:700;margin-bottom:2px}
+  .vehicle-meta{font-size:11px;color:var(--text-muted)}
+  .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+  .route-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-light);font-size:13px}
+  .route-row:last-child{border-bottom:none}
+  .route-line{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text-muted);flex:1;min-width:0}
+  .route-stop{background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-full);padding:2px 7px;font-size:10px;font-weight:500;white-space:nowrap}
+  .route-arrow{color:var(--text-muted);font-size:10px}
+  .student-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:13px}
+  .student-row:last-child{border-bottom:none}
+  .stat-chip{background:var(--bg-secondary);border-radius:var(--radius-md);padding:10px 14px;text-align:center}
+  .stat-chip .val{font-size:20px;font-weight:700}
+  .stat-chip .lbl{font-size:11px;color:var(--text-muted);margin-top:2px}
+  .map-placeholder{background:var(--bg-secondary);border:1.5px dashed var(--border-medium);border-radius:var(--radius-lg);height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">College Administration</div>
+      <div class="role-sub">GC Lahore</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="02-principal-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+      <div class="sidebar-section-label">Transport</div>
+      <a class="nav-item active" href="#"><span class="nav-icon">🚌</span><span>Transport Management</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🗺</span><span>Routes</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🚐</span><span>Vehicles</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>Passengers</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">💳</span><span>Transport Fee</span><span class="nav-badge warn">18</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🔧</span><span>Maintenance</span></a>
+      <div class="sidebar-section-label">College</div>
+      <a class="nav-item" href="23-college-profile.html"><span class="nav-icon">🏫</span><span>College Profile</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">MK</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Muhammad Kamran</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">Admin Officer</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb"><span>College</span><span>›</span><span class="crumb-active">Transport Management</span></div>
+      <div class="topbar-search" style="margin-left:16px"><span>🔍</span><span>Search routes, vehicles, students…</span></div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">MK</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Transport Management</h1>
+          <p>GC Lahore · 8 vehicles · 6 active routes · 420 registered students</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">+ Add route</button>
+          <button class="btn btn-secondary">🚐 Add vehicle</button>
+          <button class="btn btn-primary">+ Register student</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="grid" style="grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px">
+        <div class="stat-chip"><div class="val">8</div><div class="lbl">Total vehicles</div></div>
+        <div class="stat-chip"><div class="val" style="color:var(--color-success-text)">6</div><div class="lbl">Active today</div></div>
+        <div class="stat-chip"><div class="val" style="color:var(--color-danger-text)">2</div><div class="lbl">Maintenance</div></div>
+        <div class="stat-chip"><div class="val">6</div><div class="lbl">Routes</div></div>
+        <div class="stat-chip"><div class="val">420</div><div class="lbl">Students</div></div>
+        <div class="stat-chip"><div class="val" style="color:var(--color-warning-text)">18</div><div class="lbl">Fee defaulters</div></div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active">Vehicles</div>
+        <div class="tab-item">Routes</div>
+        <div class="tab-item">Students / Passengers</div>
+        <div class="tab-item">Transport fee</div>
+        <div class="tab-item">Maintenance</div>
+      </div>
+
+      <div class="grid" style="grid-template-columns:1.6fr 1fr;gap:16px">
+
+        <!-- Vehicle cards + route list -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+
+          <!-- Vehicle grid -->
+          <div class="card">
+            <div class="card-header">
+              <div><div class="card-title">Fleet overview</div><div class="card-subtitle">All vehicles — GC Lahore</div></div>
+              <button class="btn btn-primary btn-sm">+ Add vehicle</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+
+              <div class="vehicle-card active-route">
+                <div class="vehicle-icon">🚌</div>
+                <div class="vehicle-num">Bus #01</div>
+                <div class="vehicle-meta">LEI-1234 · 42 seats · Diesel</div>
+                <div style="margin-top:8px;font-size:11px"><span class="status-dot" style="background:var(--color-success-text)"></span><span style="color:var(--color-success-text);font-weight:500">On route</span></div>
+                <div style="font-size:11px;color:var(--text-muted)">Route 1 · 38 passengers</div>
+              </div>
+
+              <div class="vehicle-card active-route">
+                <div class="vehicle-icon">🚌</div>
+                <div class="vehicle-num">Bus #02</div>
+                <div class="vehicle-meta">LEI-5678 · 42 seats · CNG</div>
+                <div style="margin-top:8px;font-size:11px"><span class="status-dot" style="background:var(--color-success-text)"></span><span style="color:var(--color-success-text);font-weight:500">On route</span></div>
+                <div style="font-size:11px;color:var(--text-muted)">Route 2 · 41 passengers</div>
+              </div>
+
+              <div class="vehicle-card active-route">
+                <div class="vehicle-icon">🚐</div>
+                <div class="vehicle-num">Van #03</div>
+                <div class="vehicle-meta">LEH-9012 · 15 seats · Petrol</div>
+                <div style="margin-top:8px;font-size:11px"><span class="status-dot" style="background:var(--color-success-text)"></span><span style="color:var(--color-success-text);font-weight:500">On route</span></div>
+                <div style="font-size:11px;color:var(--text-muted)">Route 3 · 14 passengers</div>
+              </div>
+
+              <div class="vehicle-card maintenance">
+                <div class="vehicle-icon">🚐</div>
+                <div class="vehicle-num">Van #04</div>
+                <div class="vehicle-meta">LEH-3456 · 15 seats · Petrol</div>
+                <div style="margin-top:8px;font-size:11px"><span class="status-dot" style="background:var(--color-danger-text)"></span><span style="color:var(--color-danger-text);font-weight:500">Maintenance</span></div>
+                <div style="font-size:11px;color:var(--text-muted)">Engine repair · Est. 2 days</div>
+              </div>
+
+              <div class="vehicle-card active-route">
+                <div class="vehicle-icon">🚌</div>
+                <div class="vehicle-num">Bus #05</div>
+                <div class="vehicle-meta">LEI-7890 · 52 seats · Diesel</div>
+                <div style="margin-top:8px;font-size:11px"><span class="status-dot" style="background:var(--color-success-text)"></span><span style="color:var(--color-success-text);font-weight:500">On route</span></div>
+                <div style="font-size:11px;color:var(--text-muted)">Route 4 · 48 passengers</div>
+              </div>
+
+              <div class="vehicle-card active-route">
+                <div class="vehicle-icon">🚌</div>
+                <div class="vehicle-num">Bus #06</div>
+                <div class="vehicle-meta">LEI-2345 · 52 seats · CNG</div>
+                <div style="margin-top:8px;font-size:11px"><span class="status-dot" style="background:var(--color-success-text)"></span><span style="color:var(--color-success-text);font-weight:500">On route</span></div>
+                <div style="font-size:11px;color:var(--text-muted)">Route 5 · 50 passengers</div>
+              </div>
+
+              <div class="vehicle-card active-route">
+                <div class="vehicle-icon">🚐</div>
+                <div class="vehicle-num">Van #07</div>
+                <div class="vehicle-meta">LEH-6789 · 15 seats · Petrol</div>
+                <div style="margin-top:8px;font-size:11px"><span class="status-dot" style="background:var(--color-success-text)"></span><span style="color:var(--color-success-text);font-weight:500">On route</span></div>
+                <div style="font-size:11px;color:var(--text-muted)">Route 6 · 12 passengers</div>
+              </div>
+
+              <div class="vehicle-card maintenance">
+                <div class="vehicle-icon">🚌</div>
+                <div class="vehicle-num">Bus #08</div>
+                <div class="vehicle-meta">LEI-0123 · 42 seats · Diesel</div>
+                <div style="margin-top:8px;font-size:11px"><span class="status-dot" style="background:var(--color-danger-text)"></span><span style="color:var(--color-danger-text);font-weight:500">Maintenance</span></div>
+                <div style="font-size:11px;color:var(--text-muted)">Tyre change · Est. 1 day</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Routes table -->
+          <div class="card" style="padding:0;overflow:hidden">
+            <div style="padding:14px 18px;border-bottom:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center">
+              <div class="card-title">Active routes</div>
+              <button class="btn btn-secondary btn-sm">+ Add route</button>
+            </div>
+            <div style="padding:0 18px">
+              <div class="route-row">
+                <span class="badge badge-info" style="font-size:11px;flex-shrink:0">Route 1</span>
+                <div class="route-line">
+                  <span class="route-stop">GC Lahore</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-stop">Model Town</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-stop">Gulberg</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-stop">Garden Town</span>
+                </div>
+                <div style="text-align:right;font-size:12px;flex-shrink:0">
+                  <div style="font-weight:600">Bus #01 · 38 students</div>
+                  <div style="color:var(--text-muted)">Departs 7:30 AM</div>
+                </div>
+                <span class="badge badge-success" style="font-size:10px;flex-shrink:0">Active</span>
+              </div>
+              <div class="route-row">
+                <span class="badge badge-info" style="font-size:11px;flex-shrink:0">Route 2</span>
+                <div class="route-line">
+                  <span class="route-stop">GC Lahore</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-stop">Johar Town</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-stop">Faisal Town</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-stop">Wapda Town</span>
+                </div>
+                <div style="text-align:right;font-size:12px;flex-shrink:0">
+                  <div style="font-weight:600">Bus #02 · 41 students</div>
+                  <div style="color:var(--text-muted)">Departs 7:15 AM</div>
+                </div>
+                <span class="badge badge-success" style="font-size:10px;flex-shrink:0">Active</span>
+              </div>
+              <div class="route-row">
+                <span class="badge badge-info" style="font-size:11px;flex-shrink:0">Route 3</span>
+                <div class="route-line">
+                  <span class="route-stop">GC Lahore</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-stop">DHA Phase 1</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-stop">DHA Phase 5</span>
+                </div>
+                <div style="text-align:right;font-size:12px;flex-shrink:0">
+                  <div style="font-weight:600">Van #03 · 14 students</div>
+                  <div style="color:var(--text-muted)">Departs 7:45 AM</div>
+                </div>
+                <span class="badge badge-success" style="font-size:10px;flex-shrink:0">Active</span>
+              </div>
+              <div class="route-row">
+                <span class="badge badge-info" style="font-size:11px;flex-shrink:0">Route 4</span>
+                <div class="route-line">
+                  <span class="route-stop">GC Lahore</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-stop">Iqbal Town</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-stop">Allama Iqbal Town</span>
+                  <span class="route-arrow">→</span>
+                  <span class="route-stop">Manga Mandi</span>
+                </div>
+                <div style="text-align:right;font-size:12px;flex-shrink:0">
+                  <div style="font-weight:600">Bus #05 · 48 students</div>
+                  <div style="color:var(--text-muted)">Departs 7:00 AM</div>
+                </div>
+                <span class="badge badge-success" style="font-size:10px;flex-shrink:0">Active</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right panel -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+
+          <!-- Route map placeholder -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Live route map</div><span class="badge badge-success">6 active</span></div>
+            <div class="map-placeholder">
+              <span style="font-size:32px;margin-bottom:8px">🗺</span>
+              <span style="font-size:13px;font-weight:500">Route map</span>
+              <span style="font-size:11px;margin-top:4px">Integrate Google Maps / GIS</span>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px">
+              <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center">Track Bus #01</button>
+              <button class="btn btn-secondary btn-sm" style="flex:1;justify-content:center">Track Bus #02</button>
+            </div>
+          </div>
+
+          <!-- Today's log -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Today's log</div><div class="card-subtitle">Wed, 15 Jan 2025</div></div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:12px">
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-light)">
+                <span>Route 1 — Bus #01 departed</span>
+                <span style="color:var(--color-success-text);font-weight:500">7:30 AM ✓</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-light)">
+                <span>Route 2 — Bus #02 departed</span>
+                <span style="color:var(--color-success-text);font-weight:500">7:17 AM ✓</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-light)">
+                <span>Route 4 — Bus #05 departed</span>
+                <span style="color:var(--color-success-text);font-weight:500">7:02 AM ✓</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border-light)">
+                <span>Route 5 — Bus #06 delayed</span>
+                <span style="color:var(--color-warning-text);font-weight:500">8:12 AM ⚠</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:6px 0">
+                <span>Van #04 — Maintenance started</span>
+                <span style="color:var(--color-danger-text);font-weight:500">9:00 AM ✕</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fee summary -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Transport fee</div><div class="card-subtitle">This month</div></div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
+              <div class="flex-between" style="padding:6px 0;border-bottom:1px solid var(--border-light)">
+                <span style="color:var(--text-muted)">Monthly fee/student</span>
+                <span style="font-weight:600">₨ 1,200</span>
+              </div>
+              <div class="flex-between" style="padding:6px 0;border-bottom:1px solid var(--border-light)">
+                <span style="color:var(--text-muted)">Total expected</span>
+                <span style="font-weight:600">₨ 5,04,000</span>
+              </div>
+              <div class="flex-between" style="padding:6px 0;border-bottom:1px solid var(--border-light)">
+                <span style="color:var(--text-muted)">Collected</span>
+                <span style="font-weight:600;color:var(--color-success-text)">₨ 4,82,400</span>
+              </div>
+              <div class="flex-between" style="padding:6px 0">
+                <span style="color:var(--text-muted)">Defaulters</span>
+                <span class="badge badge-warning">18 students</span>
+              </div>
+            </div>
+            <div style="margin-top:10px">
+              <div class="flex-between mb-1"><span style="font-size:12px">Collection rate</span><span style="font-size:12px;font-weight:600;color:var(--color-success-text)">95.7%</span></div>
+              <div class="progress-bar"><div class="progress-fill success" style="width:96%"></div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Academic Calendar — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border-light);margin-bottom:var(--space-5)}
+  .tab-item{padding:10px 18px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+  .tab-item.active{color:var(--brand-600);border-bottom-color:var(--brand-600)}
+  /* Calendar grid */
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+  .cal-day-hd{text-align:center;font-size:11px;font-weight:600;color:var(--text-muted);padding:6px 0;text-transform:uppercase}
+  .cal-day{min-height:64px;border-radius:var(--radius-sm);padding:5px;border:1px solid var(--border-light);position:relative;background:var(--bg-surface);cursor:pointer;transition:all .12s}
+  .cal-day:hover{border-color:var(--brand-300);z-index:1}
+  .cal-day.today{border-color:var(--brand-500);border-width:1.5px;background:var(--brand-50)}
+  .cal-day.other-month{background:var(--bg-secondary);opacity:.5;cursor:default}
+  .cal-day.holiday{background:var(--color-danger-bg);border-color:var(--color-danger-border)}
+  .cal-day.exam{background:var(--color-warning-bg);border-color:var(--color-warning-border)}
+  .cal-day.event{background:var(--color-info-bg);border-color:var(--color-info-border)}
+  .cal-day.break{background:var(--color-success-bg);border-color:var(--color-success-border)}
+  .day-num{font-size:12px;font-weight:600;color:var(--text-secondary)}
+  .cal-day.today .day-num{color:var(--brand-600)}
+  .event-pill{font-size:9px;font-weight:600;border-radius:3px;padding:1px 5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+  .ev-exam{background:var(--color-warning-bg);color:var(--color-warning-text)}
+  .ev-holiday{background:var(--color-danger-bg);color:var(--color-danger-text)}
+  .ev-event{background:var(--color-info-bg);color:var(--color-info-text)}
+  .ev-break{background:var(--color-success-bg);color:var(--color-success-text)}
+  /* Session card */
+  .session-card{border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:all .15s}
+  .session-card:hover{border-color:var(--brand-300);box-shadow:var(--shadow-sm)}
+  .session-card.active-session{border-color:var(--brand-500);background:var(--brand-50)}
+  .session-card .sc-name{font-size:14px;font-weight:700;margin-bottom:3px}
+  .session-card .sc-sub{font-size:12px;color:var(--text-muted)}
+  /* Event list */
+  .event-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border-light);font-size:13px}
+  .event-row:last-child{border-bottom:none}
+  .event-type-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  /* Timeline */
+  .timeline-bar{display:flex;height:28px;border-radius:var(--radius-md);overflow:hidden;margin-bottom:6px}
+  .tl-seg{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;transition:flex .3s}
+  .sem-prog-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border-light);font-size:13px}
+  .sem-prog-row:last-child{border-bottom:none}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">HED Super Admin</div>
+      <div class="role-sub">Provincial Administration</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="01-hed-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+      <div class="sidebar-section-label">Academics</div>
+      <a class="nav-item" href="17-academic-structure.html"><span class="nav-icon">📚</span><span>Academic Structure</span></a>
+      <a class="nav-item active" href="#"><span class="nav-icon">📅</span><span>Academic Calendar</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🕐</span><span>Sessions</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🎓</span><span>Admissions</span></a>
+      <div class="sidebar-section-label">System</div>
+      <a class="nav-item" href="10-reports-analytics.html"><span class="nav-icon">📊</span><span>Reports</span></a>
+      <a class="nav-item" href="18-user-management.html"><span class="nav-icon">🔐</span><span>User Management</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">SA</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Super Admin</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">admin@hed.punjab.gov.pk</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Academics</span><span>›</span>
+        <span class="crumb-active">Academic Calendar</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search events, sessions, dates…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">SA</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Academic Calendar & Sessions</h1>
+          <p>Province-wide academic calendar · AY 2024–25 · Punjab HED</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">⬇ Download calendar</button>
+          <button class="btn btn-secondary">📢 Publish to colleges</button>
+          <button class="btn btn-primary">+ Add event</button>
+        </div>
+      </div>
+
+      <!-- Session selector row -->
+      <div class="grid grid-3 mb-6" style="gap:12px">
+        <div class="session-card active-session">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div class="sc-name" style="color:var(--brand-700)">Annual Session 2024–25</div>
+              <div class="sc-sub">Sep 2024 — Jun 2025 · FA/FSc/I.Com</div>
+            </div>
+            <span class="badge badge-success">Current</span>
+          </div>
+          <div style="margin-top:10px">
+            <div class="flex-between mb-1" style="font-size:12px"><span>Progress</span><span style="font-weight:600;color:var(--brand-600)">52%</span></div>
+            <div class="progress-bar"><div class="progress-fill brand" style="width:52%"></div></div>
+          </div>
+        </div>
+        <div class="session-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div class="sc-name">Spring Semester 2025</div>
+              <div class="sc-sub">Feb 2025 — Jun 2025 · BS/MA programs</div>
+            </div>
+            <span class="badge badge-info">Upcoming</span>
+          </div>
+          <div style="margin-top:10px">
+            <div class="flex-between mb-1" style="font-size:12px"><span>Progress</span><span style="font-weight:600;color:var(--text-muted)">Not started</span></div>
+            <div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--text-muted)"></div></div>
+          </div>
+        </div>
+        <div class="session-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div class="sc-name">Fall Semester 2024</div>
+              <div class="sc-sub">Sep 2024 — Jan 2025 · BS/MA programs</div>
+            </div>
+            <span class="badge badge-warning">Closing</span>
+          </div>
+          <div style="margin-top:10px">
+            <div class="flex-between mb-1" style="font-size:12px"><span>Progress</span><span style="font-weight:600;color:var(--color-warning-text)">88%</span></div>
+            <div class="progress-bar"><div class="progress-fill warning" style="width:88%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active">Calendar view</div>
+        <div class="tab-item">Events list</div>
+        <div class="tab-item">Session setup</div>
+        <div class="tab-item">Semester schedule</div>
+        <div class="tab-item">Holidays</div>
+      </div>
+
+      <!-- Main layout -->
+      <div class="grid" style="grid-template-columns:1fr 300px;gap:16px">
+
+        <!-- Calendar -->
+        <div class="card">
+          <div class="card-header">
+            <div style="display:flex;align-items:center;gap:12px">
+              <button class="btn btn-ghost btn-sm">← Prev</button>
+              <h3 style="margin:0;font-size:16px">January 2025</h3>
+              <button class="btn btn-ghost btn-sm">Next →</button>
+            </div>
+            <div style="display:flex;gap:8px">
+              <select class="form-select" style="width:auto;font-size:12px;padding:4px 8px"><option>Annual Session</option><option>Semester</option></select>
+              <button class="btn btn-secondary btn-sm">Today</button>
+            </div>
+          </div>
+
+          <!-- Day headers -->
+          <div class="cal-grid mb-2">
+            <div class="cal-day-hd">Sun</div>
+            <div class="cal-day-hd">Mon</div>
+            <div class="cal-day-hd">Tue</div>
+            <div class="cal-day-hd">Wed</div>
+            <div class="cal-day-hd">Thu</div>
+            <div class="cal-day-hd">Fri</div>
+            <div class="cal-day-hd">Sat</div>
+          </div>
+
+          <!-- Week 1 (Dec 29 – Jan 4) -->
+          <div class="cal-grid" style="gap:3px">
+            <div class="cal-day other-month"><div class="day-num">29</div></div>
+            <div class="cal-day other-month"><div class="day-num">30</div></div>
+            <div class="cal-day other-month"><div class="day-num">31</div></div>
+            <div class="cal-day"><div class="day-num">1</div></div>
+            <div class="cal-day"><div class="day-num">2</div></div>
+            <div class="cal-day"><div class="day-num">3</div></div>
+            <div class="cal-day"><div class="day-num">4</div></div>
+
+            <!-- Week 2 -->
+            <div class="cal-day holiday">
+              <div class="day-num">5</div>
+              <span class="event-pill ev-holiday">Public holiday</span>
+            </div>
+            <div class="cal-day"><div class="day-num">6</div></div>
+            <div class="cal-day"><div class="day-num">7</div></div>
+            <div class="cal-day exam">
+              <div class="day-num">8</div>
+              <span class="event-pill ev-exam">Mid-terms begin</span>
+            </div>
+            <div class="cal-day exam"><div class="day-num">9</div><span class="event-pill ev-exam">Mid-terms</span></div>
+            <div class="cal-day exam"><div class="day-num">10</div><span class="event-pill ev-exam">Mid-terms</span></div>
+            <div class="cal-day"><div class="day-num">11</div></div>
+
+            <!-- Week 3 -->
+            <div class="cal-day"><div class="day-num">12</div></div>
+            <div class="cal-day"><div class="day-num">13</div></div>
+            <div class="cal-day"><div class="day-num">14</div></div>
+            <div class="cal-day today">
+              <div class="day-num">15</div>
+              <span class="event-pill" style="background:var(--brand-50);color:var(--brand-600)">Today</span>
+            </div>
+            <div class="cal-day event">
+              <div class="day-num">16</div>
+              <span class="event-pill ev-event">Sports day</span>
+            </div>
+            <div class="cal-day"><div class="day-num">17</div></div>
+            <div class="cal-day"><div class="day-num">18</div></div>
+
+            <!-- Week 4 -->
+            <div class="cal-day"><div class="day-num">19</div></div>
+            <div class="cal-day"><div class="day-num">20</div></div>
+            <div class="cal-day"><div class="day-num">21</div></div>
+            <div class="cal-day"><div class="day-num">22</div></div>
+            <div class="cal-day holiday">
+              <div class="day-num">23</div>
+              <span class="event-pill ev-holiday">Kashmir day</span>
+            </div>
+            <div class="cal-day"><div class="day-num">24</div></div>
+            <div class="cal-day"><div class="day-num">25</div></div>
+
+            <!-- Week 5 -->
+            <div class="cal-day"><div class="day-num">26</div></div>
+            <div class="cal-day"><div class="day-num">27</div></div>
+            <div class="cal-day"><div class="day-num">28</div></div>
+            <div class="cal-day event">
+              <div class="day-num">29</div>
+              <span class="event-pill ev-event">Annual day</span>
+            </div>
+            <div class="cal-day"><div class="day-num">30</div></div>
+            <div class="cal-day break">
+              <div class="day-num">31</div>
+              <span class="event-pill ev-break">Fee deadline</span>
+            </div>
+            <div class="cal-day other-month"><div class="day-num">1</div></div>
+          </div>
+
+          <!-- Legend -->
+          <div style="display:flex;gap:14px;margin-top:14px;flex-wrap:wrap;font-size:11px">
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--color-danger-bg);border:1px solid var(--color-danger-border);border-radius:2px;display:inline-block"></span>Holiday</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--color-warning-bg);border:1px solid var(--color-warning-border);border-radius:2px;display:inline-block"></span>Exams</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--color-info-bg);border:1px solid var(--color-info-border);border-radius:2px;display:inline-block"></span>College event</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--color-success-bg);border:1px solid var(--color-success-border);border-radius:2px;display:inline-block"></span>Deadline</span>
+            <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--brand-50);border:1.5px solid var(--brand-500);border-radius:2px;display:inline-block"></span>Today</span>
+          </div>
+        </div>
+
+        <!-- Right panel: events + year timeline -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+
+          <!-- Year timeline -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">AY 2024–25 timeline</div></div>
+            <div class="timeline-bar">
+              <div class="tl-seg" style="flex:2;background:var(--color-success-bg);color:var(--color-success-text)">Admit.</div>
+              <div class="tl-seg" style="flex:1;background:var(--color-warning-bg);color:var(--color-warning-text)">MT</div>
+              <div class="tl-seg" style="flex:3;background:var(--color-info-bg);color:var(--color-info-text)">Classes</div>
+              <div class="tl-seg" style="flex:2;background:var(--color-danger-bg);color:var(--color-danger-text)">Finals</div>
+              <div class="tl-seg" style="flex:1;background:var(--bg-tertiary);color:var(--text-muted)">Break</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted)">
+              <span>Sep '24</span><span>Nov</span><span>Jan '25</span><span>Apr</span><span>Jun</span>
+            </div>
+
+            <!-- Semester progress -->
+            <div class="divider"></div>
+            <div class="card-title mb-3" style="font-size:12px">Session milestones</div>
+            <div>
+              <div class="sem-prog-row">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--color-success-text);flex-shrink:0"></div>
+                <div style="flex:1;font-size:12px">Admissions opened</div>
+                <span style="font-size:11px;color:var(--text-muted)">1 Sep 2024</span>
+              </div>
+              <div class="sem-prog-row">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--color-success-text);flex-shrink:0"></div>
+                <div style="flex:1;font-size:12px">Classes commenced</div>
+                <span style="font-size:11px;color:var(--text-muted)">16 Sep 2024</span>
+              </div>
+              <div class="sem-prog-row">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--color-success-text);flex-shrink:0"></div>
+                <div style="flex:1;font-size:12px">Mid-terms concluded</div>
+                <span style="font-size:11px;color:var(--text-muted)">10 Jan 2025</span>
+              </div>
+              <div class="sem-prog-row">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--brand-500);flex-shrink:0"></div>
+                <div style="flex:1;font-size:12px;font-weight:500;color:var(--brand-600)">Today — 15 Jan 2025</div>
+                <span class="badge badge-brand" style="font-size:10px">Now</span>
+              </div>
+              <div class="sem-prog-row">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--border-medium);flex-shrink:0"></div>
+                <div style="flex:1;font-size:12px;color:var(--text-muted)">Annual exams begin</div>
+                <span style="font-size:11px;color:var(--text-muted)">1 Apr 2025</span>
+              </div>
+              <div class="sem-prog-row">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--border-medium);flex-shrink:0"></div>
+                <div style="flex:1;font-size:12px;color:var(--text-muted)">Results declared</div>
+                <span style="font-size:11px;color:var(--text-muted)">15 May 2025</span>
+              </div>
+              <div class="sem-prog-row">
+                <div style="width:8px;height:8px;border-radius:50%;background:var(--border-medium);flex-shrink:0"></div>
+                <div style="flex:1;font-size:12px;color:var(--text-muted)">Session ends</div>
+                <span style="font-size:11px;color:var(--text-muted)">30 Jun 2025</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upcoming events -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Upcoming events</div>
+              <button class="btn btn-primary btn-sm">+ Add</button>
+            </div>
+            <div>
+              <div class="event-row">
+                <div class="event-type-dot" style="background:var(--color-info-text)"></div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Sports Day</div>
+                  <div style="font-size:11px;color:var(--text-muted)">All colleges · Province-wide</div>
+                </div>
+                <span class="badge badge-info" style="font-size:10px">16 Jan</span>
+              </div>
+              <div class="event-row">
+                <div class="event-type-dot" style="background:var(--color-danger-text)"></div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Kashmir Solidarity Day</div>
+                  <div style="font-size:11px;color:var(--text-muted)">Public holiday — colleges closed</div>
+                </div>
+                <span class="badge badge-danger" style="font-size:10px">23 Jan</span>
+              </div>
+              <div class="event-row">
+                <div class="event-type-dot" style="background:var(--color-info-text)"></div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Annual day ceremony</div>
+                  <div style="font-size:11px;color:var(--text-muted)">Award distribution · All colleges</div>
+                </div>
+                <span class="badge badge-info" style="font-size:10px">29 Jan</span>
+              </div>
+              <div class="event-row">
+                <div class="event-type-dot" style="background:var(--color-success-text)"></div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Fee submission deadline</div>
+                  <div style="font-size:11px;color:var(--text-muted)">Semester 6 challan due</div>
+                </div>
+                <span class="badge badge-success" style="font-size:10px">31 Jan</span>
+              </div>
+              <div class="event-row">
+                <div class="event-type-dot" style="background:var(--color-warning-text)"></div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Annual exams — begin</div>
+                  <div style="font-size:11px;color:var(--text-muted)">FA/FSc BISE examinations</div>
+                </div>
+                <span class="badge badge-warning" style="font-size:10px">1 Apr</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

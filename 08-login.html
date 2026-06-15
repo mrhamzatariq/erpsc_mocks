@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  body { background:var(--brand-900); display:flex; align-items:center; justify-content:center; min-height:100vh; }
+  .login-shell { width:100%; max-width:960px; display:grid; grid-template-columns:1fr 1fr; min-height:580px; border-radius:var(--radius-xl); overflow:hidden; box-shadow:var(--shadow-lg); }
+  .login-left  { background:linear-gradient(160deg, var(--brand-700) 0%, var(--brand-900) 100%); padding:40px; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden; }
+  .login-right { background:var(--bg-surface); padding:40px; display:flex; flex-direction:column; justify-content:center; }
+  .brand-mark  { display:flex; align-items:center; gap:12px; margin-bottom:40px; }
+  .brand-icon  { width:40px; height:40px; background:rgba(255,255,255,.15); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; color:#fff; }
+  .brand-name  { font-size:20px; font-weight:700; color:#fff; }
+  .brand-sub   { font-size:12px; color:rgba(255,255,255,.5); }
+  .hero-headline { font-size:28px; font-weight:700; color:#fff; line-height:1.3; margin-bottom:12px; }
+  .hero-sub      { font-size:14px; color:rgba(255,255,255,.6); line-height:1.6; }
+  .role-card { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:var(--radius-md); border:1.5px solid transparent; cursor:pointer; transition:all .15s; margin-bottom:8px; }
+  .role-card:hover { border-color:var(--border-medium); background:var(--bg-secondary); }
+  .role-card.active { border-color:var(--brand-500); background:var(--brand-50); }
+  .role-icon { width:38px; height:38px; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .role-name { font-size:13px; font-weight:600; }
+  .role-desc { font-size:11px; color:var(--text-muted); margin-top:1px; }
+  .mfa-card { background:var(--color-info-bg); border:1px solid var(--color-info-border); border-radius:var(--radius-md); padding:10px 13px; margin-bottom:16px; font-size:12px; color:var(--color-info-text); display:flex; align-items:flex-start; gap:8px; }
+  .step-dot-row { display:flex; gap:6px; }
+  .step-dot-btn { width:8px; height:8px; border-radius:50%; border:none; cursor:pointer; transition:all .2s; }
+  .step-dot-btn.active { background:#fff; width:20px; border-radius:4px; }
+  .step-dot-btn.inactive { background:rgba(255,255,255,.3); }
+  .stat-pill { background:rgba(255,255,255,.1); border-radius:var(--radius-full); padding:6px 14px; font-size:12px; color:rgba(255,255,255,.8); display:inline-block; margin-right:6px; margin-bottom:6px; }
+  .divider-label { display:flex; align-items:center; gap:10px; margin:14px 0; font-size:12px; color:var(--text-muted); }
+  .divider-label::before, .divider-label::after { content:''; flex:1; height:1px; background:var(--border-light); }
+</style>
+</head>
+<body>
+
+<div class="login-shell">
+
+  <!-- LEFT PANEL -->
+  <div class="login-left">
+    <div>
+      <div class="brand-mark">
+        <div class="brand-icon">E</div>
+        <div>
+          <div class="brand-name">EduGov ERP</div>
+          <div class="brand-sub">Punjab Higher Education Department</div>
+        </div>
+      </div>
+
+      <div class="hero-headline">Province-wide higher education, unified.</div>
+      <div class="hero-sub" style="margin-bottom:32px">One platform for all 1,247 government colleges across Punjab. Manage academics, admissions, faculty, finance, and more.</div>
+
+      <div>
+        <div class="stat-pill">1,247 Colleges</div>
+        <div class="stat-pill">8.4M Students</div>
+        <div class="stat-pill">52K+ Faculty</div>
+      </div>
+    </div>
+
+    <!-- Bottom decorative -->
+    <div>
+      <div style="font-size:11px;color:rgba(255,255,255,.35);margin-bottom:8px">SECURED BY</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.6)">Punjab Gov SSO · 256-bit TLS · ISO 27001 compliant</div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="login-right">
+
+    <div style="margin-bottom:24px">
+      <h2 style="margin-bottom:4px">Sign in to EduGov</h2>
+      <p style="font-size:13px;color:var(--text-muted)">Select your role and enter your credentials</p>
+    </div>
+
+    <!-- Role selector -->
+    <div style="margin-bottom:20px">
+      <div class="text-sm text-muted mb-2" style="font-weight:500;text-transform:uppercase;letter-spacing:.05em;font-size:10px">Your role</div>
+
+      <div class="role-card active" onclick="selectRole(this,'hed')">
+        <div class="role-icon" style="background:var(--brand-50)">🏛️</div>
+        <div>
+          <div class="role-name" style="color:var(--brand-700)">HED / DPI / Directorate</div>
+          <div class="role-desc">Provincial administration access</div>
+        </div>
+        <span class="badge badge-brand" style="margin-left:auto">Selected</span>
+      </div>
+
+      <div class="role-card" onclick="selectRole(this,'college')">
+        <div class="role-icon" style="background:var(--color-success-bg)">🏫</div>
+        <div>
+          <div class="role-name">College staff</div>
+          <div class="role-desc">Principal, admin, operators</div>
+        </div>
+      </div>
+
+      <div class="role-card" onclick="selectRole(this,'faculty')">
+        <div class="role-icon" style="background:var(--color-warning-bg)">👨‍🏫</div>
+        <div>
+          <div class="role-name">Faculty member</div>
+          <div class="role-desc">Teaching staff portal</div>
+        </div>
+      </div>
+
+      <div class="role-card" onclick="selectRole(this,'student')">
+        <div class="role-icon" style="background:var(--bg-tertiary)">🎓</div>
+        <div>
+          <div class="role-name">Student / Parent</div>
+          <div class="role-desc">Self-service portal</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login form -->
+    <div class="form-group mb-3">
+      <label class="form-label">Official email address</label>
+      <input class="form-input" type="email" placeholder="name@hed.punjab.gov.pk" value="raza.khan@dpi.punjab.gov.pk"/>
+    </div>
+
+    <div class="form-group mb-3">
+      <label class="form-label" style="display:flex;justify-content:space-between">
+        Password
+        <a href="#" style="font-size:11px;color:var(--brand-600);font-weight:500;text-decoration:none">Forgot password?</a>
+      </label>
+      <input class="form-input" type="password" value="••••••••••••"/>
+    </div>
+
+    <!-- MFA note -->
+    <div class="mfa-card">
+      <span>🔐</span>
+      <div>An OTP will be sent to your registered mobile number ending in <strong>–3421</strong> to verify your identity.</div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;font-size:14px;padding:10px;margin-bottom:12px">Sign in securely →</button>
+
+    <div class="divider-label">or</div>
+
+    <button class="btn btn-secondary" style="width:100%;font-size:13px;margin-bottom:16px">🔑 Sign in with Punjab Gov SSO</button>
+
+    <p style="font-size:11px;color:var(--text-muted);text-align:center">Protected by 256-bit TLS encryption · Sessions expire after 8 hours of inactivity</p>
+
+  </div>
+</div>
+
+<script>
+function selectRole(el, role) {
+  document.querySelectorAll('.role-card').forEach(c => {
+    c.classList.remove('active');
+    c.querySelector('.role-name').style.color = '';
+    const badge = c.querySelector('.badge');
+    if (badge) badge.remove();
+  });
+  el.classList.add('active');
+  const badge = document.createElement('span');
+  badge.className = 'badge badge-brand';
+  badge.style.marginLeft = 'auto';
+  badge.textContent = 'Selected';
+  el.appendChild(badge);
+
+  const placeholders = {
+    hed:     'name@hed.punjab.gov.pk',
+    college: 'principal@gcc.edu.pk',
+    faculty: 'faculty@gcc.edu.pk',
+    student: 'Roll number or CNIC'
+  };
+  document.querySelector('input[type="email"]').placeholder = placeholders[role] || '';
+}
+</script>
+</body>
+</html>

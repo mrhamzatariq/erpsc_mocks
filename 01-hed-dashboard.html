@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HED Dashboard — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .chart-bar-group { display: flex; align-items: flex-end; gap: 4px; height: 80px; }
+  .chart-bar { border-radius: 4px 4px 0 0; transition: opacity .2s; flex: 1; }
+  .chart-bar:hover { opacity: .8; }
+  .rank-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border-light); font-size: 13px; }
+  .rank-row:last-child { border-bottom: none; }
+  .rank-num { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: var(--text-muted); flex-shrink: 0; }
+  .rank-num.top { background: var(--brand-50); color: var(--brand-600); }
+  .approval-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-light); font-size: 13px; }
+  .approval-row:last-child { border-bottom: none; }
+  .map-placeholder { background: var(--bg-secondary); border-radius: var(--radius-md); height: 160px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 12px; border: 1px dashed var(--border-medium); }
+  .activity-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border-light); font-size: 12px; }
+  .activity-item:last-child { border-bottom: none; }
+  .activity-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">HED Super Admin</div>
+      <div class="role-sub">Provincial Administration</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item active" href="#">
+        <span class="nav-icon">⊞</span><span>Dashboard</span>
+      </a>
+
+      <div class="sidebar-section-label">Academics</div>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">🏫</span><span>Institutions</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">📚</span><span>Academic Structure</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">🎓</span><span>Admissions</span>
+        <span class="nav-badge">47</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">👥</span><span>Students</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">👨‍🏫</span><span>Faculty</span>
+        <span class="nav-badge warn">89</span>
+      </a>
+
+      <div class="sidebar-section-label">Operations</div>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">📝</span><span>Examinations</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">💳</span><span>Finance</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">🏗</span><span>Facilities</span>
+      </a>
+
+      <div class="sidebar-section-label">System</div>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">📊</span><span>Reports & Analytics</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">🔐</span><span>User Management</span>
+      </a>
+      <a class="nav-item" href="#">
+        <span class="nav-icon">🕵️</span><span>Audit Log</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">SA</div>
+        <div class="user-info" style="min-width:0">
+          <div style="font-size:12px;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Super Admin</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">admin@hed.punjab.gov.pk</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN AREA ===== -->
+  <div class="main-area">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>EduGov</span><span>›</span>
+        <span class="crumb-active">Province Overview</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span style="font-size:14px">🔍</span>
+        <span>Search colleges, students, faculty…</span>
+        <span style="margin-left:auto;font-size:11px;background:var(--bg-tertiary);padding:1px 6px;border-radius:4px;color:var(--text-muted)">⌘K</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" title="Tasks">📋</button>
+        <button class="icon-btn" title="Notifications" style="position:relative">
+          🔔<span class="notif-dot"></span>
+        </button>
+        <button class="icon-btn" title="Messages">✉️</button>
+        <div class="avatar sm" title="Profile">SA</div>
+      </div>
+    </header>
+
+    <!-- Page Body -->
+    <main class="page-body">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Province Overview</h1>
+          <p>Punjab Higher Education Department · Academic Year 2024–25 · Updated 2 min ago</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">📅 AY 2024–25 ▾</button>
+          <button class="btn btn-secondary">⬇ Export report</button>
+          <button class="btn btn-primary">📊 Executive summary</button>
+        </div>
+      </div>
+
+      <!-- KPI Row -->
+      <div class="grid grid-5 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Total colleges</div>
+          <div class="metric-value">1,247</div>
+          <div class="metric-delta delta-up">▲ 12 new this year</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Total students</div>
+          <div class="metric-value">8.4M</div>
+          <div class="metric-delta delta-up">▲ 6.2% YoY</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Total faculty</div>
+          <div class="metric-value">52,180</div>
+          <div class="metric-delta delta-up">▲ 1,240 appointed</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Admissions filled</div>
+          <div class="metric-value">71%</div>
+          <div class="metric-delta delta-neutral">3,18,450 of 4,49,000</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Pending approvals</div>
+          <div class="metric-value" style="color:var(--color-warning-text)">234</div>
+          <div class="metric-delta" style="color:var(--color-danger-text)">▼ Needs attention</div>
+        </div>
+      </div>
+
+      <!-- Row 2: Chart + Compliance + District Map -->
+      <div class="grid" style="grid-template-columns:2fr 1fr 1fr;gap:16px;margin-bottom:16px">
+
+        <!-- Enrollment trend -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Enrollment trend</div>
+              <div class="card-subtitle">New enrollments vs continuations — last 6 months</div>
+            </div>
+            <select class="form-select" style="width:auto;font-size:12px;padding:4px 8px">
+              <option>All programs</option>
+              <option>FA / FSc</option>
+              <option>BS</option>
+              <option>Masters</option>
+            </select>
+          </div>
+          <!-- Bar chart mock -->
+          <div style="display:flex;gap:8px;align-items:flex-end;height:100px;padding-bottom:4px">
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px">
+              <div style="display:flex;gap:2px;align-items:flex-end;height:80px;width:100%">
+                <div class="chart-bar" style="background:var(--brand-400,#7F77DD);height:55%"></div>
+                <div class="chart-bar" style="background:var(--color-info-border,#378ADD);height:40%;opacity:.5"></div>
+              </div>
+              <div style="font-size:10px;color:var(--text-muted)">Mar</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px">
+              <div style="display:flex;gap:2px;align-items:flex-end;height:80px;width:100%">
+                <div class="chart-bar" style="background:var(--brand-400,#7F77DD);height:62%"></div>
+                <div class="chart-bar" style="background:var(--color-info-border,#378ADD);height:48%;opacity:.5"></div>
+              </div>
+              <div style="font-size:10px;color:var(--text-muted)">Apr</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px">
+              <div style="display:flex;gap:2px;align-items:flex-end;height:80px;width:100%">
+                <div class="chart-bar" style="background:var(--brand-400,#7F77DD);height:70%"></div>
+                <div class="chart-bar" style="background:var(--color-info-border,#378ADD);height:52%;opacity:.5"></div>
+              </div>
+              <div style="font-size:10px;color:var(--text-muted)">May</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px">
+              <div style="display:flex;gap:2px;align-items:flex-end;height:80px;width:100%">
+                <div class="chart-bar" style="background:var(--brand-400,#7F77DD);height:82%"></div>
+                <div class="chart-bar" style="background:var(--color-info-border,#378ADD);height:60%;opacity:.5"></div>
+              </div>
+              <div style="font-size:10px;color:var(--text-muted)">Jun</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px">
+              <div style="display:flex;gap:2px;align-items:flex-end;height:80px;width:100%">
+                <div class="chart-bar" style="background:var(--brand-400,#7F77DD);height:91%"></div>
+                <div class="chart-bar" style="background:var(--color-info-border,#378ADD);height:68%;opacity:.5"></div>
+              </div>
+              <div style="font-size:10px;color:var(--text-muted)">Jul</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1;gap:3px">
+              <div style="display:flex;gap:2px;align-items:flex-end;height:80px;width:100%">
+                <div class="chart-bar" style="background:var(--brand-400,#7F77DD);height:100%"></div>
+                <div class="chart-bar" style="background:var(--color-info-border,#378ADD);height:75%;opacity:.5"></div>
+              </div>
+              <div style="font-size:10px;color:var(--text-muted)">Aug</div>
+            </div>
+          </div>
+          <div class="flex gap-4 mt-2">
+            <span style="font-size:11px;display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#7F77DD"></span>New enrollments</span>
+            <span style="font-size:11px;display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#378ADD;opacity:.6"></span>Continuations</span>
+          </div>
+        </div>
+
+        <!-- Compliance indicators -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Compliance status</div>
+              <div class="card-subtitle">Province-wide</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div>
+              <div class="flex-between mb-1"><span style="font-size:12px">Accreditation complete</span><span style="font-size:12px;font-weight:600;color:var(--color-success-text)">87%</span></div>
+              <div class="progress-bar"><div class="progress-fill success" style="width:87%"></div></div>
+            </div>
+            <div>
+              <div class="flex-between mb-1"><span style="font-size:12px">Fee submission</span><span style="font-size:12px;font-weight:600;color:var(--color-success-text)">92%</span></div>
+              <div class="progress-bar"><div class="progress-fill success" style="width:92%"></div></div>
+            </div>
+            <div>
+              <div class="flex-between mb-1"><span style="font-size:12px">Faculty data updated</span><span style="font-size:12px;font-weight:600;color:var(--color-warning-text)">64%</span></div>
+              <div class="progress-bar"><div class="progress-fill warning" style="width:64%"></div></div>
+            </div>
+            <div>
+              <div class="flex-between mb-1"><span style="font-size:12px">Result submission</span><span style="font-size:12px;font-weight:600;color:var(--color-danger-text)">38%</span></div>
+              <div class="progress-bar"><div class="progress-fill danger" style="width:38%"></div></div>
+            </div>
+            <div>
+              <div class="flex-between mb-1"><span style="font-size:12px">Timetable uploaded</span><span style="font-size:12px;font-weight:600;color:var(--color-warning-text)">71%</span></div>
+              <div class="progress-bar"><div class="progress-fill warning" style="width:71%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pending approvals -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Pending approvals</div>
+              <div class="card-subtitle">Requires HED action</div>
+            </div>
+            <span class="badge badge-warning">234 total</span>
+          </div>
+          <div>
+            <div class="approval-row">
+              <span>Faculty appointments</span>
+              <span class="badge badge-danger">89</span>
+            </div>
+            <div class="approval-row">
+              <span>Program requests</span>
+              <span class="badge badge-warning">47</span>
+            </div>
+            <div class="approval-row">
+              <span>Infrastructure grants</span>
+              <span class="badge badge-info">44</span>
+            </div>
+            <div class="approval-row">
+              <span>Fee waivers</span>
+              <span class="badge badge-info">31</span>
+            </div>
+            <div class="approval-row">
+              <span>College upgrades</span>
+              <span class="badge badge-warning">23</span>
+            </div>
+          </div>
+          <button class="btn btn-secondary" style="width:100%;margin-top:14px;font-size:12px">Review all approvals →</button>
+        </div>
+      </div>
+
+      <!-- Row 3: Rankings + Revenue + Activity -->
+      <div class="grid grid-3" style="gap:16px">
+
+        <!-- College performance ranking -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">College performance ranking</div>
+              <div class="card-subtitle">Composite score — AY 2024–25</div>
+            </div>
+            <button class="btn btn-ghost btn-sm">View all</button>
+          </div>
+          <div>
+            <div class="rank-row">
+              <div class="rank-num top">1</div>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:500">GC Lahore</div>
+                <div style="font-size:11px;color:var(--text-muted)">Lahore Division</div>
+              </div>
+              <span class="badge badge-success">98.2%</span>
+            </div>
+            <div class="rank-row">
+              <div class="rank-num top">2</div>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:500">GC Faisalabad</div>
+                <div style="font-size:11px;color:var(--text-muted)">Central Punjab</div>
+              </div>
+              <span class="badge badge-success">96.7%</span>
+            </div>
+            <div class="rank-row">
+              <div class="rank-num top">3</div>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:500">GC Multan</div>
+                <div style="font-size:11px;color:var(--text-muted)">Southern Punjab</div>
+              </div>
+              <span class="badge badge-success">94.1%</span>
+            </div>
+            <div class="rank-row">
+              <div class="rank-num">4</div>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:500">GC Rawalpindi</div>
+                <div style="font-size:11px;color:var(--text-muted)">Northern Punjab</div>
+              </div>
+              <span class="badge badge-info">93.5%</span>
+            </div>
+            <div class="rank-row">
+              <div class="rank-num">5</div>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:500">GC Bahawalpur</div>
+                <div style="font-size:11px;color:var(--text-muted)">Southern Punjab</div>
+              </div>
+              <span class="badge badge-info">91.8%</span>
+            </div>
+            <div class="rank-row">
+              <div class="rank-num">6</div>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:500">GC Gujranwala</div>
+                <div style="font-size:11px;color:var(--text-muted)">Gujranwala Division</div>
+              </div>
+              <span class="badge badge-info">89.3%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revenue snapshot -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Revenue snapshot</div>
+              <div class="card-subtitle">Financial Year 2024–25</div>
+            </div>
+            <button class="btn btn-ghost btn-sm">Details</button>
+          </div>
+          <!-- Donut placeholder + stats -->
+          <div style="display:flex;justify-content:center;margin-bottom:16px">
+            <div style="position:relative;width:100px;height:100px">
+              <svg viewBox="0 0 36 36" style="transform:rotate(-90deg);width:100px;height:100px">
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--bg-tertiary)" stroke-width="3.5"/>
+                <circle cx="18" cy="18" r="15.9" fill="none" stroke="#3B6D11" stroke-width="3.5"
+                  stroke-dasharray="87 13" stroke-linecap="round"/>
+              </svg>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <div style="font-size:18px;font-weight:700;color:var(--color-success-text)">87%</div>
+                <div style="font-size:9px;color:var(--text-muted)">collected</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="flex-between" style="font-size:13px">
+              <span style="color:var(--text-muted)">Total collected</span>
+              <span style="font-weight:600">₨ 42.3 Cr</span>
+            </div>
+            <div class="flex-between" style="font-size:13px">
+              <span style="color:var(--text-muted)">Outstanding dues</span>
+              <span style="font-weight:600;color:var(--color-danger-text)">₨ 6.1 Cr</span>
+            </div>
+            <div class="flex-between" style="font-size:13px">
+              <span style="color:var(--text-muted)">Waivers granted</span>
+              <span style="font-weight:600;color:var(--color-warning-text)">₨ 1.8 Cr</span>
+            </div>
+            <div class="flex-between" style="font-size:13px">
+              <span style="color:var(--text-muted)">Total target</span>
+              <span style="font-weight:600">₨ 50.2 Cr</span>
+            </div>
+          </div>
+          <button class="btn btn-secondary" style="width:100%;margin-top:14px;font-size:12px">Financial analytics →</button>
+        </div>
+
+        <!-- Activity feed -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Recent activity</div>
+              <div class="card-subtitle">Province-wide system events</div>
+            </div>
+          </div>
+          <div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--color-success-text)"></div>
+              <div>
+                <div style="font-weight:500">GC Sargodha — Merit list approved</div>
+                <div style="color:var(--text-muted)">FA 2024-25 · 420 students confirmed</div>
+                <div style="color:var(--text-muted);font-size:10px">2 min ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--color-warning-text)"></div>
+              <div>
+                <div style="font-weight:500">DPI Centre — 12 new faculty requests</div>
+                <div style="color:var(--text-muted)">Forwarded to HED for approval</div>
+                <div style="color:var(--text-muted);font-size:10px">14 min ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--color-info-text)"></div>
+              <div>
+                <div style="font-weight:500">GC Multan — New program request</div>
+                <div style="color:var(--text-muted)">B.Sc Computer Science submitted</div>
+                <div style="color:var(--text-muted);font-size:10px">1 hr ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--color-danger-text)"></div>
+              <div>
+                <div style="font-weight:500">GC Jhang — Fee deadline missed</div>
+                <div style="color:var(--text-muted)">342 students unpaid — escalated</div>
+                <div style="color:var(--text-muted);font-size:10px">3 hrs ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot" style="background:var(--color-success-text)"></div>
+              <div>
+                <div style="font-weight:500">GC Lahore — Semester results posted</div>
+                <div style="color:var(--text-muted)">2,840 students · Pass rate 94%</div>
+                <div style="color:var(--text-muted);font-size:10px">5 hrs ago</div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:8px">View all activity →</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

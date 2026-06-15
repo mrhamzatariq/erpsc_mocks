@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Library Management — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border-light);margin-bottom:var(--space-5)}
+  .tab-item{padding:10px 18px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+  .tab-item.active{color:var(--brand-600);border-bottom-color:var(--brand-600)}
+  .book-card{border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:14px;display:flex;gap:12px;transition:all .15s;cursor:pointer}
+  .book-card:hover{border-color:var(--brand-300);box-shadow:var(--shadow-sm)}
+  .book-spine{width:48px;height:68px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+  .borrow-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border-light);font-size:13px}
+  .borrow-row:last-child{border-bottom:none}
+  .overdue-badge{background:var(--color-danger-bg);color:var(--color-danger-text);border:1px solid var(--color-danger-border);border-radius:var(--radius-full);padding:2px 8px;font-size:11px;font-weight:600}
+  .due-badge{background:var(--color-warning-bg);color:var(--color-warning-text);border:1px solid var(--color-warning-border);border-radius:var(--radius-full);padding:2px 8px;font-size:11px;font-weight:600}
+  .ok-badge{background:var(--color-success-bg);color:var(--color-success-text);border:1px solid var(--color-success-border);border-radius:var(--radius-full);padding:2px 8px;font-size:11px;font-weight:600}
+  .stat-tile{background:var(--bg-secondary);border-radius:var(--radius-md);padding:14px;text-align:center}
+  .stat-tile .val{font-size:24px;font-weight:700;line-height:1.1}
+  .stat-tile .lbl{font-size:11px;color:var(--text-muted);margin-top:3px}
+  .search-bar-lg{display:flex;align-items:center;gap:10px;background:var(--bg-surface);border:1.5px solid var(--border-medium);border-radius:var(--radius-lg);padding:10px 16px;margin-bottom:16px;font-size:14px;color:var(--text-muted)}
+  .search-bar-lg input{flex:1;border:none;background:none;outline:none;font-size:14px;color:var(--text-primary)}
+  .category-chip{padding:5px 12px;border-radius:var(--radius-full);font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border-medium);background:var(--bg-surface);color:var(--text-muted);transition:all .15s}
+  .category-chip.active{background:var(--brand-50);color:var(--brand-600);border-color:var(--brand-300)}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">Library Staff</div>
+      <div class="role-sub">GC Lahore</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="02-principal-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+      <div class="sidebar-section-label">Library</div>
+      <a class="nav-item active" href="#"><span class="nav-icon">📚</span><span>Library Management</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🔍</span><span>Book Catalogue</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📋</span><span>Borrowing Records</span><span class="nav-badge warn">14</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">⚠️</span><span>Overdue Books</span><span class="nav-badge">6</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📦</span><span>Inventory</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📊</span><span>Reports</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">LB</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Librarian</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">GC Lahore Library</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Library</span><span>›</span>
+        <span class="crumb-active">Library Management</span>
+      </div>
+      <div class="topbar-actions" style="margin-left:auto">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">LB</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Library Management</h1>
+          <p>GC Lahore Library · 42,000 books · 200 seats · Est. 1864</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">+ Issue book</button>
+          <button class="btn btn-secondary">📦 Add inventory</button>
+          <button class="btn btn-primary">+ Add new book</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="grid" style="grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px">
+        <div class="stat-tile">
+          <div class="val">42,000</div>
+          <div class="lbl">Total books</div>
+        </div>
+        <div class="stat-tile">
+          <div class="val" style="color:var(--color-success-text)">38,240</div>
+          <div class="lbl">Available</div>
+        </div>
+        <div class="stat-tile">
+          <div class="val" style="color:var(--color-info-text)">3,760</div>
+          <div class="lbl">Issued</div>
+        </div>
+        <div class="stat-tile">
+          <div class="val" style="color:var(--color-danger-text)">6</div>
+          <div class="lbl">Overdue</div>
+        </div>
+        <div class="stat-tile">
+          <div class="val" style="color:var(--color-warning-text)">14</div>
+          <div class="lbl">Due this week</div>
+        </div>
+        <div class="stat-tile">
+          <div class="val">128</div>
+          <div class="lbl">Visitors today</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active">Book catalogue</div>
+        <div class="tab-item">Active borrowings</div>
+        <div class="tab-item">Overdue list</div>
+        <div class="tab-item">Issue / return</div>
+        <div class="tab-item">Inventory</div>
+        <div class="tab-item">Reports</div>
+      </div>
+
+      <!-- Catalogue search + filter -->
+      <div class="search-bar-lg">
+        <span style="font-size:18px">🔍</span>
+        <input type="text" placeholder="Search by title, author, ISBN, subject…"/>
+        <button class="btn btn-primary btn-sm">Search</button>
+      </div>
+
+      <!-- Category chips -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <span class="category-chip active">All</span>
+        <span class="category-chip">Computer Science</span>
+        <span class="category-chip">Mathematics</span>
+        <span class="category-chip">Physics</span>
+        <span class="category-chip">Chemistry</span>
+        <span class="category-chip">Literature</span>
+        <span class="category-chip">History</span>
+        <span class="category-chip">Islamic Studies</span>
+        <span class="category-chip">Economics</span>
+        <span class="category-chip">Reference</span>
+      </div>
+
+      <!-- Main content grid -->
+      <div class="grid" style="grid-template-columns:1.5fr 1fr;gap:16px">
+
+        <!-- Book catalogue grid -->
+        <div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+
+            <div class="book-card">
+              <div class="book-spine" style="background:var(--color-info-bg)">📘</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:600;font-size:13px;margin-bottom:2px">Introduction to Algorithms</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">Cormen, Leiserson, Rivest · 4th Ed. · MIT Press</div>
+                <div style="font-size:11px;font-family:monospace;color:var(--text-muted);margin-bottom:6px">ISBN: 978-0-262-04630-5</div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span class="badge badge-success" style="font-size:10px">12 available</span>
+                  <span style="font-size:10px;color:var(--text-muted)">Shelf: CS-A-04</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="book-card">
+              <div class="book-spine" style="background:var(--color-success-bg)">📗</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:600;font-size:13px;margin-bottom:2px">Data Structures & Algorithms</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">Goodrich & Tamassia · 6th Ed. · Wiley</div>
+                <div style="font-size:11px;font-family:monospace;color:var(--text-muted);margin-bottom:6px">ISBN: 978-1-118-80958-1</div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span class="badge badge-warning" style="font-size:10px">2 available</span>
+                  <span style="font-size:10px;color:var(--text-muted)">Shelf: CS-A-06</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="book-card">
+              <div class="book-spine" style="background:var(--color-warning-bg)">📙</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:600;font-size:13px;margin-bottom:2px">Calculus: Early Transcendentals</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">James Stewart · 8th Ed. · Cengage</div>
+                <div style="font-size:11px;font-family:monospace;color:var(--text-muted);margin-bottom:6px">ISBN: 978-1-285-74155-0</div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span class="badge badge-success" style="font-size:10px">18 available</span>
+                  <span style="font-size:10px;color:var(--text-muted)">Shelf: M-B-12</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="book-card">
+              <div class="book-spine" style="background:var(--color-danger-bg)">📕</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:600;font-size:13px;margin-bottom:2px">University Physics</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">Young & Freedman · 15th Ed. · Pearson</div>
+                <div style="font-size:11px;font-family:monospace;color:var(--text-muted);margin-bottom:6px">ISBN: 978-0-13-553765-0</div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span class="badge badge-danger" style="font-size:10px">0 available</span>
+                  <span style="font-size:10px;color:var(--text-muted)">Shelf: PH-C-03</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="book-card">
+              <div class="book-spine" style="background:var(--brand-50)">📔</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:600;font-size:13px;margin-bottom:2px">Organic Chemistry</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">Paula Bruice · 8th Ed. · Pearson</div>
+                <div style="font-size:11px;font-family:monospace;color:var(--text-muted);margin-bottom:6px">ISBN: 978-0-13-404228-2</div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span class="badge badge-success" style="font-size:10px">7 available</span>
+                  <span style="font-size:10px;color:var(--text-muted)">Shelf: CH-D-08</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="book-card">
+              <div class="book-spine" style="background:var(--bg-secondary)">📒</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:600;font-size:13px;margin-bottom:2px">Pakistan Studies</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">Ikram Rabbani · 2023 Ed. · Caravan</div>
+                <div style="font-size:11px;font-family:monospace;color:var(--text-muted);margin-bottom:6px">ISBN: 978-969-550-512-1</div>
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span class="badge badge-success" style="font-size:10px">34 available</span>
+                  <span style="font-size:10px;color:var(--text-muted)">Shelf: SS-E-02</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pagination" style="background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-md)">
+            <span class="text-muted text-sm">Showing 1–6 of 42,000 books</span>
+            <div style="display:flex;gap:6px;margin-left:auto">
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">→</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: active borrowings + overdue -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+
+          <!-- Issue/Return quick form -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Quick issue / return</div></div>
+            <div class="form-group mb-3">
+              <label class="form-label">Student / Faculty roll / ID</label>
+              <input class="form-input" type="text" placeholder="Scan card or enter ID…"/>
+            </div>
+            <div class="form-group mb-3">
+              <label class="form-label">Book ISBN or accession no.</label>
+              <input class="form-input" type="text" placeholder="Scan barcode or enter ISBN…"/>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <button class="btn btn-success" style="justify-content:center">📖 Issue book</button>
+              <button class="btn btn-secondary" style="justify-content:center">↩ Return book</button>
+            </div>
+          </div>
+
+          <!-- Active borrowings -->
+          <div class="card">
+            <div class="card-header">
+              <div><div class="card-title">Active borrowings</div><div class="card-subtitle">Currently issued</div></div>
+              <span class="badge badge-info">3,760</span>
+            </div>
+            <div>
+              <div class="borrow-row">
+                <div class="avatar sm" style="background:var(--color-danger-text);color:#fff;font-size:10px">ZA</div>
+                <div style="flex:1">
+                  <div style="font-weight:500;font-size:13px">Zara Ahmed <span style="font-weight:400;color:var(--text-muted);font-size:11px">2024-CS-1142</span></div>
+                  <div style="font-size:11px;color:var(--text-muted)">Introduction to Algorithms — due 10 Jan</div>
+                </div>
+                <span class="overdue-badge">5 days late</span>
+              </div>
+              <div class="borrow-row">
+                <div class="avatar sm" style="background:var(--color-warning-text);color:#fff;font-size:10px">HA</div>
+                <div style="flex:1">
+                  <div style="font-weight:500;font-size:13px">Hassan Ali <span style="font-weight:400;color:var(--text-muted);font-size:11px">2024-CS-1089</span></div>
+                  <div style="font-size:11px;color:var(--text-muted)">Data Structures & Algorithms — due 18 Jan</div>
+                </div>
+                <span class="due-badge">Due in 3 days</span>
+              </div>
+              <div class="borrow-row">
+                <div class="avatar sm" style="background:var(--color-success-text);color:#fff;font-size:10px">AT</div>
+                <div style="flex:1">
+                  <div style="font-weight:500;font-size:13px">Amna Tariq <span style="font-weight:400;color:var(--text-muted);font-size:11px">2024-CS-1204</span></div>
+                  <div style="font-size:11px;color:var(--text-muted)">University Physics — due 25 Jan</div>
+                </div>
+                <span class="ok-badge">10 days left</span>
+              </div>
+              <div class="borrow-row">
+                <div class="avatar sm" style="background:var(--color-danger-text);color:#fff;font-size:10px">SN</div>
+                <div style="flex:1">
+                  <div style="font-weight:500;font-size:13px">Sara Noor <span style="font-weight:400;color:var(--text-muted);font-size:11px">2022-CS-0112</span></div>
+                  <div style="font-size:11px;color:var(--text-muted)">Organic Chemistry — due 5 Jan</div>
+                </div>
+                <span class="overdue-badge">10 days late</span>
+              </div>
+            </div>
+            <button class="btn btn-secondary" style="width:100%;margin-top:12px;font-size:12px">View all 3,760 borrowings →</button>
+          </div>
+
+          <!-- Overdue summary -->
+          <div class="card" style="border-color:var(--color-danger-border);background:var(--color-danger-bg)">
+            <div class="card-header">
+              <div class="card-title" style="color:var(--color-danger-text)">⚠ Overdue books</div>
+              <span class="badge badge-danger">6 books</span>
+            </div>
+            <div style="font-size:13px;color:var(--color-danger-text);margin-bottom:8px">Fine rate: ₨ 5 per day per book</div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+              <span style="color:var(--text-secondary)">Total fines accumulated</span>
+              <span style="font-weight:700;color:var(--color-danger-text)">₨ 1,240</span>
+            </div>
+            <button class="btn btn-danger btn-sm" style="width:100%;margin-top:8px;justify-content:center">Send overdue notices →</button>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

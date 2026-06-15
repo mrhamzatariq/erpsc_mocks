@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admissions Grid — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">Admission Operator</div>
+      <div class="role-sub">GC Lahore</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="#"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">Admissions</div>
+      <a class="nav-item active" href="#"><span class="nav-icon">🎓</span><span>Applications</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📋</span><span>Merit Processing</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">💺</span><span>Seat Allocation</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">✅</span><span>Enrollment</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🔍</span><span>Verification</span><span class="nav-badge warn">14</span></a>
+
+      <div class="sidebar-section-label">Students</div>
+      <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>Student List</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📝</span><span>Registration</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">AO</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Admission Officer</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">GC Lahore</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Admissions</span><span>›</span>
+        <span class="crumb-active">Applications</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search applications…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">AO</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Admission Applications</h1>
+          <p>FA / F.Sc Program · Session 2024–25 · GC Lahore</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">⬇ Export</button>
+          <button class="btn btn-secondary">📊 Analytics</button>
+          <button class="btn btn-primary">+ New application</button>
+        </div>
+      </div>
+
+      <!-- Summary cards -->
+      <div class="grid grid-4 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Total applications</div>
+          <div class="metric-value">1,247</div>
+          <div class="metric-delta delta-neutral">This session</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Pending review</div>
+          <div class="metric-value" style="color:var(--color-warning-text)">312</div>
+          <div class="metric-delta" style="color:var(--color-warning-text)">Needs action</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Approved</div>
+          <div class="metric-value" style="color:var(--color-success-text)">841</div>
+          <div class="metric-delta delta-up">▲ 67.4%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Rejected</div>
+          <div class="metric-value" style="color:var(--color-danger-text)">94</div>
+          <div class="metric-delta delta-neutral">7.5% rejection rate</div>
+        </div>
+      </div>
+
+      <!-- Data grid card -->
+      <div class="card" style="padding:0;overflow:hidden">
+
+        <!-- Toolbar -->
+        <div class="grid-toolbar">
+          <div class="toolbar-search">
+            <span>🔍</span>
+            <input type="text" placeholder="Search by name, form no., CNIC…" value=""/>
+          </div>
+          <button class="btn btn-secondary btn-sm">🔽 Filters</button>
+          <span class="filter-chip">Status: Pending <span class="remove">×</span></span>
+          <span class="filter-chip">Program: FA <span class="remove">×</span></span>
+          <span class="filter-chip">District: Lahore <span class="remove">×</span></span>
+          <div class="ml-auto" style="display:flex;gap:6px">
+            <button class="btn btn-secondary btn-sm">Saved views ▾</button>
+            <button class="btn btn-secondary btn-sm">Columns ▾</button>
+            <button class="btn btn-secondary btn-sm">⬇ Export</button>
+          </div>
+        </div>
+
+        <!-- Bulk bar (shown when rows selected) -->
+        <div class="bulk-bar">
+          <input type="checkbox" checked readonly style="cursor:default"/>
+          <span style="font-weight:500">3 applications selected</span>
+          <button class="bulk-action" style="color:var(--color-success-text)">✓ Approve selected</button>
+          <button class="bulk-action" style="color:var(--color-danger-text)">✕ Reject selected</button>
+          <button class="bulk-action">📧 Send notification</button>
+          <button class="bulk-action" style="margin-left:auto;color:var(--text-muted)">Clear selection</button>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th class="table-checkbox"><input type="checkbox"/></th>
+                <th>#</th>
+                <th class="sortable">Applicant name ↕</th>
+                <th>Form no.</th>
+                <th>Program</th>
+                <th class="sortable">Marks % ↓</th>
+                <th>Board</th>
+                <th>District</th>
+                <th>Status</th>
+                <th>Applied on</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="selected">
+                <td><input type="checkbox" checked/></td>
+                <td style="color:var(--text-muted)">1</td>
+                <td>
+                  <div style="font-weight:500">Amna Tariq</div>
+                  <div class="text-xs text-muted font-mono">35201-9812345-2</div>
+                </td>
+                <td class="font-mono text-sm">APP-2024-00412</td>
+                <td>FA (Pre-Eng)</td>
+                <td><strong>92.4%</strong></td>
+                <td>BISE Lahore</td>
+                <td>Lahore</td>
+                <td><span class="badge badge-warning">Pending</span></td>
+                <td class="text-muted text-sm">14 Jan 2025</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action-btn primary">Review</button>
+                    <button class="row-action-btn" style="color:var(--color-success-text)">Approve</button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="selected">
+                <td><input type="checkbox" checked/></td>
+                <td style="color:var(--text-muted)">2</td>
+                <td>
+                  <div style="font-weight:500">Hassan Ali</div>
+                  <div class="text-xs text-muted font-mono">35202-7654321-1</div>
+                </td>
+                <td class="font-mono text-sm">APP-2024-00398</td>
+                <td>F.Sc (Pre-Med)</td>
+                <td><strong>89.1%</strong></td>
+                <td>BISE Lahore</td>
+                <td>Lahore</td>
+                <td><span class="badge badge-warning">Pending</span></td>
+                <td class="text-muted text-sm">13 Jan 2025</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action-btn primary">Review</button>
+                    <button class="row-action-btn" style="color:var(--color-success-text)">Approve</button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="selected">
+                <td><input type="checkbox" checked/></td>
+                <td style="color:var(--text-muted)">3</td>
+                <td>
+                  <div style="font-weight:500">Nadia Iqbal</div>
+                  <div class="text-xs text-muted font-mono">35203-1122334-8</div>
+                </td>
+                <td class="font-mono text-sm">APP-2024-00385</td>
+                <td>FA (Arts)</td>
+                <td><strong>86.7%</strong></td>
+                <td>BISE Gujranwala</td>
+                <td>Gujranwala</td>
+                <td><span class="badge badge-warning">Pending</span></td>
+                <td class="text-muted text-sm">13 Jan 2025</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action-btn primary">Review</button>
+                    <button class="row-action-btn" style="color:var(--color-success-text)">Approve</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"/></td>
+                <td style="color:var(--text-muted)">4</td>
+                <td>
+                  <div style="font-weight:500">Sana Iqbal</div>
+                  <div class="text-xs text-muted font-mono">35401-1234567-4</div>
+                </td>
+                <td class="font-mono text-sm">APP-2024-00376</td>
+                <td>FA (Arts)</td>
+                <td><strong>85.6%</strong></td>
+                <td>BISE Lahore</td>
+                <td>Sheikhupura</td>
+                <td><span class="badge badge-info">Under review</span></td>
+                <td class="text-muted text-sm">12 Jan 2025</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action-btn primary">Review</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"/></td>
+                <td style="color:var(--text-muted)">5</td>
+                <td>
+                  <div style="font-weight:500">Umar Farooq</div>
+                  <div class="text-xs text-muted font-mono">35101-9988776-3</div>
+                </td>
+                <td class="font-mono text-sm">APP-2024-00341</td>
+                <td>F.Sc (Pre-Eng)</td>
+                <td><strong>91.2%</strong></td>
+                <td>BISE Rawalpindi</td>
+                <td>Kasur</td>
+                <td><span class="badge badge-success">Approved</span></td>
+                <td class="text-muted text-sm">11 Jan 2025</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action-btn">View</button>
+                    <button class="row-action-btn">Print</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"/></td>
+                <td style="color:var(--text-muted)">6</td>
+                <td>
+                  <div style="font-weight:500">Rabia Shahid</div>
+                  <div class="text-xs text-muted font-mono">35301-5544332-6</div>
+                </td>
+                <td class="font-mono text-sm">APP-2024-00318</td>
+                <td>FA (Pre-Eng)</td>
+                <td><strong>74.3%</strong></td>
+                <td>BISE Lahore</td>
+                <td>Lahore</td>
+                <td><span class="badge badge-danger">Rejected</span></td>
+                <td class="text-muted text-sm">10 Jan 2025</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action-btn" style="color:var(--color-danger-text)">Reason</button>
+                    <button class="row-action-btn">Appeal</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"/></td>
+                <td style="color:var(--text-muted)">7</td>
+                <td>
+                  <div style="font-weight:500">Ali Hassan</div>
+                  <div class="text-xs text-muted font-mono">35202-6677889-9</div>
+                </td>
+                <td class="font-mono text-sm">APP-2024-00297</td>
+                <td>F.Sc (Pre-Med)</td>
+                <td><strong>88.0%</strong></td>
+                <td>BISE Lahore</td>
+                <td>Lahore</td>
+                <td><span class="badge badge-success">Approved</span></td>
+                <td class="text-muted text-sm">9 Jan 2025</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action-btn">View</button>
+                    <button class="row-action-btn">Print</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"/></td>
+                <td style="color:var(--text-muted)">8</td>
+                <td>
+                  <div style="font-weight:500">Zainab Malik</div>
+                  <div class="text-xs text-muted font-mono">35101-3344556-2</div>
+                </td>
+                <td class="font-mono text-sm">APP-2024-00281</td>
+                <td>FA (Arts)</td>
+                <td><strong>83.2%</strong></td>
+                <td>BISE Gujranwala</td>
+                <td>Sialkot</td>
+                <td><span class="badge badge-info">Under review</span></td>
+                <td class="text-muted text-sm">8 Jan 2025</td>
+                <td>
+                  <div class="row-actions">
+                    <button class="row-action-btn primary">Review</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <span class="text-muted text-sm">Showing 1–8 of 1,247 results</span>
+          <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+            <span class="text-muted text-sm">Rows per page</span>
+            <select class="form-select" style="width:70px;font-size:12px;padding:4px 6px">
+              <option>25</option><option>50</option><option>100</option>
+            </select>
+            <button class="page-btn">←</button>
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <span class="text-muted text-sm">…</span>
+            <button class="page-btn">50</button>
+            <button class="page-btn">→</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

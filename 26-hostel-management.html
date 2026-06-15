@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hostel Management — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border-light);margin-bottom:var(--space-5)}
+  .tab-item{padding:10px 18px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+  .tab-item.active{color:var(--brand-600);border-bottom-color:var(--brand-600)}
+  .room-card{border:1px solid var(--border-light);border-radius:var(--radius-md);padding:12px;cursor:pointer;transition:all .15s;position:relative}
+  .room-card:hover{border-color:var(--brand-300);box-shadow:var(--shadow-sm)}
+  .room-card.full{border-left:3px solid var(--color-success-text);background:var(--color-success-bg)}
+  .room-card.partial{border-left:3px solid var(--color-warning-text);background:var(--color-warning-bg)}
+  .room-card.empty{border-left:3px solid var(--border-medium);background:var(--bg-secondary)}
+  .room-card.maintenance{border-left:3px solid var(--color-danger-text);background:var(--color-danger-bg)}
+  .room-num{font-size:15px;font-weight:700;margin-bottom:3px}
+  .room-type{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+  .room-occ{font-size:11px;margin-top:6px;font-weight:500}
+  .resident-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border-light);font-size:13px}
+  .resident-row:last-child{border-bottom:none}
+  .fee-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border-light);font-size:13px}
+  .fee-row:last-child{border-bottom:none}
+  .block-card{background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:16px}
+  .block-header{font-size:14px;font-weight:700;margin-bottom:4px}
+  .block-sub{font-size:11px;color:var(--text-muted);margin-bottom:12px}
+  .occ-bar{background:var(--border-light);border-radius:var(--radius-full);height:8px;overflow:hidden;margin-top:6px}
+  .occ-fill{height:100%;border-radius:var(--radius-full)}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">Hostel Warden</div>
+      <div class="role-sub">GC Lahore</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="02-principal-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+      <div class="sidebar-section-label">Hostel</div>
+      <a class="nav-item active" href="#"><span class="nav-icon">🏠</span><span>Hostel Management</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🛏</span><span>Room Allocation</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>Residents</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">💳</span><span>Hostel Fee</span><span class="nav-badge warn">28</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🔧</span><span>Maintenance</span><span class="nav-badge">3</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📋</span><span>Applications</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📊</span><span>Reports</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">HW</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Hostel Warden</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">GC Lahore Hostel</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Hostel</span><span>›</span>
+        <span class="crumb-active">Hostel Management</span>
+      </div>
+      <div class="topbar-actions" style="margin-left:auto">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">HW</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Hostel Management</h1>
+          <p>GC Lahore Boys Hostel · 3 blocks · 70 rooms · 280 beds</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">📋 Admission applications</button>
+          <button class="btn btn-secondary">💳 Fee collection</button>
+          <button class="btn btn-primary">+ Allocate room</button>
+        </div>
+      </div>
+
+      <!-- KPI strip -->
+      <div class="grid grid-5 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Total beds</div>
+          <div class="metric-value">280</div>
+          <div class="metric-delta delta-neutral">70 rooms · 3 blocks</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Occupied</div>
+          <div class="metric-value" style="color:var(--color-success-text)">214</div>
+          <div class="metric-delta delta-up">▲ 76.4% occupancy</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Vacant beds</div>
+          <div class="metric-value">54</div>
+          <div class="metric-delta delta-neutral">Available now</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Fee defaulters</div>
+          <div class="metric-value" style="color:var(--color-warning-text)">28</div>
+          <div class="metric-delta" style="color:var(--color-warning-text)">Overdue payment</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Maintenance issues</div>
+          <div class="metric-value" style="color:var(--color-danger-text)">3</div>
+          <div class="metric-delta" style="color:var(--color-danger-text)">Rooms out of service</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active">Room overview</div>
+        <div class="tab-item">Residents list</div>
+        <div class="tab-item">Hostel fee</div>
+        <div class="tab-item">Applications</div>
+        <div class="tab-item">Maintenance</div>
+      </div>
+
+      <!-- Block summary row -->
+      <div class="grid grid-3 mb-6" style="gap:14px">
+        <div class="block-card">
+          <div class="block-header">Block A — Iqbal Block</div>
+          <div class="block-sub">Ground + 2 floors · 24 rooms · 96 beds</div>
+          <div class="flex-between" style="font-size:12px">
+            <span style="color:var(--text-muted)">Occupancy</span>
+            <span style="font-weight:600;color:var(--color-success-text)">88 / 96</span>
+          </div>
+          <div class="occ-bar"><div class="occ-fill" style="width:91%;background:var(--color-success-text)"></div></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px">8 beds available · Warden: Mr. Tariq</div>
+        </div>
+        <div class="block-card">
+          <div class="block-header">Block B — Jinnah Block</div>
+          <div class="block-sub">Ground + 2 floors · 24 rooms · 96 beds</div>
+          <div class="flex-between" style="font-size:12px">
+            <span style="color:var(--text-muted)">Occupancy</span>
+            <span style="font-weight:600;color:var(--color-warning-text)">72 / 96</span>
+          </div>
+          <div class="occ-bar"><div class="occ-fill" style="width:75%;background:var(--color-warning-text)"></div></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px">24 beds available · Warden: Mr. Asad</div>
+        </div>
+        <div class="block-card">
+          <div class="block-header">Block C — Allama Block</div>
+          <div class="block-sub">Ground + 2 floors · 22 rooms · 88 beds</div>
+          <div class="flex-between" style="font-size:12px">
+            <span style="color:var(--text-muted)">Occupancy</span>
+            <span style="font-weight:600;color:var(--color-warning-text)">54 / 88</span>
+          </div>
+          <div class="occ-bar"><div class="occ-fill" style="width:61%;background:var(--color-warning-text)"></div></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px">34 beds available · Warden: Mr. Imran</div>
+        </div>
+      </div>
+
+      <!-- Main grid: room map + residents -->
+      <div class="grid" style="grid-template-columns:1.6fr 1fr;gap:16px">
+
+        <!-- Room grid map - Block A -->
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Block A — Room map</div><div class="card-subtitle">Iqbal Block · Click a room for details</div></div>
+            <div style="display:flex;gap:6px">
+              <select class="form-select" style="width:auto;font-size:12px;padding:4px 8px"><option>Block A</option><option>Block B</option><option>Block C</option></select>
+            </div>
+          </div>
+          <!-- Legend -->
+          <div style="display:flex;gap:12px;margin-bottom:14px;font-size:11px">
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;background:var(--color-success-bg);border-left:3px solid var(--color-success-text);display:inline-block;border-radius:2px"></span>Full</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;background:var(--color-warning-bg);border-left:3px solid var(--color-warning-text);display:inline-block;border-radius:2px"></span>Partial</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;background:var(--bg-secondary);border-left:3px solid var(--border-medium);display:inline-block;border-radius:2px"></span>Empty</span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;background:var(--color-danger-bg);border-left:3px solid var(--color-danger-text);display:inline-block;border-radius:2px"></span>Maintenance</span>
+          </div>
+          <!-- Ground floor -->
+          <div style="font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">Ground floor</div>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px">
+            <div class="room-card full"><div class="room-num">101</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-success-text)">4/4</div></div>
+            <div class="room-card full"><div class="room-num">102</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-success-text)">4/4</div></div>
+            <div class="room-card partial"><div class="room-num">103</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-warning-text)">2/4</div></div>
+            <div class="room-card full"><div class="room-num">104</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-success-text)">4/4</div></div>
+            <div class="room-card maintenance"><div class="room-num">105</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-danger-text)">⚠ Repair</div></div>
+            <div class="room-card empty"><div class="room-num">106</div><div class="room-type">Single</div><div class="room-occ" style="color:var(--text-muted)">0/2</div></div>
+          </div>
+          <!-- First floor -->
+          <div style="font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">First floor</div>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px">
+            <div class="room-card full"><div class="room-num">201</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-success-text)">4/4</div></div>
+            <div class="room-card full"><div class="room-num">202</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-success-text)">4/4</div></div>
+            <div class="room-card full"><div class="room-num">203</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-success-text)">4/4</div></div>
+            <div class="room-card partial"><div class="room-num">204</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-warning-text)">3/4</div></div>
+            <div class="room-card full"><div class="room-num">205</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-success-text)">4/4</div></div>
+            <div class="room-card partial"><div class="room-num">206</div><div class="room-type">Single</div><div class="room-occ" style="color:var(--color-warning-text)">1/2</div></div>
+          </div>
+          <!-- Second floor -->
+          <div style="font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px">Second floor</div>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px">
+            <div class="room-card full"><div class="room-num">301</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-success-text)">4/4</div></div>
+            <div class="room-card empty"><div class="room-num">302</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--text-muted)">0/4</div></div>
+            <div class="room-card full"><div class="room-num">303</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-success-text)">4/4</div></div>
+            <div class="room-card maintenance"><div class="room-num">304</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-danger-text)">⚠ Repair</div></div>
+            <div class="room-card partial"><div class="room-num">305</div><div class="room-type">Double</div><div class="room-occ" style="color:var(--color-warning-text)">2/4</div></div>
+            <div class="room-card full"><div class="room-num">306</div><div class="room-type">Single</div><div class="room-occ" style="color:var(--color-success-text)">2/2</div></div>
+          </div>
+        </div>
+
+        <!-- Right: residents + fees -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+
+          <!-- Recent residents -->
+          <div class="card">
+            <div class="card-header">
+              <div><div class="card-title">Recent admissions</div><div class="card-subtitle">New hostel residents</div></div>
+              <button class="btn btn-ghost btn-sm">View all →</button>
+            </div>
+            <div>
+              <div class="resident-row">
+                <div class="avatar sm" style="background:var(--brand-500)">UA</div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Umar Ahmed</div>
+                  <div style="font-size:11px;color:var(--text-muted)">2024-CS-1189 · Room 203, Block A</div>
+                  <div style="font-size:10px;color:var(--text-muted)">Admitted: 10 Jan 2025</div>
+                </div>
+                <span class="badge badge-success">Active</span>
+              </div>
+              <div class="resident-row">
+                <div class="avatar sm" style="background:var(--color-info-text)">KM</div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Kamran Malik</div>
+                  <div style="font-size:11px;color:var(--text-muted)">2023-FA-0412 · Room 101, Block B</div>
+                  <div style="font-size:10px;color:var(--text-muted)">Admitted: 5 Jan 2025</div>
+                </div>
+                <span class="badge badge-success">Active</span>
+              </div>
+              <div class="resident-row">
+                <div class="avatar sm" style="background:var(--color-warning-text)">AB</div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Ali Butt</div>
+                  <div style="font-size:11px;color:var(--text-muted)">2024-BS-0088 · Room 305, Block A</div>
+                  <div style="font-size:10px;color:var(--text-muted)">Admitted: 2 Jan 2025</div>
+                </div>
+                <span class="badge badge-warning">Fee due</span>
+              </div>
+              <div class="resident-row">
+                <div class="avatar sm" style="background:var(--color-danger-text)">HR</div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Hamid Raza</div>
+                  <div style="font-size:11px;color:var(--text-muted)">2022-CS-0198 · Room 204, Block C</div>
+                  <div style="font-size:10px;color:var(--color-danger-text)">Fee overdue — 15 days</div>
+                </div>
+                <span class="badge badge-danger">Overdue</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fee summary -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Hostel fee — this month</div></div>
+            <div>
+              <div class="fee-row"><span style="color:var(--text-muted)">Monthly fee/bed</span><span style="font-weight:600">₨ 3,500</span></div>
+              <div class="fee-row"><span style="color:var(--text-muted)">Total expected</span><span style="font-weight:600">₨ 7,49,000</span></div>
+              <div class="fee-row"><span style="color:var(--text-muted)">Collected</span><span style="font-weight:600;color:var(--color-success-text)">₨ 6,51,500</span></div>
+              <div class="fee-row"><span style="color:var(--text-muted)">Outstanding</span><span style="font-weight:600;color:var(--color-danger-text)">₨ 97,500</span></div>
+              <div class="fee-row"><span style="color:var(--text-muted)">Defaulters</span><span style="font-weight:600;color:var(--color-warning-text)">28 residents</span></div>
+            </div>
+            <div style="margin-top:10px">
+              <div class="flex-between mb-1"><span style="font-size:12px">Collection rate</span><span style="font-size:12px;font-weight:600;color:var(--color-warning-text)">87%</span></div>
+              <div class="progress-bar"><div class="progress-fill warning" style="width:87%"></div></div>
+            </div>
+            <button class="btn btn-secondary" style="width:100%;margin-top:12px;font-size:12px">Manage fee →</button>
+          </div>
+
+          <!-- Pending applications -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Pending applications</div>
+              <span class="badge badge-warning">12</span>
+            </div>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px">Students waiting for room allocation</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 8px;background:var(--bg-secondary);border-radius:var(--radius-sm)">
+                <span>Farhan Iqbal — 2024-CS-1340</span>
+                <button class="btn btn-sm" style="font-size:11px;padding:2px 8px;color:var(--color-success-text);border-color:var(--color-success-border)">Allocate</button>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 8px;background:var(--bg-secondary);border-radius:var(--radius-sm)">
+                <span>Zain Abbas — 2023-FA-0812</span>
+                <button class="btn btn-sm" style="font-size:11px;padding:2px 8px;color:var(--color-success-text);border-color:var(--color-success-border)">Allocate</button>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;padding:6px 8px;background:var(--bg-secondary);border-radius:var(--radius-sm)">
+                <span>Anas Riaz — 2024-BS-0211</span>
+                <button class="btn btn-sm" style="font-size:11px;padding:2px 8px;color:var(--color-success-text);border-color:var(--color-success-border)">Allocate</button>
+              </div>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:8px">View all 12 applications →</button>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

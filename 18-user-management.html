@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>User Management — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar { display:flex; gap:0; border-bottom:1px solid var(--border-light); margin-bottom:var(--space-5); }
+  .tab-item { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; }
+  .tab-item.active { color:var(--brand-600); border-bottom-color:var(--brand-600); }
+  .role-card { border:1px solid var(--border-light); border-radius:var(--radius-lg); padding:16px; cursor:pointer; transition:all .15s; }
+  .role-card:hover { border-color:var(--brand-300); box-shadow:var(--shadow-sm); }
+  .role-card.selected { border-color:var(--brand-500); background:var(--brand-50); }
+  .role-icon-lg { width:44px; height:44px; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:20px; margin-bottom:10px; }
+  .perm-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border-light); font-size:13px; }
+  .perm-row:last-child { border-bottom:none; }
+  .perm-module { flex:1; }
+  .perm-module-name { font-weight:500; }
+  .perm-module-desc { font-size:11px; color:var(--text-muted); }
+  .perm-toggles { display:flex; gap:4px; }
+  .perm-toggle { width:28px; height:20px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; cursor:pointer; border:1px solid; transition:all .15s; }
+  .perm-toggle.on  { background:var(--color-success-bg); color:var(--color-success-text); border-color:var(--color-success-border); }
+  .perm-toggle.off { background:var(--bg-tertiary); color:var(--text-muted); border-color:var(--border-light); }
+  .user-row { display:flex; align-items:center; gap:12px; padding:10px 12px; border-bottom:1px solid var(--border-light); font-size:13px; }
+  .user-row:hover { background:var(--bg-secondary); }
+  .user-row:last-child { border-bottom:none; }
+  .online-dot { width:7px; height:7px; border-radius:50%; }
+  .online-dot.online { background:var(--color-success-text); }
+  .online-dot.offline { background:var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">HED Super Admin</div>
+      <div class="role-sub">Provincial Administration</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="01-hed-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">System</div>
+      <a class="nav-item active" href="#"><span class="nav-icon">🔐</span><span>User Management</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🎭</span><span>Roles & Permissions</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🕵️</span><span>Audit Log</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">⚙️</span><span>System Settings</span></a>
+      <a class="nav-item" href="10-reports-analytics.html"><span class="nav-icon">📊</span><span>Reports</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">SA</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Super Admin</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">admin@hed.punjab.gov.pk</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>System</span><span>›</span>
+        <span class="crumb-active">User Management</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search users by name, email, role…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">SA</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>User Management</h1>
+          <p>Manage system users, roles, permissions and access control</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">⬇ Export users</button>
+          <button class="btn btn-secondary">🔑 Reset passwords</button>
+          <button class="btn btn-primary">+ Add user</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="grid grid-4 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Total users</div>
+          <div class="metric-value">1,24,820</div>
+          <div class="metric-delta delta-neutral">All roles</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Active today</div>
+          <div class="metric-value" style="color:var(--color-success-text)">8,412</div>
+          <div class="metric-delta delta-up">▲ Online now</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Locked accounts</div>
+          <div class="metric-value" style="color:var(--color-danger-text)">34</div>
+          <div class="metric-delta" style="color:var(--color-danger-text)">Needs review</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Pending approvals</div>
+          <div class="metric-value" style="color:var(--color-warning-text)">127</div>
+          <div class="metric-delta" style="color:var(--color-warning-text)">New accounts</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active">All users</div>
+        <div class="tab-item">Roles & permissions</div>
+        <div class="tab-item">Pending approvals</div>
+        <div class="tab-item">Locked accounts</div>
+        <div class="tab-item">Activity log</div>
+      </div>
+
+      <div class="grid" style="grid-template-columns:1fr 360px;gap:16px">
+
+        <!-- Left: user table -->
+        <div>
+
+          <!-- Role filter cards -->
+          <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+            <div class="role-card selected">
+              <div class="role-icon-lg" style="background:var(--brand-50)">🏛️</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:2px">HED / DPI</div>
+              <div style="font-size:11px;color:var(--text-muted)">248 users</div>
+            </div>
+            <div class="role-card">
+              <div class="role-icon-lg" style="background:var(--color-success-bg)">🏫</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:2px">College Staff</div>
+              <div style="font-size:11px;color:var(--text-muted)">12,480 users</div>
+            </div>
+            <div class="role-card">
+              <div class="role-icon-lg" style="background:var(--color-warning-bg)">👨‍🏫</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:2px">Faculty</div>
+              <div style="font-size:11px;color:var(--text-muted)">52,180 users</div>
+            </div>
+            <div class="role-card">
+              <div class="role-icon-lg" style="background:var(--color-info-bg)">🎓</div>
+              <div style="font-size:13px;font-weight:600;margin-bottom:2px">Students</div>
+              <div style="font-size:11px;color:var(--text-muted)">8,400,000 users</div>
+            </div>
+          </div>
+
+          <!-- User table card -->
+          <div class="card" style="padding:0;overflow:hidden">
+            <div class="grid-toolbar">
+              <div class="toolbar-search">
+                <span>🔍</span>
+                <input type="text" placeholder="Search users…"/>
+              </div>
+              <button class="btn btn-secondary btn-sm">Role ▾</button>
+              <button class="btn btn-secondary btn-sm">College ▾</button>
+              <button class="btn btn-secondary btn-sm">Status ▾</button>
+              <div class="ml-auto" style="display:flex;gap:6px">
+                <button class="btn btn-secondary btn-sm">⬇ Export</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="user-row" style="background:var(--bg-secondary);font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em">
+                <div style="width:32px"></div>
+                <div style="flex:1">User</div>
+                <div style="width:130px">Role</div>
+                <div style="width:140px">College / Office</div>
+                <div style="width:80px">Last login</div>
+                <div style="width:70px">Status</div>
+                <div style="width:80px">Actions</div>
+              </div>
+
+              <div class="user-row">
+                <div class="avatar sm" style="background:var(--brand-500)">RK</div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Dr. Raza Khan</div>
+                  <div style="font-size:11px;color:var(--text-muted)">raza.khan@dpi.punjab.gov.pk</div>
+                </div>
+                <div style="width:130px"><span class="badge badge-brand">DPI Centre</span></div>
+                <div style="width:140px;font-size:12px;color:var(--text-muted)">DPI Centre Office</div>
+                <div style="width:80px;font-size:11px;color:var(--text-muted)">Today 9:14AM</div>
+                <div style="width:70px;display:flex;align-items:center;gap:5px"><div class="online-dot online"></div><span style="font-size:11px;color:var(--color-success-text)">Online</span></div>
+                <div style="width:80px;display:flex;gap:4px">
+                  <button class="row-action-btn">Edit</button>
+                  <button class="row-action-btn danger">Lock</button>
+                </div>
+              </div>
+
+              <div class="user-row">
+                <div class="avatar sm" style="background:var(--color-success-text)">AM</div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Dr. Ayesha Malik</div>
+                  <div style="font-size:11px;color:var(--text-muted)">ayesha.malik@gcc.edu.pk</div>
+                </div>
+                <div style="width:130px"><span class="badge badge-warning">Faculty</span></div>
+                <div style="width:140px;font-size:12px;color:var(--text-muted)">GC Lahore</div>
+                <div style="width:80px;font-size:11px;color:var(--text-muted)">Today 8:02AM</div>
+                <div style="width:70px;display:flex;align-items:center;gap:5px"><div class="online-dot online"></div><span style="font-size:11px;color:var(--color-success-text)">Online</span></div>
+                <div style="width:80px;display:flex;gap:4px">
+                  <button class="row-action-btn">Edit</button>
+                  <button class="row-action-btn danger">Lock</button>
+                </div>
+              </div>
+
+              <div class="user-row">
+                <div class="avatar sm" style="background:var(--color-info-text)">MK</div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Muhammad Kamran</div>
+                  <div style="font-size:11px;color:var(--text-muted)">m.kamran@gcfsd.edu.pk</div>
+                </div>
+                <div style="width:130px"><span class="badge badge-success">College Admin</span></div>
+                <div style="width:140px;font-size:12px;color:var(--text-muted)">GC Faisalabad</div>
+                <div style="width:80px;font-size:11px;color:var(--text-muted)">Today 10:41AM</div>
+                <div style="width:70px;display:flex;align-items:center;gap:5px"><div class="online-dot online"></div><span style="font-size:11px;color:var(--color-success-text)">Online</span></div>
+                <div style="width:80px;display:flex;gap:4px">
+                  <button class="row-action-btn">Edit</button>
+                  <button class="row-action-btn danger">Lock</button>
+                </div>
+              </div>
+
+              <div class="user-row">
+                <div class="avatar sm" style="background:#888">ZA</div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Zara Ahmed</div>
+                  <div style="font-size:11px;color:var(--text-muted)">2024-CS-1142@student.gcc.edu.pk</div>
+                </div>
+                <div style="width:130px"><span class="badge badge-info">Student</span></div>
+                <div style="width:140px;font-size:12px;color:var(--text-muted)">GC Lahore</div>
+                <div style="width:80px;font-size:11px;color:var(--text-muted)">Today 8:34AM</div>
+                <div style="width:70px;display:flex;align-items:center;gap:5px"><div class="online-dot offline"></div><span style="font-size:11px;color:var(--text-muted)">Offline</span></div>
+                <div style="width:80px;display:flex;gap:4px">
+                  <button class="row-action-btn">View</button>
+                </div>
+              </div>
+
+              <div class="user-row">
+                <div class="avatar sm" style="background:var(--color-danger-text)">BX</div>
+                <div style="flex:1">
+                  <div style="font-weight:500">Blocked User</div>
+                  <div style="font-size:11px;color:var(--text-muted)">blocked@gcc.edu.pk</div>
+                </div>
+                <div style="width:130px"><span class="badge badge-success">College Admin</span></div>
+                <div style="width:140px;font-size:12px;color:var(--text-muted)">GC Sargodha</div>
+                <div style="width:80px;font-size:11px;color:var(--text-muted)">12 Jan 2025</div>
+                <div style="width:70px;display:flex;align-items:center;gap:5px"><div class="online-dot offline"></div><span style="font-size:11px;color:var(--color-danger-text)">Locked</span></div>
+                <div style="width:80px;display:flex;gap:4px">
+                  <button class="row-action-btn primary">Unlock</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="pagination">
+              <span class="text-muted text-sm">Showing 1–5 of 248 HED/DPI users</span>
+              <div style="display:flex;gap:6px;margin-left:auto">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">→</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Role permissions panel -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Role permissions</div>
+                <div class="card-subtitle">DPI Centre — currently viewing</div>
+              </div>
+              <button class="btn btn-secondary btn-sm">Edit role</button>
+            </div>
+
+            <div style="font-size:10px;font-weight:600;color:var(--text-muted);display:grid;grid-template-columns:1fr repeat(4,28px);gap:4px;margin-bottom:6px;text-align:center">
+              <span style="text-align:left">Module</span>
+              <span>View</span><span>Add</span><span>Edit</span><span>Del</span>
+            </div>
+
+            <div>
+              <div class="perm-row">
+                <div class="perm-module">
+                  <div class="perm-module-name">Admissions</div>
+                  <div class="perm-module-desc">Applications, merit, seats</div>
+                </div>
+                <div class="perm-toggles">
+                  <div class="perm-toggle on">V</div>
+                  <div class="perm-toggle on">A</div>
+                  <div class="perm-toggle on">E</div>
+                  <div class="perm-toggle off">D</div>
+                </div>
+              </div>
+              <div class="perm-row">
+                <div class="perm-module">
+                  <div class="perm-module-name">Students</div>
+                  <div class="perm-module-desc">Profiles, records, transfers</div>
+                </div>
+                <div class="perm-toggles">
+                  <div class="perm-toggle on">V</div>
+                  <div class="perm-toggle off">A</div>
+                  <div class="perm-toggle off">E</div>
+                  <div class="perm-toggle off">D</div>
+                </div>
+              </div>
+              <div class="perm-row">
+                <div class="perm-module">
+                  <div class="perm-module-name">Faculty</div>
+                  <div class="perm-module-desc">Profiles, workload, leave</div>
+                </div>
+                <div class="perm-toggles">
+                  <div class="perm-toggle on">V</div>
+                  <div class="perm-toggle on">A</div>
+                  <div class="perm-toggle on">E</div>
+                  <div class="perm-toggle off">D</div>
+                </div>
+              </div>
+              <div class="perm-row">
+                <div class="perm-module">
+                  <div class="perm-module-name">Approvals</div>
+                  <div class="perm-module-desc">Program, college requests</div>
+                </div>
+                <div class="perm-toggles">
+                  <div class="perm-toggle on">V</div>
+                  <div class="perm-toggle off">A</div>
+                  <div class="perm-toggle on">E</div>
+                  <div class="perm-toggle off">D</div>
+                </div>
+              </div>
+              <div class="perm-row">
+                <div class="perm-module">
+                  <div class="perm-module-name">Finance</div>
+                  <div class="perm-module-desc">Fee, vouchers, waivers</div>
+                </div>
+                <div class="perm-toggles">
+                  <div class="perm-toggle on">V</div>
+                  <div class="perm-toggle off">A</div>
+                  <div class="perm-toggle off">E</div>
+                  <div class="perm-toggle off">D</div>
+                </div>
+              </div>
+              <div class="perm-row">
+                <div class="perm-module">
+                  <div class="perm-module-name">Reports</div>
+                  <div class="perm-module-desc">Analytics, exports</div>
+                </div>
+                <div class="perm-toggles">
+                  <div class="perm-toggle on">V</div>
+                  <div class="perm-toggle on">A</div>
+                  <div class="perm-toggle off">E</div>
+                  <div class="perm-toggle off">D</div>
+                </div>
+              </div>
+              <div class="perm-row">
+                <div class="perm-module">
+                  <div class="perm-module-name">User Management</div>
+                  <div class="perm-module-desc">Accounts, roles</div>
+                </div>
+                <div class="perm-toggles">
+                  <div class="perm-toggle off">V</div>
+                  <div class="perm-toggle off">A</div>
+                  <div class="perm-toggle off">E</div>
+                  <div class="perm-toggle off">D</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent activity -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Recent login activity</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:12px">
+              <div class="flex-between">
+                <div>
+                  <div style="font-weight:500">Dr. Raza Khan</div>
+                  <div style="color:var(--text-muted)">Login — Chrome / Windows</div>
+                </div>
+                <div style="text-align:right;color:var(--text-muted)">Today 9:14 AM<br>IP: 182.xx.xx.12</div>
+              </div>
+              <div style="height:1px;background:var(--border-light)"></div>
+              <div class="flex-between">
+                <div>
+                  <div style="font-weight:500">Dr. Ayesha Malik</div>
+                  <div style="color:var(--text-muted)">Login — Mobile / Android</div>
+                </div>
+                <div style="text-align:right;color:var(--text-muted)">Today 8:02 AM<br>IP: 39.xx.xx.44</div>
+              </div>
+              <div style="height:1px;background:var(--border-light)"></div>
+              <div class="flex-between">
+                <div>
+                  <div style="font-weight:500" style="color:var(--color-danger-text)">Blocked User</div>
+                  <div style="color:var(--color-danger-text)">Failed login — 5 attempts</div>
+                </div>
+                <div style="text-align:right;color:var(--text-muted)">12 Jan 11:44 PM<br>IP: 103.xx.xx.7</div>
+              </div>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="width:100%;margin-top:10px">View full audit log →</button>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

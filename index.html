@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EduGov ERP — Complete Mockup Kit</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  body{background:var(--bg-page)}
+  .shell{max-width:1120px;margin:0 auto;padding:48px 32px}
+  .screen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .card-link{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);overflow:hidden;transition:all .18s;text-decoration:none;color:inherit;display:block}
+  .card-link:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:var(--brand-200)}
+  .thumb{height:88px;display:flex;align-items:center;justify-content:center;font-size:38px}
+  .info{padding:12px 14px;border-top:1px solid var(--border-light)}
+  .num{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:2px}
+  .name{font-size:13px;font-weight:600;margin-bottom:2px}
+  .desc{font-size:11px;color:var(--text-muted);line-height:1.5}
+  .rtag{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:var(--radius-full);margin-top:5px}
+  .section-head{font-size:13px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.07em;margin:32px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--brand-500)}
+  code{color:var(--brand-600);font-family:monospace;font-size:12px}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px">
+    <div style="width:46px;height:46px;background:var(--brand-600);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff">E</div>
+    <div>
+      <h1 style="margin:0;font-size:22px">EduGov ERP — Complete Mockup Kit</h1>
+      <p style="margin:0;color:var(--text-muted);font-size:13px">Province-wide Higher Education ERP · Punjab HED · 29 screens + 1 shared CSS</p>
+    </div>
+  </div>
+
+  <div class="alert alert-info mb-6" style="font-size:13px">
+    ℹ All screens share <strong>design-system.css</strong>. Place all files in one folder and open <strong>INDEX.html</strong> in any browser. No build tools, no CDN dependencies required.
+  </div>
+
+  <!-- Foundation -->
+  <div class="section-head">Foundation</div>
+  <div class="screen-grid">
+    <a class="card-link" href="00-design-system.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--brand-50),var(--brand-100))">🎨</div>
+      <div class="info"><div class="num">File 00</div><div class="name">Design System Reference</div><div class="desc">Colors, tokens, typography, badges, buttons, inputs, alerts, progress bars, empty states</div><span class="rtag" style="background:var(--brand-50);color:var(--brand-600)">Reference</span></div>
+    </a>
+    <a class="card-link" href="08-login.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--brand-900),var(--brand-600))">🔐</div>
+      <div class="info"><div class="num">File 08</div><div class="name">Login Screen</div><div class="desc">Role-aware login — 4 role selectors, MFA / OTP notice, Punjab Gov SSO, interactive JS role switching</div><span class="rtag" style="background:var(--brand-50);color:var(--brand-600)">All roles</span></div>
+    </a>
+  </div>
+
+  <!-- Dashboards -->
+  <div class="section-head">Role Dashboards</div>
+  <div class="screen-grid">
+    <a class="card-link" href="01-hed-dashboard.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#EEEDFE,#AFA9EC)">🏛️</div>
+      <div class="info"><div class="num">File 01</div><div class="name">HED Dashboard</div><div class="desc">Province command center — KPI strip, enrollment bar chart, compliance rings, college rankings, revenue donut, activity feed</div><span class="rtag" style="background:var(--brand-50);color:var(--brand-600)">HED Admin</span></div>
+    </a>
+    <a class="card-link" href="20-dpi-dashboard.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#EEF2FF,#C7D2FE)">🗺️</div>
+      <div class="info"><div class="num">File 20</div><div class="name">DPI / Directorate Dashboard</div><div class="desc">Regional command centre — district grid cards, compliance bars, college performance table with trend indicators</div><span class="rtag" style="background:var(--brand-50);color:var(--brand-600)">DPI / Directorate</span></div>
+    </a>
+    <a class="card-link" href="02-principal-dashboard.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--color-success-bg),#c5e8a0)">🏫</div>
+      <div class="info"><div class="num">File 02</div><div class="name">Principal Dashboard</div><div class="desc">College hub — admission progress bars, period-level attendance bars, action queue, fee ring chart, faculty absent list, ranking badge</div><span class="rtag" style="background:var(--color-success-bg);color:var(--color-success-text)">Principal</span></div>
+    </a>
+    <a class="card-link" href="09-college-admin-dashboard.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--color-success-bg),#d4edae)">🗂️</div>
+      <div class="info"><div class="num">File 09</div><div class="name">College Admin Dashboard</div><div class="desc">Checkbox task queue, fee collection ring, activity feed, admissions progress, doc verification, 6-button quick-action grid</div><span class="rtag" style="background:var(--color-success-bg);color:var(--color-success-text)">College Admin</span></div>
+    </a>
+    <a class="card-link" href="03-faculty-dashboard.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--color-warning-bg),#f7d49e)">👨‍🏫</div>
+      <div class="info"><div class="num">File 03</div><div class="name">Faculty Dashboard</div><div class="desc">Today's schedule cards (done/now/upcoming/lab), pending tasks with badges, workload progress, low-attendance alert list</div><span class="rtag" style="background:var(--color-warning-bg);color:var(--color-warning-text)">Faculty</span></div>
+    </a>
+    <a class="card-link" href="04-student-dashboard.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--color-info-bg),#b8d9f5)">🎓</div>
+      <div class="info"><div class="num">File 04</div><div class="name">Student Dashboard</div><div class="desc">Gradient profile banner, 6-icon quick links, colour-coded timetable, subject attendance bars, degree progress ring, notices</div><span class="rtag" style="background:var(--color-info-bg);color:var(--color-info-text)">Student</span></div>
+    </a>
+    <a class="card-link" href="15-parent-dashboard.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#F0FDF4,#BBF7D0)">👨‍👩‍👧</div>
+      <div class="info"><div class="num">File 15</div><div class="name">Parent Dashboard</div><div class="desc">Sidebar-free portal — attendance calendar with colour-coded days, result card, fee status, college notice feed with alert</div><span class="rtag" style="background:var(--color-success-bg);color:var(--color-success-text)">Parent / Guardian</span></div>
+    </a>
+  </div>
+
+  <!-- Grids & Workflows -->
+  <div class="section-head">Data Grids & Workflows</div>
+  <div class="screen-grid">
+    <a class="card-link" href="05-admissions-grid.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--bg-secondary),var(--gray-200))">📋</div>
+      <div class="info"><div class="num">File 05</div><div class="name">Admissions Data Grid</div><div class="desc">Enterprise table — toolbar search, filter chips, bulk action bar, per-row hover actions, sticky column headers, pagination</div><span class="rtag" style="background:var(--bg-tertiary);color:var(--text-secondary)">Admin / Operator</span></div>
+    </a>
+    <a class="card-link" href="06-admission-wizard.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#EEEDFE,#CECBF6)">📝</div>
+      <div class="info"><div class="num">File 06</div><div class="name">Admission Wizard Form</div><div class="desc">5-step stepper, section dividers, 3–4 col field grids, blur-time validation, error / verified / hint states, auto-save footer</div><span class="rtag" style="background:var(--brand-50);color:var(--brand-600)">Admin / Operator</span></div>
+    </a>
+    <a class="card-link" href="07-approval-workflow.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--color-warning-bg),#f5c980)">⚙️</div>
+      <div class="info"><div class="num">File 07</div><div class="name">Approval Workflow</div><div class="desc">5-node timeline, done / active / pending states, document download list, metadata panel, split approve/return decision panel</div><span class="rtag" style="background:var(--color-warning-bg);color:var(--color-warning-text)">DPI / Directorate</span></div>
+    </a>
+  </div>
+
+  <!-- Operational Screens -->
+  <div class="section-head">Operational Screens</div>
+  <div class="screen-grid">
+    <a class="card-link" href="13-attendance-marking.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--color-success-bg),#b8f5b0)">✅</div>
+      <div class="info"><div class="num">File 13</div><div class="name">Attendance Marking</div><div class="desc">Class banner strip, per-student Present/Absent/Late/Leave toggle buttons, 5-day history dot row, bulk mark-all toolbar, sticky save bar</div><span class="rtag" style="background:var(--color-warning-bg);color:var(--color-warning-text)">Faculty</span></div>
+    </a>
+    <a class="card-link" href="21-marks-entry.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#FFF7ED,#FED7AA)">🔢</div>
+      <div class="info"><div class="num">File 21</div><div class="name">Marks Entry</div><div class="desc">Assessment type tabs, sticky two-row column headers, per-student number inputs with filled / over-max states, auto-total, class average footer</div><span class="rtag" style="background:var(--color-warning-bg);color:var(--color-warning-text)">Faculty</span></div>
+    </a>
+    <a class="card-link" href="16-timetable.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#F5F0FF,#DDD6FE)">📅</div>
+      <div class="info"><div class="num">File 16</div><div class="name">Weekly Timetable</div><div class="desc">5-day × 6-period colour-coded grid, done / now / break / lab slot states, live pulsing dot for current class, week nav, legend</div><span class="rtag" style="background:var(--color-warning-bg);color:var(--color-warning-text)">Faculty</span></div>
+    </a>
+    <a class="card-link" href="11-fee-management.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#FEF9EE,#FDE68A)">💳</div>
+      <div class="info"><div class="num">File 11</div><div class="name">Fee Management</div><div class="desc">Collection breakdown table, donut ring chart, defaulter list with notify buttons, live voucher preview with print + PDF download</div><span class="rtag" style="background:var(--color-warning-bg);color:var(--color-warning-text)">Finance / Admin</span></div>
+    </a>
+    <a class="card-link" href="12-examinations-results.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--color-info-bg),#9dcef5)">📝</div>
+      <div class="info"><div class="num">File 12</div><div class="name">Examinations & Results</div><div class="desc">Subject result table with inline mini progress bars, grade distribution horizontal bars, exam schedule cards, student-level marks grid</div><span class="rtag" style="background:var(--color-info-bg);color:var(--color-info-text)">Admin / Exam Staff</span></div>
+    </a>
+    <a class="card-link" href="27-academic-calendar.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#ECFDF5,#A7F3D0)">📆</div>
+      <div class="info"><div class="num">File 27</div><div class="name">Academic Calendar</div><div class="desc">Full month grid with colour-coded event/exam/holiday/deadline days, session progress cards, year timeline bar, upcoming events list</div><span class="rtag" style="background:var(--brand-50);color:var(--brand-600)">HED Admin</span></div>
+    </a>
+  </div>
+
+  <!-- People / Profile Screens -->
+  <div class="section-head">People & Profile Screens</div>
+  <div class="screen-grid">
+    <a class="card-link" href="14-student-profile.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--brand-50),var(--brand-100))">👤</div>
+      <div class="info"><div class="num">File 14</div><div class="name">Student Profile</div><div class="desc">Gradient banner with stats, 6-tab layout, personal / academic / guardian info rows, per-semester GPA cards, document list with status badges</div><span class="rtag" style="background:var(--bg-tertiary);color:var(--text-secondary)">Admin / Principal</span></div>
+    </a>
+    <a class="card-link" href="24-faculty-profile.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#FDF4FF,#E9D5FF)">👩‍🏫</div>
+      <div class="info"><div class="num">File 24</div><div class="name">Faculty Profile</div><div class="desc">Gradient HR banner, 6 tabs, personal / employment info, leave balance bars, teaching assignment cards, qualifications, performance KPIs</div><span class="rtag" style="background:var(--bg-tertiary);color:var(--text-secondary)">Admin / Principal</span></div>
+    </a>
+    <a class="card-link" href="23-college-profile.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--brand-900),var(--brand-700))">🏛️</div>
+      <div class="info"><div class="num">File 23</div><div class="name">College Profile</div><div class="desc">Gradient institutional banner, 6 tabs, basic/contact info, 10-card facility grid, programs-offered table with seat fill data</div><span class="rtag" style="background:var(--color-success-bg);color:var(--color-success-text)">Principal / Admin</span></div>
+    </a>
+  </div>
+
+  <!-- Configuration & Auxiliary -->
+  <div class="section-head">Configuration, Analytics & Auxiliary</div>
+  <div class="screen-grid">
+    <a class="card-link" href="17-academic-structure.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#F0FDF4,#BBF7D0)">📚</div>
+      <div class="info"><div class="num">File 17</div><div class="name">Academic Structure</div><div class="desc">3-panel layout — collapsible hierarchy tree, program list with enrolled counts, detail panel with curriculum subject rows and subject combinations</div><span class="rtag" style="background:var(--brand-50);color:var(--brand-600)">HED Admin</span></div>
+    </a>
+    <a class="card-link" href="10-reports-analytics.html">
+      <div class="thumb" style="background:linear-gradient(135deg,var(--color-info-bg),#9dcef5)">📊</div>
+      <div class="info"><div class="num">File 10</div><div class="name">Reports & Analytics</div><div class="desc">Horizontal enrollment bar chart by division, YoY KPI comparison grid, pass-rate bars, 8-card report library, scheduled report list</div><span class="rtag" style="background:var(--color-info-bg);color:var(--color-info-text)">HED Admin</span></div>
+    </a>
+    <a class="card-link" href="18-user-management.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#EEF2FF,#C7D2FE)">🔐</div>
+      <div class="info"><div class="num">File 18</div><div class="name">User Management</div><div class="desc">4-role filter cards, user table with online dot, CRUD/VADE permission toggle matrix per module, recent login activity</div><span class="rtag" style="background:var(--brand-50);color:var(--brand-600)">HED Admin</span></div>
+    </a>
+    <a class="card-link" href="19-audit-log.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#FFF7ED,#FED7AA)">🕵️</div>
+      <div class="info"><div class="num">File 19</div><div class="name">Audit Log</div><div class="desc">Immutable event stream — coloured action pills (CREATE/UPDATE/LOGIN/APPROVE/EXPORT), field-level diff view, event-type breakdown bars, security alert</div><span class="rtag" style="background:var(--brand-50);color:var(--brand-600)">HED Admin</span></div>
+    </a>
+    <a class="card-link" href="22-communication-centre.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#F0F9FF,#BAE6FD)">📬</div>
+      <div class="info"><div class="num">File 22</div><div class="name">Communication Centre</div><div class="desc">Inbox with unread highlight, quick-compose form with channel checkboxes, pinned announcements, SMS delivery stats</div><span class="rtag" style="background:var(--bg-tertiary);color:var(--text-secondary)">Admin / Principal</span></div>
+    </a>
+    <a class="card-link" href="28-notifications-centre.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#FFF1F2,#FECDD3)">🔔</div>
+      <div class="info"><div class="num">File 28</div><div class="name">Notifications Centre</div><div class="desc">Grouped notification feed (Today/Yesterday/Earlier), unread highlight, inline approve/reject action buttons, per-type preference toggles</div><span class="rtag" style="background:var(--bg-tertiary);color:var(--text-secondary)">All roles</span></div>
+    </a>
+    <a class="card-link" href="25-library-management.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#FFFBEB,#FEF08A)">📚</div>
+      <div class="info"><div class="num">File 25</div><div class="name">Library Management</div><div class="desc">Book catalogue grid cards with availability badges, quick-issue/return form, active borrowing list with overdue / due-soon / ok badges</div><span class="rtag" style="background:var(--bg-tertiary);color:var(--text-secondary)">Library Staff</span></div>
+    </a>
+    <a class="card-link" href="26-hostel-management.html">
+      <div class="thumb" style="background:linear-gradient(135deg,#F0FDF4,#86EFAC)">🏠</div>
+      <div class="info"><div class="num">File 26</div><div class="name">Hostel Management</div><div class="desc">3-block occupancy cards, colour-coded floor-by-floor room map (full/partial/empty/maintenance), resident list, fee collection summary</div><span class="rtag" style="background:var(--bg-tertiary);color:var(--text-secondary)">Hostel Warden</span></div>
+    </a>
+  </div>
+
+  <!-- Complete file list -->
+  <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border-light)">
+    <h3 style="margin-bottom:14px">All 31 files</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:12px;color:var(--text-muted)">
+      <div><code>design-system.css</code> — Shared design tokens & all components</div>
+      <div><code>00-design-system.html</code> — Component reference page</div>
+      <div><code>01-hed-dashboard.html</code> — Province command center</div>
+      <div><code>02-principal-dashboard.html</code> — Principal college hub</div>
+      <div><code>03-faculty-dashboard.html</code> — Faculty teaching dashboard</div>
+      <div><code>04-student-dashboard.html</code> — Student personal portal</div>
+      <div><code>05-admissions-grid.html</code> — Enterprise data table</div>
+      <div><code>06-admission-wizard.html</code> — 5-step form wizard</div>
+      <div><code>07-approval-workflow.html</code> — Approval timeline</div>
+      <div><code>08-login.html</code> — Role-aware login screen</div>
+      <div><code>09-college-admin-dashboard.html</code> — College admin hub</div>
+      <div><code>10-reports-analytics.html</code> — Reports & analytics</div>
+      <div><code>11-fee-management.html</code> — Fee collection & vouchers</div>
+      <div><code>12-examinations-results.html</code> — Exam results management</div>
+      <div><code>13-attendance-marking.html</code> — Attendance marking screen</div>
+      <div><code>14-student-profile.html</code> — Full student profile</div>
+      <div><code>15-parent-dashboard.html</code> — Parent / guardian portal</div>
+      <div><code>16-timetable.html</code> — Weekly timetable grid</div>
+      <div><code>17-academic-structure.html</code> — Programs & curriculum</div>
+      <div><code>18-user-management.html</code> — Users, roles & permissions</div>
+      <div><code>19-audit-log.html</code> — System audit trail</div>
+      <div><code>20-dpi-dashboard.html</code> — DPI / Directorate regional hub</div>
+      <div><code>21-marks-entry.html</code> — Faculty marks entry grid</div>
+      <div><code>22-communication-centre.html</code> — Inbox, SMS, announcements</div>
+      <div><code>23-college-profile.html</code> — Institutional profile</div>
+      <div><code>24-faculty-profile.html</code> — Faculty HR profile</div>
+      <div><code>25-library-management.html</code> — Book catalogue & borrowing</div>
+      <div><code>26-hostel-management.html</code> — Room map & residents</div>
+      <div><code>27-academic-calendar.html</code> — Calendar & session setup</div>
+      <div><code>28-notifications-centre.html</code> — Notifications & preferences</div>
+    </div>
+    <div class="alert alert-success" style="margin-top:16px;font-size:12px">
+      ✓ All 31 files use only <code>design-system.css</code> — no frameworks, no CDN, no build step. Download all files to one folder and open INDEX.html.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

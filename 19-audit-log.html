@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Audit Log — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .log-row { display:flex; align-items:flex-start; gap:12px; padding:11px 16px; border-bottom:1px solid var(--border-light); font-size:13px; transition:background .12s; }
+  .log-row:hover { background:var(--bg-secondary); }
+  .log-row:last-child { border-bottom:none; }
+  .log-type-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+  .log-action-pill { font-size:10px; font-weight:600; padding:2px 7px; border-radius:4px; flex-shrink:0; }
+  .log-action-pill.create { background:var(--color-success-bg); color:var(--color-success-text); }
+  .log-action-pill.update { background:var(--color-info-bg); color:var(--color-info-text); }
+  .log-action-pill.delete { background:var(--color-danger-bg); color:var(--color-danger-text); }
+  .log-action-pill.login  { background:var(--brand-50); color:var(--brand-600); }
+  .log-action-pill.approve { background:var(--color-success-bg); color:var(--color-success-text); }
+  .log-action-pill.reject  { background:var(--color-danger-bg); color:var(--color-danger-text); }
+  .log-action-pill.export  { background:var(--color-warning-bg); color:var(--color-warning-text); }
+  .log-diff { background:var(--bg-secondary); border-radius:var(--radius-sm); padding:6px 10px; margin-top:6px; font-size:11px; font-family:monospace; }
+  .diff-old { color:var(--color-danger-text); }
+  .diff-new { color:var(--color-success-text); }
+  .filter-chip-bar { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; align-items:center; }
+  .stat-pill { background:var(--bg-secondary); border:1px solid var(--border-light); border-radius:var(--radius-md); padding:10px 14px; display:flex; align-items:center; gap:10px; }
+  .stat-pill .sp-val { font-size:18px; font-weight:700; }
+  .stat-pill .sp-lbl { font-size:11px; color:var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">HED Super Admin</div>
+      <div class="role-sub">Provincial Administration</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">System</div>
+      <a class="nav-item" href="18-user-management.html"><span class="nav-icon">🔐</span><span>User Management</span></a>
+      <a class="nav-item active" href="#"><span class="nav-icon">🕵️</span><span>Audit Log</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">⚙️</span><span>System Settings</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🔔</span><span>Notifications</span></a>
+
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="01-hed-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+      <a class="nav-item" href="10-reports-analytics.html"><span class="nav-icon">📊</span><span>Reports</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">SA</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Super Admin</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>System</span><span>›</span>
+        <span class="crumb-active">Audit Log</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search by user, module, action…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">SA</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>System Audit Log</h1>
+          <p>Immutable record of all data changes and user actions · Province-wide</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">📅 Date range ▾</button>
+          <button class="btn btn-secondary">⬇ Export log</button>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+        <div class="stat-pill">
+          <div>
+            <div class="sp-val">2,84,124</div>
+            <div class="sp-lbl">Total events today</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div>
+            <div class="sp-val" style="color:var(--color-success-text)">8,412</div>
+            <div class="sp-lbl">Logins today</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div>
+            <div class="sp-val" style="color:var(--color-info-text)">1,240</div>
+            <div class="sp-lbl">Data changes</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div>
+            <div class="sp-val" style="color:var(--color-warning-text)">342</div>
+            <div class="sp-lbl">Exports</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div>
+            <div class="sp-val" style="color:var(--color-danger-text)">5</div>
+            <div class="sp-lbl">Failed logins (5+)</div>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <div>
+            <div class="sp-val">34</div>
+            <div class="sp-lbl">Approvals/rejections</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-chip-bar">
+        <span style="font-size:12px;font-weight:500;color:var(--text-muted)">Filters:</span>
+        <span class="filter-chip">Today <span class="remove">×</span></span>
+        <span class="filter-chip">All modules <span class="remove">×</span></span>
+        <button class="btn btn-secondary btn-sm">+ Add filter</button>
+        <button class="btn btn-ghost btn-sm" style="color:var(--text-muted)">Clear all</button>
+      </div>
+
+      <!-- Main layout -->
+      <div class="grid" style="grid-template-columns:1fr 300px;gap:16px">
+
+        <!-- Log table -->
+        <div class="card" style="padding:0;overflow:hidden">
+
+          <!-- Table header -->
+          <div style="display:grid;grid-template-columns:120px 80px 100px 1fr 100px 100px;gap:8px;padding:9px 16px;background:var(--bg-secondary);font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border-light)">
+            <span>Timestamp</span>
+            <span>Action</span>
+            <span>Module</span>
+            <span>Description</span>
+            <span>User</span>
+            <span>IP address</span>
+          </div>
+
+          <!-- Log entries -->
+          <div class="log-row">
+            <div class="log-type-dot" style="background:var(--brand-500)"></div>
+            <div style="width:115px;flex-shrink:0;font-size:11px;color:var(--text-muted);font-family:monospace">15 Jan 10:41:22</div>
+            <div style="width:75px;flex-shrink:0"><span class="log-action-pill approve">APPROVE</span></div>
+            <div style="width:95px;flex-shrink:0;font-size:12px;color:var(--text-secondary)">Admissions</div>
+            <div style="flex:1">
+              <div style="font-weight:500">Application approved — Amna Tariq (APP-2024-00412)</div>
+              <div style="font-size:11px;color:var(--text-muted)">FA Pre-Engineering · Seat allocated · Status changed: Pending → Approved</div>
+            </div>
+            <div style="width:95px;flex-shrink:0;font-size:12px"><div style="font-weight:500">M. Kamran</div><div style="color:var(--text-muted);font-size:10px">Admin Officer</div></div>
+            <div style="width:95px;flex-shrink:0;font-size:11px;font-family:monospace;color:var(--text-muted)">182.xx.xx.12</div>
+          </div>
+
+          <div class="log-row">
+            <div class="log-type-dot" style="background:var(--color-info-text)"></div>
+            <div style="width:115px;flex-shrink:0;font-size:11px;color:var(--text-muted);font-family:monospace">15 Jan 10:14:08</div>
+            <div style="width:75px;flex-shrink:0"><span class="log-action-pill update">UPDATE</span></div>
+            <div style="width:95px;flex-shrink:0;font-size:12px;color:var(--text-secondary)">Student</div>
+            <div style="flex:1">
+              <div style="font-weight:500">Student profile updated — Zara Ahmed (2024-CS-1142)</div>
+              <div style="font-size:11px;color:var(--text-muted)">Phone number changed</div>
+              <div class="log-diff">
+                <span class="diff-old">− Phone: 0321-1234567</span><br>
+                <span class="diff-new">+ Phone: 0321-9876543</span>
+              </div>
+            </div>
+            <div style="width:95px;flex-shrink:0;font-size:12px"><div style="font-weight:500">M. Kamran</div><div style="color:var(--text-muted);font-size:10px">Admin Officer</div></div>
+            <div style="width:95px;flex-shrink:0;font-size:11px;font-family:monospace;color:var(--text-muted)">182.xx.xx.12</div>
+          </div>
+
+          <div class="log-row">
+            <div class="log-type-dot" style="background:var(--brand-500)"></div>
+            <div style="width:115px;flex-shrink:0;font-size:11px;color:var(--text-muted);font-family:monospace">15 Jan 10:02:44</div>
+            <div style="width:75px;flex-shrink:0"><span class="log-action-pill login">LOGIN</span></div>
+            <div style="width:95px;flex-shrink:0;font-size:12px;color:var(--text-secondary)">Auth</div>
+            <div style="flex:1">
+              <div style="font-weight:500">Successful login — Dr. Ayesha Malik</div>
+              <div style="font-size:11px;color:var(--text-muted)">Faculty · GC Lahore · Chrome / Android · MFA verified</div>
+            </div>
+            <div style="width:95px;flex-shrink:0;font-size:12px"><div style="font-weight:500">Dr. A. Malik</div><div style="color:var(--text-muted);font-size:10px">Faculty</div></div>
+            <div style="width:95px;flex-shrink:0;font-size:11px;font-family:monospace;color:var(--text-muted)">39.xx.xx.44</div>
+          </div>
+
+          <div class="log-row">
+            <div class="log-type-dot" style="background:var(--color-success-text)"></div>
+            <div style="width:115px;flex-shrink:0;font-size:11px;color:var(--text-muted);font-family:monospace">15 Jan 09:48:11</div>
+            <div style="width:75px;flex-shrink:0"><span class="log-action-pill create">CREATE</span></div>
+            <div style="width:95px;flex-shrink:0;font-size:12px;color:var(--text-secondary)">Finance</div>
+            <div style="flex:1">
+              <div style="font-weight:500">Fee vouchers generated — Semester 6 (1,240 students)</div>
+              <div style="font-size:11px;color:var(--text-muted)">GC Lahore · Total amount: ₨ 2,29,40,000 · Due: 31 Jan 2025</div>
+            </div>
+            <div style="width:95px;flex-shrink:0;font-size:12px"><div style="font-weight:500">M. Kamran</div><div style="color:var(--text-muted);font-size:10px">Admin Officer</div></div>
+            <div style="width:95px;flex-shrink:0;font-size:11px;font-family:monospace;color:var(--text-muted)">182.xx.xx.12</div>
+          </div>
+
+          <div class="log-row">
+            <div class="log-type-dot" style="background:var(--color-warning-text)"></div>
+            <div style="width:115px;flex-shrink:0;font-size:11px;color:var(--text-muted);font-family:monospace">15 Jan 09:31:02</div>
+            <div style="width:75px;flex-shrink:0"><span class="log-action-pill export">EXPORT</span></div>
+            <div style="width:95px;flex-shrink:0;font-size:12px;color:var(--text-secondary)">Reports</div>
+            <div style="flex:1">
+              <div style="font-weight:500">Data export — Admission applications list</div>
+              <div style="font-size:11px;color:var(--text-muted)">Excel · 1,247 records · Filter: FA/F.Sc, Lahore, Pending</div>
+            </div>
+            <div style="width:95px;flex-shrink:0;font-size:12px"><div style="font-weight:500">Dr. R. Khan</div><div style="color:var(--text-muted);font-size:10px">DPI Centre</div></div>
+            <div style="width:95px;flex-shrink:0;font-size:11px;font-family:monospace;color:var(--text-muted)">202.xx.xx.8</div>
+          </div>
+
+          <div class="log-row">
+            <div class="log-type-dot" style="background:var(--color-danger-text)"></div>
+            <div style="width:115px;flex-shrink:0;font-size:11px;color:var(--text-muted);font-family:monospace">15 Jan 09:14:55</div>
+            <div style="width:75px;flex-shrink:0"><span class="log-action-pill reject">REJECT</span></div>
+            <div style="width:95px;flex-shrink:0;font-size:12px;color:var(--text-secondary)">Approvals</div>
+            <div style="flex:1">
+              <div style="font-weight:500">Program request rejected — B.Sc CS, GC Jhang (REQ-2025-PRG-0087)</div>
+              <div style="font-size:11px;color:var(--text-muted)">Reason: Insufficient qualified faculty. Returned for revision.</div>
+            </div>
+            <div style="width:95px;flex-shrink:0;font-size:12px"><div style="font-weight:500">Dr. R. Khan</div><div style="color:var(--text-muted);font-size:10px">DPI Centre</div></div>
+            <div style="width:95px;flex-shrink:0;font-size:11px;font-family:monospace;color:var(--text-muted)">202.xx.xx.8</div>
+          </div>
+
+          <div class="log-row">
+            <div class="log-type-dot" style="background:var(--color-danger-text)"></div>
+            <div style="width:115px;flex-shrink:0;font-size:11px;color:var(--text-muted);font-family:monospace">14 Jan 23:44:12</div>
+            <div style="width:75px;flex-shrink:0"><span class="log-action-pill delete">FAILED</span></div>
+            <div style="width:95px;flex-shrink:0;font-size:12px;color:var(--text-secondary)">Auth</div>
+            <div style="flex:1">
+              <div style="font-weight:500;color:var(--color-danger-text)">5 failed login attempts — account locked automatically</div>
+              <div style="font-size:11px;color:var(--text-muted)">User: blocked@gcc.edu.pk · Suspicious IP flagged · Account suspended</div>
+            </div>
+            <div style="width:95px;flex-shrink:0;font-size:12px"><div style="font-weight:500;color:var(--color-danger-text)">Unknown</div><div style="color:var(--text-muted);font-size:10px">Blocked</div></div>
+            <div style="width:95px;flex-shrink:0;font-size:11px;font-family:monospace;color:var(--color-danger-text)">103.xx.xx.7</div>
+          </div>
+
+          <div class="pagination">
+            <span class="text-muted text-sm">Showing 1–7 of 2,84,124 events today</span>
+            <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+              <select class="form-select" style="width:70px;font-size:12px;padding:4px 6px"><option>25</option><option>50</option><option>100</option></select>
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+              <span style="color:var(--text-muted);font-size:12px">…</span>
+              <button class="page-btn">→</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: summary panels -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+
+          <!-- Action type breakdown -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Events by type</div><div class="card-subtitle">Today</div></div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div>
+                <div class="flex-between mb-1"><span style="font-size:12px;display:flex;align-items:center;gap:6px"><span class="log-action-pill login">LOGIN</span>Logins</span><span style="font-size:12px;font-weight:600">8,412</span></div>
+                <div class="progress-bar"><div class="progress-fill brand" style="width:90%"></div></div>
+              </div>
+              <div>
+                <div class="flex-between mb-1"><span style="font-size:12px;display:flex;align-items:center;gap:6px"><span class="log-action-pill update">UPDATE</span>Updates</span><span style="font-size:12px;font-weight:600">840</span></div>
+                <div class="progress-bar"><div class="progress-fill info" style="width:45%"></div></div>
+              </div>
+              <div>
+                <div class="flex-between mb-1"><span style="font-size:12px;display:flex;align-items:center;gap:6px"><span class="log-action-pill create">CREATE</span>Creates</span><span style="font-size:12px;font-weight:600">400</span></div>
+                <div class="progress-bar"><div class="progress-fill success" style="width:30%"></div></div>
+              </div>
+              <div>
+                <div class="flex-between mb-1"><span style="font-size:12px;display:flex;align-items:center;gap:6px"><span class="log-action-pill export">EXPORT</span>Exports</span><span style="font-size:12px;font-weight:600">342</span></div>
+                <div class="progress-bar"><div class="progress-fill warning" style="width:20%"></div></div>
+              </div>
+              <div>
+                <div class="flex-between mb-1"><span style="font-size:12px;display:flex;align-items:center;gap:6px"><span class="log-action-pill approve">APPROVE</span>Approvals</span><span style="font-size:12px;font-weight:600">24</span></div>
+                <div class="progress-bar"><div class="progress-fill success" style="width:8%"></div></div>
+              </div>
+              <div>
+                <div class="flex-between mb-1"><span style="font-size:12px;display:flex;align-items:center;gap:6px"><span class="log-action-pill delete">DELETE</span>Deletes</span><span style="font-size:12px;font-weight:600">6</span></div>
+                <div class="progress-bar"><div class="progress-fill danger" style="width:3%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top active users -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Most active users</div><div class="card-subtitle">Today</div></div>
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:12px">
+              <div class="flex-between">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="avatar sm" style="background:var(--color-info-text)">MK</div>
+                  <div>
+                    <div style="font-weight:500">M. Kamran</div>
+                    <div style="color:var(--text-muted)">Admin · GC Lahore</div>
+                  </div>
+                </div>
+                <span class="badge badge-info">284 actions</span>
+              </div>
+              <div class="flex-between">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="avatar sm" style="background:var(--color-warning-text)">AM</div>
+                  <div>
+                    <div style="font-weight:500">Dr. A. Malik</div>
+                    <div style="color:var(--text-muted)">Faculty · GC Lahore</div>
+                  </div>
+                </div>
+                <span class="badge badge-warning">142 actions</span>
+              </div>
+              <div class="flex-between">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="avatar sm" style="background:var(--brand-500)">RK</div>
+                  <div>
+                    <div style="font-weight:500">Dr. R. Khan</div>
+                    <div style="color:var(--text-muted)">DPI Centre</div>
+                  </div>
+                </div>
+                <span class="badge badge-brand">98 actions</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security alert -->
+          <div class="alert alert-danger" style="font-size:12px">
+            ⚠ <strong>Security alert:</strong> 5 failed login attempts detected from IP 103.xx.xx.7 at 11:44 PM yesterday. Account auto-locked. Review recommended.
+            <div style="margin-top:8px">
+              <button class="btn btn-danger btn-sm">Review IP</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

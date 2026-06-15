@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admission Form Wizard — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .wizard-wrap { max-width:900px; margin:0 auto; }
+  .wizard-card { background:var(--bg-surface); border:1px solid var(--border-light); border-radius:var(--radius-xl); overflow:hidden; box-shadow:var(--shadow-md); }
+  .wizard-header { background:var(--bg-secondary); padding:var(--space-5) var(--space-6); border-bottom:1px solid var(--border-light); }
+  .wizard-body   { padding:var(--space-6); }
+  .wizard-footer { background:var(--bg-secondary); padding:var(--space-4) var(--space-6); border-top:1px solid var(--border-light); display:flex; align-items:center; justify-content:space-between; }
+  .form-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4); margin-bottom:var(--space-4); }
+  .form-grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:var(--space-4); margin-bottom:var(--space-4); }
+  .form-grid-4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:var(--space-4); margin-bottom:var(--space-4); }
+  .section-divider { font-size:13px; font-weight:600; color:var(--text-primary); padding-bottom:10px; border-bottom:1px solid var(--border-light); margin-bottom:var(--space-4); margin-top:var(--space-5); display:flex; align-items:center; gap:8px; }
+  .section-divider:first-child { margin-top:0; }
+  .autosave-note { font-size:12px; color:var(--color-success-text); display:flex; align-items:center; gap:5px; }
+  .step-wrap { display:flex; align-items:center; gap:0; margin-top:var(--space-4); }
+  .step-node { display:flex; align-items:center; gap:6px; }
+  .step-conn { flex:1; height:1.5px; min-width:20px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">Admission Operator</div>
+      <div class="role-sub">GC Lahore</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Admissions</div>
+      <a class="nav-item" href="05-admissions-grid.html"><span class="nav-icon">🎓</span><span>Applications</span></a>
+      <a class="nav-item active" href="#"><span class="nav-icon">📝</span><span>New Application</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📋</span><span>Merit Processing</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">💺</span><span>Seat Allocation</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">AO</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Admission Officer</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Admissions</span><span>›</span>
+        <a href="05-admissions-grid.html" style="color:var(--text-muted);text-decoration:none">Applications</a><span>›</span>
+        <span class="crumb-active">New Application</span>
+      </div>
+      <div class="topbar-actions" style="margin-left:auto">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">AO</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+      <div class="wizard-wrap">
+
+        <!-- Page heading -->
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Student Admission Application</h1>
+            <p>Session 2024–25 · GC Lahore · Complete all required fields</p>
+          </div>
+        </div>
+
+        <div class="wizard-card">
+
+          <!-- Wizard header + stepper -->
+          <div class="wizard-header">
+            <div class="flex-between">
+              <div>
+                <div style="font-size:14px;font-weight:600">Step 2 of 5 — Academic Qualifications</div>
+                <div style="font-size:12px;color:var(--text-muted);margin-top:2px">Enter previous educational qualifications</div>
+              </div>
+              <span class="badge badge-info">In progress</span>
+            </div>
+
+            <!-- Stepper -->
+            <div class="step-wrap">
+              <div class="step-node">
+                <div class="step-circle done">✓</div>
+                <span class="step-label done">Personal</span>
+              </div>
+              <div class="step-conn" style="background:var(--color-success-border)"></div>
+              <div class="step-node">
+                <div class="step-circle active">2</div>
+                <span class="step-label active">Academic</span>
+              </div>
+              <div class="step-conn" style="background:var(--border-light)"></div>
+              <div class="step-node">
+                <div class="step-circle pending">3</div>
+                <span class="step-label pending">Program</span>
+              </div>
+              <div class="step-conn" style="background:var(--border-light)"></div>
+              <div class="step-node">
+                <div class="step-circle pending">4</div>
+                <span class="step-label pending">Documents</span>
+              </div>
+              <div class="step-conn" style="background:var(--border-light)"></div>
+              <div class="step-node">
+                <div class="step-circle pending">5</div>
+                <span class="step-label pending">Review</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Form body -->
+          <div class="wizard-body">
+
+            <!-- Completed step preview -->
+            <div class="alert alert-success mb-4" style="font-size:13px">
+              ✓ Step 1 complete — Personal information saved for <strong>Amna Tariq</strong> · CNIC: 35201-9812345-2
+            </div>
+
+            <div class="section-divider">📚 Previous academic qualification</div>
+
+            <div class="form-grid-3">
+              <div class="form-group">
+                <label class="form-label">Qualification <span class="required">*</span></label>
+                <select class="form-select">
+                  <option>Matriculation (SSC)</option>
+                  <option>O-Levels</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Board / University <span class="required">*</span></label>
+                <select class="form-select">
+                  <option>BISE Lahore</option>
+                  <option>BISE Gujranwala</option>
+                  <option>BISE Rawalpindi</option>
+                  <option>BISE Multan</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Passing year <span class="required">*</span></label>
+                <select class="form-select">
+                  <option>2024</option>
+                  <option>2023</option>
+                  <option>2022</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-grid-4">
+              <div class="form-group">
+                <label class="form-label">Total marks</label>
+                <input class="form-input" type="number" placeholder="e.g. 1100" value="1100"/>
+                <div class="form-hint">Maximum marks of board</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Marks obtained <span class="required">*</span></label>
+                <input class="form-input valid" type="number" value="987"/>
+                <div class="form-valid">✓ Verified — 89.7%</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Roll number <span class="required">*</span></label>
+                <input class="form-input" type="text" value="421-2024-L"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Grade / Division</label>
+                <select class="form-select">
+                  <option>A1</option><option>A</option><option>B</option><option>C</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="section-divider">📐 Subject details</div>
+
+            <div class="form-grid-3">
+              <div class="form-group" style="grid-column:span 2">
+                <label class="form-label">Subject group / combination <span class="required">*</span></label>
+                <select class="form-select">
+                  <option>Pre-Engineering (Physics, Chemistry, Mathematics)</option>
+                  <option>Pre-Medical (Biology, Chemistry, Physics)</option>
+                  <option>Computer Science (CS, Physics, Mathematics)</option>
+                  <option>General Science (Biology, Chemistry, General Science)</option>
+                  <option>Arts (Urdu, English, Pakistan Studies, Islamiat)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Elective subject</label>
+                <input class="form-input" type="text" placeholder="Optional"/>
+                <div class="form-hint">If applicable</div>
+              </div>
+            </div>
+
+            <div class="section-divider">🔐 Verification</div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Certificate / DMC number <span class="required">*</span></label>
+                <input class="form-input valid" type="text" value="DMC-2024-98712"/>
+                <div class="form-valid">✓ Verified against BISE Lahore records</div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">CNIC of student <span class="required">*</span></label>
+                <input class="form-input error" type="text" value="35201-"/>
+                <div class="form-error">⚠ Incomplete — enter full 13-digit CNIC</div>
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">Father's CNIC <span class="required">*</span></label>
+                <input class="form-input" type="text" placeholder="XXXXX-XXXXXXX-X"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Domicile district</label>
+                <select class="form-select">
+                  <option>Lahore</option>
+                  <option>Gujranwala</option>
+                  <option>Faisalabad</option>
+                  <option>Rawalpindi</option>
+                  <option>Multan</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- BISE verification note -->
+            <div class="alert alert-info" style="font-size:12px">
+              ℹ This application will be automatically cross-verified with BISE Lahore records on submission. Ensure all details match the official DMC.
+            </div>
+
+          </div>
+
+          <!-- Footer -->
+          <div class="wizard-footer">
+            <div style="display:flex;align-items:center;gap:16px">
+              <button class="btn btn-secondary">← Back to Personal</button>
+              <div class="autosave-note">✓ Draft saved 12 seconds ago</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-ghost">Save draft</button>
+              <button class="btn btn-primary">Continue to Program → </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</div>
+</body>
+</html>

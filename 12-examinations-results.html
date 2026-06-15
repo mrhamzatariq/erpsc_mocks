@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Examinations & Results — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar { display:flex; gap:0; border-bottom:1px solid var(--border-light); margin-bottom:var(--space-5); }
+  .tab-item { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; transition:all .15s; white-space:nowrap; }
+  .tab-item.active { color:var(--brand-600); border-bottom-color:var(--brand-600); }
+  .tab-item:hover:not(.active) { color:var(--text-primary); background:var(--bg-secondary); }
+  .exam-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border-light); font-size:13px; }
+  .exam-row:last-child { border-bottom:none; }
+  .grade-pill { display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:50%; font-size:12px; font-weight:700; flex-shrink:0; }
+  .result-table thead tr { background:var(--bg-secondary); }
+  .result-table th { padding:8px 12px; text-align:left; font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.04em; border-bottom:1px solid var(--border-light); }
+  .result-table td { padding:9px 12px; border-bottom:1px solid var(--border-light); font-size:13px; vertical-align:middle; }
+  .result-table tr:last-child td { border-bottom:none; }
+  .result-table tr:hover td { background:var(--bg-secondary); }
+  .marks-bar { background:var(--bg-tertiary); border-radius:var(--radius-full); height:5px; overflow:hidden; margin-top:3px; }
+  .marks-fill { height:100%; border-radius:var(--radius-full); }
+  .schedule-card { border:1px solid var(--border-light); border-radius:var(--radius-md); padding:12px 14px; margin-bottom:8px; }
+  .schedule-card.upcoming { border-left:3px solid var(--brand-500); }
+  .schedule-card.ongoing  { border-left:3px solid var(--color-warning-text); background:var(--color-warning-bg); }
+  .schedule-card.done     { border-left:3px solid var(--color-success-text); opacity:.7; }
+  .stat-box { background:var(--bg-secondary); border-radius:var(--radius-md); padding:12px; text-align:center; }
+  .stat-box .val { font-size:22px; font-weight:700; }
+  .stat-box .lbl { font-size:11px; color:var(--text-muted); margin-top:2px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">College Administration</div>
+      <div class="role-sub">GC Lahore</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="02-principal-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">Examinations</div>
+      <a class="nav-item active" href="#"><span class="nav-icon">📝</span><span>Exam Management</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📅</span><span>Exam Schedule</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🔢</span><span>Marks Entry</span><span class="nav-badge warn">3</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📊</span><span>Result Processing</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🎓</span><span>Transcripts</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🧪</span><span>Practical Exams</span></a>
+
+      <div class="sidebar-section-label">Academics</div>
+      <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>Students</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">👨‍🏫</span><span>Faculty</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">EA</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Exam Admin</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">GC Lahore</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Examinations</span><span>›</span>
+        <span class="crumb-active">Exam Management</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search exams, results, students…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">EA</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Examinations & Results</h1>
+          <p>GC Lahore · Semester 5 · Academic Year 2024–25</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">📅 Schedule exam</button>
+          <button class="btn btn-secondary">⬇ Download results</button>
+          <button class="btn btn-primary">📊 Publish results</button>
+        </div>
+      </div>
+
+      <!-- KPI strip -->
+      <div class="grid grid-5 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Total examinees</div>
+          <div class="metric-value">4,612</div>
+          <div class="metric-delta delta-neutral">Registered students</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Appeared</div>
+          <div class="metric-value">4,480</div>
+          <div class="metric-delta delta-up">▲ 97.1%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Pass rate</div>
+          <div class="metric-value" style="color:var(--color-success-text)">94.2%</div>
+          <div class="metric-delta delta-up">▲ vs 91.8% last sem</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Results pending</div>
+          <div class="metric-value" style="color:var(--color-warning-text)">3</div>
+          <div class="metric-delta" style="color:var(--color-warning-text)">Subjects unpublished</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Distinctions</div>
+          <div class="metric-value" style="color:var(--brand-600)">284</div>
+          <div class="metric-delta delta-up">▲ 6.3% of appeared</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active">Result overview</div>
+        <div class="tab-item">Exam schedule</div>
+        <div class="tab-item">Marks entry</div>
+        <div class="tab-item">Practical exams</div>
+        <div class="tab-item">Transcripts</div>
+      </div>
+
+      <!-- Main grid -->
+      <div class="grid" style="grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:16px">
+
+        <!-- Result overview table -->
+        <div class="card" style="padding:0;overflow:hidden">
+          <div style="padding:16px 20px;border-bottom:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="card-title">Subject-wise result summary</div>
+              <div class="card-subtitle">Semester 5 · BS Computer Science</div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-ghost btn-sm">Filter ▾</button>
+              <button class="btn btn-secondary btn-sm">⬇ Export</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table class="result-table">
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Code</th>
+                  <th>Appeared</th>
+                  <th>Passed</th>
+                  <th>Pass %</th>
+                  <th>Avg marks</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div style="font-weight:500">Data Structures</div>
+                    <div style="font-size:11px;color:var(--text-muted)">Theory + Practical</div>
+                  </td>
+                  <td class="font-mono text-sm">CS-301</td>
+                  <td>44</td>
+                  <td style="color:var(--color-success-text);font-weight:500">42</td>
+                  <td>
+                    <div style="font-weight:600;color:var(--color-success-text)">95.5%</div>
+                    <div class="marks-bar"><div class="marks-fill" style="width:95%;background:var(--color-success-text)"></div></div>
+                  </td>
+                  <td>
+                    <div style="font-weight:600">74.2</div>
+                    <div style="font-size:11px;color:var(--text-muted)">out of 100</div>
+                  </td>
+                  <td><span class="badge badge-success">Published</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="font-weight:500">Algorithms</div>
+                    <div style="font-size:11px;color:var(--text-muted)">Theory</div>
+                  </td>
+                  <td class="font-mono text-sm">CS-401</td>
+                  <td>38</td>
+                  <td style="color:var(--color-success-text);font-weight:500">35</td>
+                  <td>
+                    <div style="font-weight:600;color:var(--color-success-text)">92.1%</div>
+                    <div class="marks-bar"><div class="marks-fill" style="width:92%;background:var(--color-success-text)"></div></div>
+                  </td>
+                  <td>
+                    <div style="font-weight:600">68.7</div>
+                    <div style="font-size:11px;color:var(--text-muted)">out of 100</div>
+                  </td>
+                  <td><span class="badge badge-success">Published</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="font-weight:500">OOP Lab</div>
+                    <div style="font-size:11px;color:var(--text-muted)">Practical</div>
+                  </td>
+                  <td class="font-mono text-sm">CS-211L</td>
+                  <td>32</td>
+                  <td style="color:var(--color-success-text);font-weight:500">31</td>
+                  <td>
+                    <div style="font-weight:600;color:var(--color-success-text)">96.9%</div>
+                    <div class="marks-bar"><div class="marks-fill" style="width:97%;background:var(--color-success-text)"></div></div>
+                  </td>
+                  <td>
+                    <div style="font-weight:600">81.4</div>
+                    <div style="font-size:11px;color:var(--text-muted)">out of 100</div>
+                  </td>
+                  <td><span class="badge badge-success">Published</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="font-weight:500">Islamic Studies</div>
+                    <div style="font-size:11px;color:var(--text-muted)">Theory</div>
+                  </td>
+                  <td class="font-mono text-sm">HU-201</td>
+                  <td>52</td>
+                  <td style="color:var(--color-warning-text);font-weight:500">44</td>
+                  <td>
+                    <div style="font-weight:600;color:var(--color-warning-text)">84.6%</div>
+                    <div class="marks-bar"><div class="marks-fill" style="width:85%;background:var(--color-warning-text)"></div></div>
+                  </td>
+                  <td>
+                    <div style="font-weight:600">62.1</div>
+                    <div style="font-size:11px;color:var(--text-muted)">out of 100</div>
+                  </td>
+                  <td><span class="badge badge-warning">Pending</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="font-weight:500">Pakistan Studies</div>
+                    <div style="font-size:11px;color:var(--text-muted)">Theory</div>
+                  </td>
+                  <td class="font-mono text-sm">HU-101</td>
+                  <td>52</td>
+                  <td style="color:var(--color-warning-text);font-weight:500">41</td>
+                  <td>
+                    <div style="font-weight:600;color:var(--color-warning-text)">78.8%</div>
+                    <div class="marks-bar"><div class="marks-fill" style="width:79%;background:var(--color-warning-text)"></div></div>
+                  </td>
+                  <td>
+                    <div style="font-weight:600">57.9</div>
+                    <div style="font-size:11px;color:var(--text-muted)">out of 100</div>
+                  </td>
+                  <td><span class="badge badge-warning">Pending</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="font-weight:500">English Communication</div>
+                    <div style="font-size:11px;color:var(--text-muted)">Theory</div>
+                  </td>
+                  <td class="font-mono text-sm">EN-301</td>
+                  <td>44</td>
+                  <td style="color:var(--color-danger-text);font-weight:500">38</td>
+                  <td>
+                    <div style="font-weight:600;color:var(--color-danger-text)">86.4%</div>
+                    <div class="marks-bar"><div class="marks-fill" style="width:86%;background:var(--color-danger-text)"></div></div>
+                  </td>
+                  <td>
+                    <div style="font-weight:600">—</div>
+                    <div style="font-size:11px;color:var(--text-muted)">Not entered</div>
+                  </td>
+                  <td><span class="badge badge-danger">Marks missing</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right panel -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+
+          <!-- Grade distribution -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Grade distribution</div>
+              <div class="card-subtitle">BS-CS Semester 5 — all subjects</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div>
+                <div class="flex-between mb-1">
+                  <span style="font-size:12px;display:flex;align-items:center;gap:6px">
+                    <span class="grade-pill" style="background:var(--brand-50);color:var(--brand-700);width:24px;height:24px;font-size:11px">A+</span>Distinction
+                  </span>
+                  <span style="font-size:12px;font-weight:600">284 (6.3%)</span>
+                </div>
+                <div class="marks-bar" style="height:7px"><div class="marks-fill" style="width:6.3%;background:var(--brand-600)"></div></div>
+              </div>
+              <div>
+                <div class="flex-between mb-1">
+                  <span style="font-size:12px;display:flex;align-items:center;gap:6px">
+                    <span class="grade-pill" style="background:var(--color-success-bg);color:var(--color-success-text);width:24px;height:24px;font-size:11px">A</span>Excellent
+                  </span>
+                  <span style="font-size:12px;font-weight:600">812 (18.1%)</span>
+                </div>
+                <div class="marks-bar" style="height:7px"><div class="marks-fill" style="width:18.1%;background:var(--color-success-text)"></div></div>
+              </div>
+              <div>
+                <div class="flex-between mb-1">
+                  <span style="font-size:12px;display:flex;align-items:center;gap:6px">
+                    <span class="grade-pill" style="background:var(--color-success-bg);color:var(--color-success-text);width:24px;height:24px;font-size:11px">B</span>Good
+                  </span>
+                  <span style="font-size:12px;font-weight:600">1,340 (29.9%)</span>
+                </div>
+                <div class="marks-bar" style="height:7px"><div class="marks-fill" style="width:29.9%;background:#7dc85a"></div></div>
+              </div>
+              <div>
+                <div class="flex-between mb-1">
+                  <span style="font-size:12px;display:flex;align-items:center;gap:6px">
+                    <span class="grade-pill" style="background:var(--color-info-bg);color:var(--color-info-text);width:24px;height:24px;font-size:11px">C</span>Average
+                  </span>
+                  <span style="font-size:12px;font-weight:600">1,284 (28.6%)</span>
+                </div>
+                <div class="marks-bar" style="height:7px"><div class="marks-fill" style="width:28.6%;background:var(--color-info-text)"></div></div>
+              </div>
+              <div>
+                <div class="flex-between mb-1">
+                  <span style="font-size:12px;display:flex;align-items:center;gap:6px">
+                    <span class="grade-pill" style="background:var(--color-warning-bg);color:var(--color-warning-text);width:24px;height:24px;font-size:11px">D</span>Pass
+                  </span>
+                  <span style="font-size:12px;font-weight:600">492 (11.0%)</span>
+                </div>
+                <div class="marks-bar" style="height:7px"><div class="marks-fill" style="width:11%;background:var(--color-warning-text)"></div></div>
+              </div>
+              <div>
+                <div class="flex-between mb-1">
+                  <span style="font-size:12px;display:flex;align-items:center;gap:6px">
+                    <span class="grade-pill" style="background:var(--color-danger-bg);color:var(--color-danger-text);width:24px;height:24px;font-size:11px">F</span>Fail
+                  </span>
+                  <span style="font-size:12px;font-weight:600">268 (6.0%)</span>
+                </div>
+                <div class="marks-bar" style="height:7px"><div class="marks-fill" style="width:6%;background:var(--color-danger-text)"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upcoming exams -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Upcoming exams</div>
+              <div class="card-subtitle">Next 7 days</div>
+            </div>
+
+            <div class="schedule-card ongoing">
+              <div class="flex-between mb-1">
+                <span style="font-size:13px;font-weight:600">Mid-term — CS-401</span>
+                <span class="badge badge-warning">Today 2 PM</span>
+              </div>
+              <div style="font-size:12px;color:var(--text-muted)">Algorithms · Room 8 · 38 students</div>
+            </div>
+
+            <div class="schedule-card upcoming">
+              <div class="flex-between mb-1">
+                <span style="font-size:13px;font-weight:600">Mid-term — HU-201</span>
+                <span class="badge badge-info">Tomorrow 10 AM</span>
+              </div>
+              <div style="font-size:12px;color:var(--text-muted)">Islamic Studies · Hall A · 52 students</div>
+            </div>
+
+            <div class="schedule-card upcoming">
+              <div class="flex-between mb-1">
+                <span style="font-size:13px;font-weight:600">Practical — CS-211L</span>
+                <span class="badge badge-info">17 Jan, 9 AM</span>
+              </div>
+              <div style="font-size:12px;color:var(--text-muted)">OOP Lab · Lab 2 · 32 students</div>
+            </div>
+
+            <div class="schedule-card done">
+              <div class="flex-between mb-1">
+                <span style="font-size:13px;font-weight:600">Mid-term — CS-301</span>
+                <span class="badge badge-success">Done</span>
+              </div>
+              <div style="font-size:12px;color:var(--text-muted)">Data Structures · 10 Jan · Result published</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Student-level result preview -->
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div class="card-title">Student result details</div>
+            <div class="card-subtitle">BS-CS Semester 5 — individual marks</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <div style="background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:6px 10px;font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:6px;width:200px">
+              <span>🔍</span><input type="text" placeholder="Search student…" style="border:none;background:none;outline:none;font-size:13px;width:100%;color:var(--text-primary)"/>
+            </div>
+            <button class="btn btn-secondary btn-sm">⬇ Export</button>
+            <button class="btn btn-primary btn-sm">🖨 Print all</button>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="result-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Roll no.</th>
+                <th>CS-301</th>
+                <th>CS-401</th>
+                <th>CS-211L</th>
+                <th>HU-201</th>
+                <th>HU-101</th>
+                <th>Total</th>
+                <th>GPA</th>
+                <th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div style="font-weight:500">Zara Ahmed</div></td>
+                <td class="font-mono text-sm">2024-CS-1142</td>
+                <td><span class="badge badge-success">82</span></td>
+                <td><span class="badge badge-success">79</span></td>
+                <td><span class="badge badge-success">88</span></td>
+                <td><span class="badge badge-info">71</span></td>
+                <td><span class="badge badge-info">—</span></td>
+                <td style="font-weight:600">420/500</td>
+                <td style="font-weight:700;color:var(--brand-600)">3.72</td>
+                <td><span class="badge badge-success">Pass</span></td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:500">Hassan Ali</div></td>
+                <td class="font-mono text-sm">2024-CS-1089</td>
+                <td><span class="badge badge-success">91</span></td>
+                <td><span class="badge badge-success">87</span></td>
+                <td><span class="badge badge-success">94</span></td>
+                <td><span class="badge badge-success">83</span></td>
+                <td><span class="badge badge-info">—</span></td>
+                <td style="font-weight:600">455/500</td>
+                <td style="font-weight:700;color:var(--brand-600)">3.91</td>
+                <td><span class="badge badge-brand">Distinction</span></td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:500">Amna Tariq</div></td>
+                <td class="font-mono text-sm">2024-CS-1204</td>
+                <td><span class="badge badge-info">68</span></td>
+                <td><span class="badge badge-warning">54</span></td>
+                <td><span class="badge badge-info">72</span></td>
+                <td><span class="badge badge-warning">59</span></td>
+                <td><span class="badge badge-info">—</span></td>
+                <td style="font-weight:600">353/500</td>
+                <td style="font-weight:700;color:var(--text-secondary)">2.84</td>
+                <td><span class="badge badge-success">Pass</span></td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:500">Bilal Ahmed</div></td>
+                <td class="font-mono text-sm">2024-CS-0341</td>
+                <td><span class="badge badge-warning">51</span></td>
+                <td><span class="badge badge-danger">38</span></td>
+                <td><span class="badge badge-warning">62</span></td>
+                <td><span class="badge badge-danger">42</span></td>
+                <td><span class="badge badge-info">—</span></td>
+                <td style="font-weight:600">283/500</td>
+                <td style="font-weight:700;color:var(--color-danger-text)">1.74</td>
+                <td><span class="badge badge-danger">Fail (2)</span></td>
+              </tr>
+              <tr>
+                <td><div style="font-weight:500">Sara Noor</div></td>
+                <td class="font-mono text-sm">2022-CS-0112</td>
+                <td><span class="badge badge-success">77</span></td>
+                <td><span class="badge badge-success">81</span></td>
+                <td><span class="badge badge-success">85</span></td>
+                <td><span class="badge badge-info">67</span></td>
+                <td><span class="badge badge-info">—</span></td>
+                <td style="font-weight:600">410/500</td>
+                <td style="font-weight:700;color:var(--brand-600)">3.44</td>
+                <td><span class="badge badge-success">Pass</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <span class="text-muted text-sm">Showing 1–5 of 44 students</span>
+          <div style="display:flex;gap:6px;margin-left:auto">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">→</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

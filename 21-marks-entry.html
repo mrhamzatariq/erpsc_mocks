@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Marks Entry — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .marks-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .marks-table thead tr { background:var(--bg-secondary); position:sticky; top:0; z-index:1; }
+  .marks-table th { padding:10px 10px; text-align:center; font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.04em; border-bottom:1px solid var(--border-light); border-right:1px solid var(--border-light); white-space:nowrap; }
+  .marks-table th.left { text-align:left; }
+  .marks-table td { padding:6px 8px; border-bottom:1px solid var(--border-light); border-right:1px solid var(--border-light); text-align:center; vertical-align:middle; }
+  .marks-table td.left { text-align:left; }
+  .marks-table tr:last-child td { border-bottom:none; }
+  .marks-table tr:hover td { background:var(--bg-secondary); }
+  .marks-input { width:52px; padding:5px 6px; text-align:center; font-size:13px; font-family:inherit; border:1px solid var(--border-medium); border-radius:var(--radius-sm); background:var(--bg-surface); outline:none; transition:border-color .15s, box-shadow .15s; }
+  .marks-input:focus { border-color:var(--brand-500); box-shadow:0 0 0 3px rgba(107,99,212,.12); }
+  .marks-input.over-max { border-color:var(--color-danger-border); background:var(--color-danger-bg); }
+  .marks-input.filled { border-color:var(--color-success-border); background:var(--color-success-bg); }
+  .total-cell { font-weight:700; font-size:14px; }
+  .total-cell.good { color:var(--color-success-text); }
+  .total-cell.avg  { color:var(--color-warning-text); }
+  .total-cell.low  { color:var(--color-danger-text); }
+  .col-header-group { text-align:center; font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; padding:6px; background:var(--bg-tertiary); border-bottom:1px solid var(--border-light); border-right:1px solid var(--border-light); }
+  .save-bar { background:var(--bg-surface); border-top:1px solid var(--border-light); padding:14px 20px; display:flex; align-items:center; justify-content:space-between; }
+  .assessment-tab { padding:8px 14px; font-size:12px; font-weight:500; border:1px solid var(--border-medium); border-radius:var(--radius-md); cursor:pointer; background:var(--bg-surface); color:var(--text-muted); transition:all .15s; }
+  .assessment-tab.active { background:var(--brand-600); color:#fff; border-color:var(--brand-700); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">Faculty Member</div>
+      <div class="role-sub">Dept. Computer Science</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="03-faculty-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+      <div class="sidebar-section-label">Teaching</div>
+      <a class="nav-item" href="16-timetable.html"><span class="nav-icon">📅</span><span>My Timetable</span></a>
+      <a class="nav-item" href="13-attendance-marking.html"><span class="nav-icon">✅</span><span>Attendance</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📚</span><span>My Subjects</span></a>
+      <div class="sidebar-section-label">Assessment</div>
+      <a class="nav-item active" href="#"><span class="nav-icon">📝</span><span>Marks Entry</span><span class="nav-badge">1</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📋</span><span>Assignments</span></a>
+      <a class="nav-item" href="12-examinations-results.html"><span class="nav-icon">🏆</span><span>Results</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">AM</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Dr. Ayesha Malik</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">CS Department</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Assessment</span><span>›</span>
+        <span>Marks Entry</span><span>›</span>
+        <span class="crumb-active">Data Structures — CS-301</span>
+      </div>
+      <div class="topbar-actions" style="margin-left:auto">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">AM</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Marks Entry — Data Structures (CS-301)</h1>
+          <p>BS Computer Science · 3rd Semester · Section A · GC Lahore · 44 students</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">⬇ Download template</button>
+          <button class="btn btn-secondary">⬆ Import from Excel</button>
+          <button class="btn btn-primary">✓ Submit marks</button>
+        </div>
+      </div>
+
+      <!-- Alert -->
+      <div class="alert alert-danger mb-4" style="font-size:13px">
+        ⚠ <strong>Mid-term marks overdue.</strong> Deadline was 12 Jan 2025. Please submit immediately to avoid academic record delays.
+      </div>
+
+      <!-- Assessment type selector -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:12px;font-weight:500;color:var(--text-muted)">Assessment type:</span>
+        <div class="assessment-tab active">Mid-term (25 marks)</div>
+        <div class="assessment-tab">Quiz 1 (10)</div>
+        <div class="assessment-tab">Quiz 2 (10)</div>
+        <div class="assessment-tab">Quiz 3 (10)</div>
+        <div class="assessment-tab">Assignment (10)</div>
+        <div class="assessment-tab">Practical (25)</div>
+        <div class="assessment-tab">Final (100)</div>
+      </div>
+
+      <!-- Info strip -->
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+        <div style="background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:8px 14px;font-size:12px">
+          <span style="color:var(--text-muted)">Total marks: </span><strong>25</strong>
+        </div>
+        <div style="background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:8px 14px;font-size:12px">
+          <span style="color:var(--text-muted)">Pass marks: </span><strong>10 (40%)</strong>
+        </div>
+        <div style="background:var(--color-success-bg);border:1px solid var(--color-success-border);border-radius:var(--radius-md);padding:8px 14px;font-size:12px;color:var(--color-success-text)">
+          <strong>38</strong> entries filled
+        </div>
+        <div style="background:var(--color-danger-bg);border:1px solid var(--color-danger-border);border-radius:var(--radius-md);padding:8px 14px;font-size:12px;color:var(--color-danger-text)">
+          <strong>6</strong> still blank
+        </div>
+        <div style="background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:8px 14px;font-size:12px;margin-left:auto">
+          <span style="color:var(--text-muted)">Class avg: </span><strong>18.4 / 25</strong>
+        </div>
+      </div>
+
+      <!-- Marks table card -->
+      <div class="card" style="padding:0;overflow:hidden">
+
+        <div style="overflow-x:auto;max-height:520px;overflow-y:auto">
+          <table class="marks-table">
+            <thead>
+              <tr>
+                <th class="left" style="width:32px">#</th>
+                <th class="left" style="min-width:160px">Student</th>
+                <th class="left" style="min-width:120px">Roll number</th>
+                <th colspan="5" class="col-header-group" style="background:var(--color-info-bg)">Internal assessment (50)</th>
+                <th style="width:90px">Mid-term<br>/25</th>
+                <th style="width:80px">Total<br>/75</th>
+                <th style="width:70px">%</th>
+                <th style="width:60px">Grade</th>
+              </tr>
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th style="width:60px;background:var(--color-info-bg)">Quiz 1<br>/10</th>
+                <th style="width:60px;background:var(--color-info-bg)">Quiz 2<br>/10</th>
+                <th style="width:60px;background:var(--color-info-bg)">Quiz 3<br>/10</th>
+                <th style="width:70px;background:var(--color-info-bg)">Assign.<br>/10</th>
+                <th style="width:70px;background:var(--color-info-bg)">Practical<br>/10</th>
+                <th></th><th></th><th></th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Row 1 -->
+              <tr>
+                <td style="color:var(--text-muted);font-size:12px">1</td>
+                <td class="left"><div style="font-weight:500">Zara Ahmed</div></td>
+                <td class="left font-mono" style="font-size:11px">2024-CS-1142</td>
+                <td><input class="marks-input filled" type="number" value="8" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="9" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="7" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="9" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="8" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="21" min="0" max="25"/></td>
+                <td class="total-cell good">62</td>
+                <td style="font-size:12px;font-weight:500;color:var(--color-success-text)">82.7%</td>
+                <td><span class="badge badge-success">A</span></td>
+              </tr>
+              <!-- Row 2 -->
+              <tr>
+                <td style="color:var(--text-muted);font-size:12px">2</td>
+                <td class="left"><div style="font-weight:500">Hassan Ali</div></td>
+                <td class="left font-mono" style="font-size:11px">2024-CS-1089</td>
+                <td><input class="marks-input filled" type="number" value="10" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="9" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="10" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="10" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="9" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="24" min="0" max="25"/></td>
+                <td class="total-cell good">72</td>
+                <td style="font-size:12px;font-weight:500;color:var(--color-success-text)">96.0%</td>
+                <td><span class="badge badge-brand">A+</span></td>
+              </tr>
+              <!-- Row 3 -->
+              <tr>
+                <td style="color:var(--text-muted);font-size:12px">3</td>
+                <td class="left"><div style="font-weight:500">Amna Tariq</div></td>
+                <td class="left font-mono" style="font-size:11px">2024-CS-1204</td>
+                <td><input class="marks-input filled" type="number" value="7" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="6" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="8" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="7" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="7" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="17" min="0" max="25"/></td>
+                <td class="total-cell avg">52</td>
+                <td style="font-size:12px;font-weight:500;color:var(--color-warning-text)">69.3%</td>
+                <td><span class="badge badge-info">C</span></td>
+              </tr>
+              <!-- Row 4 — failing -->
+              <tr style="background:var(--color-danger-bg)">
+                <td style="color:var(--text-muted);font-size:12px">4</td>
+                <td class="left"><div style="font-weight:500">Bilal Ahmed</div><div style="font-size:10px;color:var(--color-danger-text)">⚠ Likely fail</div></td>
+                <td class="left font-mono" style="font-size:11px">2024-CS-0341</td>
+                <td><input class="marks-input filled" type="number" value="4" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="5" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="3" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="6" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="5" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="9" min="0" max="25"/></td>
+                <td class="total-cell low">32</td>
+                <td style="font-size:12px;font-weight:500;color:var(--color-danger-text)">42.7%</td>
+                <td><span class="badge badge-danger">D</span></td>
+              </tr>
+              <!-- Row 5 — blank -->
+              <tr style="background:var(--color-warning-bg)">
+                <td style="color:var(--text-muted);font-size:12px">5</td>
+                <td class="left"><div style="font-weight:500">Sara Noor</div><div style="font-size:10px;color:var(--color-warning-text)">Marks not entered</div></td>
+                <td class="left font-mono" style="font-size:11px">2022-CS-0112</td>
+                <td><input class="marks-input" type="number" placeholder="—" min="0" max="10"/></td>
+                <td><input class="marks-input" type="number" placeholder="—" min="0" max="10"/></td>
+                <td><input class="marks-input" type="number" placeholder="—" min="0" max="10"/></td>
+                <td><input class="marks-input" type="number" placeholder="—" min="0" max="10"/></td>
+                <td><input class="marks-input" type="number" placeholder="—" min="0" max="10"/></td>
+                <td><input class="marks-input" type="number" placeholder="—" min="0" max="25"/></td>
+                <td class="total-cell" style="color:var(--text-muted)">—</td>
+                <td style="font-size:12px;color:var(--text-muted)">—</td>
+                <td><span class="badge badge-neutral">—</span></td>
+              </tr>
+              <!-- Row 6 -->
+              <tr>
+                <td style="color:var(--text-muted);font-size:12px">6</td>
+                <td class="left"><div style="font-weight:500">Ali Kamran</div></td>
+                <td class="left font-mono" style="font-size:11px">2024-CS-1301</td>
+                <td><input class="marks-input filled" type="number" value="9" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="8" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="9" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="8" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="9" min="0" max="10"/></td>
+                <td><input class="marks-input filled" type="number" value="22" min="0" max="25"/></td>
+                <td class="total-cell good">65</td>
+                <td style="font-size:12px;font-weight:500;color:var(--color-success-text)">86.7%</td>
+                <td><span class="badge badge-success">A</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Table footer / summary row -->
+        <div style="padding:10px 16px;background:var(--bg-secondary);border-top:1px solid var(--border-light);display:flex;gap:20px;font-size:12px">
+          <span><strong>Class avg:</strong> 18.4 / 25 mid-term</span>
+          <span style="color:var(--color-success-text)"><strong>Pass:</strong> 40 students</span>
+          <span style="color:var(--color-danger-text)"><strong>Fail:</strong> 2 students</span>
+          <span style="color:var(--text-muted)"><strong>Blank:</strong> 6 entries</span>
+          <span style="margin-left:auto;color:var(--color-success-text)">✓ Auto-saved 20 seconds ago</span>
+        </div>
+      </div>
+
+      <!-- Save bar -->
+      <div class="save-bar" style="border-radius:var(--radius-lg);margin-top:14px">
+        <div style="font-size:12px;color:var(--text-muted)">All marks are saved in draft. Submit when complete to publish to student records.</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost">Reset</button>
+          <button class="btn btn-secondary">Save draft</button>
+          <button class="btn btn-primary" style="padding:10px 24px">✓ Submit all marks</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

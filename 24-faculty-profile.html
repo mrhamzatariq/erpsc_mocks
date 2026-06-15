@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Faculty Profile — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar{display:flex;gap:0;border-bottom:1px solid var(--border-light);margin-bottom:var(--space-5)}
+  .tab-item{padding:10px 18px;font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+  .tab-item.active{color:var(--brand-600);border-bottom-color:var(--brand-600)}
+  .info-row{display:flex;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:13px;gap:8px}
+  .info-row:last-child{border-bottom:none}
+  .info-key{color:var(--text-muted);width:180px;flex-shrink:0}
+  .profile-banner{background:linear-gradient(135deg,var(--brand-900) 0%,var(--brand-600) 100%);border-radius:var(--radius-xl);padding:24px 28px;margin-bottom:20px;color:#fff;display:flex;align-items:center;gap:20px}
+  .assign-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-light);font-size:13px}
+  .assign-row:last-child{border-bottom:none}
+  .qual-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-light);font-size:13px}
+  .qual-row:last-child{border-bottom:none}
+  .qual-icon{width:34px;height:34px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:var(--brand-50)}
+  .perf-stat{text-align:center;background:var(--bg-secondary);border-radius:var(--radius-md);padding:12px}
+  .perf-stat .val{font-size:22px;font-weight:700}
+  .perf-stat .lbl{font-size:11px;color:var(--text-muted);margin-top:2px}
+  .leave-row{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border-light);font-size:13px}
+  .leave-row:last-child{border-bottom:none}
+  .timeline-entry{display:flex;gap:14px;padding-bottom:16px;position:relative}
+  .timeline-entry:last-child{padding-bottom:0}
+  .tl-left{display:flex;flex-direction:column;align-items:center;width:28px;flex-shrink:0}
+  .tl-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;z-index:1}
+  .tl-line{width:1.5px;flex:1;margin:3px 0;background:var(--border-light)}
+  .tl-content{flex:1;padding-top:4px}
+  .tl-title{font-size:13px;font-weight:600;margin-bottom:1px}
+  .tl-sub{font-size:11px;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">College Administration</div>
+      <div class="role-sub">GC Lahore</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="02-principal-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+      <div class="sidebar-section-label">Faculty</div>
+      <a class="nav-item" href="#"><span class="nav-icon">👨‍🏫</span><span>Faculty List</span></a>
+      <a class="nav-item active" href="#"><span class="nav-icon">👤</span><span>Faculty Profile</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📊</span><span>Workload Reports</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🏖</span><span>Leave Management</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📅</span><span>Timetable Assign.</span></a>
+      <div class="sidebar-section-label">Academics</div>
+      <a class="nav-item" href="16-timetable.html"><span class="nav-icon">📅</span><span>Timetable</span></a>
+      <a class="nav-item" href="13-attendance-marking.html"><span class="nav-icon">✅</span><span>Attendance</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">MK</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Muhammad Kamran</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">Admin Officer</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Faculty</span><span>›</span>
+        <span>Faculty List</span><span>›</span>
+        <span class="crumb-active">Dr. Ayesha Malik</span>
+      </div>
+      <div class="topbar-actions" style="margin-left:auto">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">MK</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="breadcrumb" style="margin-bottom:4px"><span style="font-size:12px;color:var(--text-muted);cursor:pointer">← Back to faculty list</span></div>
+          <h1>Faculty Profile</h1>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">✏ Edit profile</button>
+          <button class="btn btn-secondary">📋 Assign subjects</button>
+          <button class="btn btn-secondary">🏖 Manage leave</button>
+          <button class="btn btn-primary">⬇ Profile report</button>
+        </div>
+      </div>
+
+      <!-- Profile banner -->
+      <div class="profile-banner">
+        <div class="avatar xl" style="background:rgba(255,255,255,.18);font-size:22px;color:#fff;width:64px;height:64px">AM</div>
+        <div style="flex:1">
+          <div style="font-size:20px;font-weight:700;margin-bottom:3px">Dr. Ayesha Malik</div>
+          <div style="font-size:13px;opacity:.7">Faculty ID: FAC-GCL-0184 &nbsp;·&nbsp; Dept. Computer Science &nbsp;·&nbsp; Assistant Professor &nbsp;·&nbsp; GC Lahore</div>
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+            <span style="background:rgba(255,255,255,.12);padding:3px 10px;border-radius:20px;font-size:11px">📧 ayesha.malik@gcc.edu.pk</span>
+            <span style="background:rgba(255,255,255,.12);padding:3px 10px;border-radius:20px;font-size:11px">📱 0321-XXXXXXX</span>
+            <span style="background:rgba(255,255,255,.12);padding:3px 10px;border-radius:20px;font-size:11px">🎓 Ph.D Computer Science</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:0">
+          <div style="text-align:center;padding:0 20px;border-right:1px solid rgba(255,255,255,.2)">
+            <div style="font-size:22px;font-weight:700;color:#90EE90">18 hrs</div>
+            <div style="font-size:11px;opacity:.6">Weekly load</div>
+          </div>
+          <div style="text-align:center;padding:0 20px;border-right:1px solid rgba(255,255,255,.2)">
+            <div style="font-size:22px;font-weight:700">4</div>
+            <div style="font-size:11px;opacity:.6">Subjects</div>
+          </div>
+          <div style="text-align:center;padding:0 20px;border-right:1px solid rgba(255,255,255,.2)">
+            <div style="font-size:22px;font-weight:700">182</div>
+            <div style="font-size:11px;opacity:.6">Students</div>
+          </div>
+          <div style="text-align:center;padding:0 20px">
+            <div style="font-size:22px;font-weight:700;color:#90EE90">Active</div>
+            <div style="font-size:11px;opacity:.6">Status</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active">Personal info</div>
+        <div class="tab-item">Teaching assignments</div>
+        <div class="tab-item">Qualifications</div>
+        <div class="tab-item">Performance</div>
+        <div class="tab-item">Leave record</div>
+        <div class="tab-item">Career history</div>
+      </div>
+
+      <!-- Content grid -->
+      <div class="grid" style="grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">
+
+        <!-- Personal info -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Personal information</div><button class="btn btn-ghost btn-sm">✏ Edit</button></div>
+          <div>
+            <div class="info-row"><span class="info-key">Full name</span><span style="font-weight:500">Dr. Ayesha Malik</span></div>
+            <div class="info-row"><span class="info-key">Father's name</span><span style="font-weight:500">Abdul Malik</span></div>
+            <div class="info-row"><span class="info-key">CNIC</span><span style="font-weight:500;font-family:monospace">35201-8812345-6</span></div>
+            <div class="info-row"><span class="info-key">Date of birth</span><span style="font-weight:500">14 Aug 1985</span></div>
+            <div class="info-row"><span class="info-key">Gender</span><span style="font-weight:500">Female</span></div>
+            <div class="info-row"><span class="info-key">Domicile</span><span style="font-weight:500">Lahore</span></div>
+            <div class="info-row"><span class="info-key">Religion</span><span style="font-weight:500">Islam</span></div>
+            <div class="info-row"><span class="info-key">Phone</span><span style="font-weight:500">0321-XXXXXXX</span></div>
+            <div class="info-row"><span class="info-key">Email</span><span style="font-weight:500">ayesha.malik@gcc.edu.pk</span></div>
+            <div class="info-row"><span class="info-key">Address</span><span style="font-weight:500">House 12, Gulberg III, Lahore</span></div>
+          </div>
+        </div>
+
+        <!-- Employment info -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Employment details</div></div>
+          <div>
+            <div class="info-row"><span class="info-key">Faculty ID</span><span style="font-weight:500;font-family:monospace">FAC-GCL-0184</span></div>
+            <div class="info-row"><span class="info-key">Designation</span><span style="font-weight:500">Assistant Professor</span></div>
+            <div class="info-row"><span class="info-key">BPS grade</span><span style="font-weight:500">BPS-18</span></div>
+            <div class="info-row"><span class="info-key">Department</span><span style="font-weight:500">Computer Science</span></div>
+            <div class="info-row"><span class="info-key">College</span><span style="font-weight:500">GC Lahore</span></div>
+            <div class="info-row"><span class="info-key">Joining date</span><span style="font-weight:500">1 Sep 2012</span></div>
+            <div class="info-row"><span class="info-key">Service years</span><span style="font-weight:500">12 years 4 months</span></div>
+            <div class="info-row"><span class="info-key">Employment type</span><span class="badge badge-success">Regular</span></div>
+            <div class="info-row"><span class="info-key">Status</span><span class="badge badge-success">Active</span></div>
+            <div class="info-row"><span class="info-key">Retirement date</span><span style="font-weight:500">14 Aug 2045</span></div>
+          </div>
+        </div>
+
+        <!-- Leave balance -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Leave balance</div><div class="card-subtitle">Academic Year 2024–25</div></div>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+            <div>
+              <div class="flex-between mb-1"><span style="font-size:12px">Casual leave</span><span style="font-size:12px;font-weight:600;color:var(--color-success-text)">12 / 15 remaining</span></div>
+              <div class="progress-bar"><div class="progress-fill success" style="width:80%"></div></div>
+            </div>
+            <div>
+              <div class="flex-between mb-1"><span style="font-size:12px">Earned leave</span><span style="font-size:12px;font-weight:600;color:var(--color-success-text)">24 / 30 remaining</span></div>
+              <div class="progress-bar"><div class="progress-fill success" style="width:80%"></div></div>
+            </div>
+            <div>
+              <div class="flex-between mb-1"><span style="font-size:12px">Medical leave</span><span style="font-size:12px;font-weight:600">10 / 10 remaining</span></div>
+              <div class="progress-bar"><div class="progress-fill info" style="width:100%"></div></div>
+            </div>
+            <div>
+              <div class="flex-between mb-1"><span style="font-size:12px">Study leave</span><span style="font-size:12px;font-weight:600;color:var(--text-muted)">0 / 0 (ineligible)</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:0%;background:var(--text-muted)"></div></div>
+            </div>
+          </div>
+          <div style="background:var(--color-warning-bg);border:1px solid var(--color-warning-border);border-radius:var(--radius-md);padding:10px 12px;font-size:12px;color:var(--color-warning-text)">
+            ⚠ Leave application pending: 20–22 Jan 2025 (3 days medical). Awaiting principal approval.
+          </div>
+          <button class="btn btn-secondary" style="width:100%;margin-top:10px;font-size:12px">Manage leave →</button>
+        </div>
+      </div>
+
+      <!-- Row 2: assignments + qualifications + performance -->
+      <div class="grid" style="grid-template-columns:1fr 1fr;gap:16px">
+
+        <!-- Teaching assignments -->
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Teaching assignments</div><div class="card-subtitle">Semester 5 · 2024–25</div></div>
+            <button class="btn btn-secondary btn-sm">✏ Edit assignments</button>
+          </div>
+          <div>
+            <div class="assign-row">
+              <div style="width:34px;height:34px;background:var(--color-info-bg);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">💻</div>
+              <div style="flex:1">
+                <div style="font-weight:600">Data Structures (CS-301)</div>
+                <div style="font-size:11px;color:var(--text-muted)">BS-CS 3rd Sem · Section A · Room 14 · Mon/Wed/Thu 8–9 AM</div>
+              </div>
+              <div style="text-align:right;font-size:12px">
+                <div style="font-weight:600">44 students</div>
+                <div style="color:var(--text-muted)">3 hrs/week</div>
+              </div>
+            </div>
+            <div class="assign-row">
+              <div style="width:34px;height:34px;background:var(--color-warning-bg);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🔢</div>
+              <div style="flex:1">
+                <div style="font-weight:600">Algorithms (CS-401)</div>
+                <div style="font-size:11px;color:var(--text-muted)">BS-CS 5th Sem · Section A · Room 8 · Tue/Wed/Fri 10–11 AM</div>
+              </div>
+              <div style="text-align:right;font-size:12px">
+                <div style="font-weight:600">38 students</div>
+                <div style="color:var(--text-muted)">3 hrs/week</div>
+              </div>
+            </div>
+            <div class="assign-row">
+              <div style="width:34px;height:34px;background:var(--brand-50);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🧪</div>
+              <div style="flex:1">
+                <div style="font-weight:600">OOP Lab (CS-211L)</div>
+                <div style="font-size:11px;color:var(--text-muted)">BS-CS 2nd Sem · Section A · Lab 2 · Tue/Thu/Sat 2–4 PM</div>
+              </div>
+              <div style="text-align:right;font-size:12px">
+                <div style="font-weight:600">32 students</div>
+                <div style="color:var(--text-muted)">6 hrs/week</div>
+              </div>
+            </div>
+            <div class="assign-row">
+              <div style="width:34px;height:34px;background:var(--color-success-bg);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🧮</div>
+              <div style="flex:1">
+                <div style="font-weight:600">Discrete Mathematics (DM-201)</div>
+                <div style="font-size:11px;color:var(--text-muted)">BS-CS 2nd Sem · Section A · Room 6 · Mon/Tue/Thu 9–10 AM</div>
+              </div>
+              <div style="text-align:right;font-size:12px">
+                <div style="font-weight:600">68 students</div>
+                <div style="color:var(--text-muted)">3 hrs/week — shared</div>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:12px;padding:10px 12px;background:var(--brand-50);border-radius:var(--radius-md);display:flex;justify-content:space-between;font-size:12px">
+            <span style="color:var(--brand-700)">Total weekly load</span>
+            <span style="font-weight:700;color:var(--brand-600)">18 hrs / 20 hrs max</span>
+          </div>
+        </div>
+
+        <!-- Qualifications + Performance -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <!-- Qualifications -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Academic qualifications</div></div>
+            <div>
+              <div class="qual-row">
+                <div class="qual-icon" style="background:var(--brand-50)">🎓</div>
+                <div>
+                  <div style="font-weight:600">Ph.D Computer Science</div>
+                  <div style="font-size:12px;color:var(--text-muted)">University of Engineering & Technology, Lahore · 2011</div>
+                  <div style="font-size:11px;color:var(--text-muted)">Thesis: Neural Network Optimization Algorithms</div>
+                </div>
+                <span class="badge badge-success" style="margin-left:auto;flex-shrink:0">Verified</span>
+              </div>
+              <div class="qual-row">
+                <div class="qual-icon" style="background:var(--color-info-bg)">📜</div>
+                <div>
+                  <div style="font-weight:600">M.Sc Computer Science</div>
+                  <div style="font-size:12px;color:var(--text-muted)">Punjab University, Lahore · 2006 · GPA 3.84</div>
+                </div>
+                <span class="badge badge-success" style="margin-left:auto;flex-shrink:0">Verified</span>
+              </div>
+              <div class="qual-row">
+                <div class="qual-icon" style="background:var(--color-success-bg)">📄</div>
+                <div>
+                  <div style="font-weight:600">B.Sc Computer Science</div>
+                  <div style="font-size:12px;color:var(--text-muted)">Punjab University, Lahore · 2004 · 1st Division</div>
+                </div>
+                <span class="badge badge-success" style="margin-left:auto;flex-shrink:0">Verified</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Performance KPIs -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Performance indicators</div><div class="card-subtitle">AY 2024–25</div></div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+              <div class="perf-stat">
+                <div class="val" style="color:var(--color-success-text)">91%</div>
+                <div class="lbl">Lectures delivered</div>
+              </div>
+              <div class="perf-stat">
+                <div class="val" style="color:var(--color-success-text)">81%</div>
+                <div class="lbl">Student avg att.</div>
+              </div>
+              <div class="perf-stat">
+                <div class="val" style="color:var(--brand-600)">4.2/5</div>
+                <div class="lbl">Student rating</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div>
+                <div class="flex-between mb-1"><span style="font-size:12px">Curriculum coverage</span><span style="font-size:12px;font-weight:600;color:var(--color-success-text)">88%</span></div>
+                <div class="progress-bar"><div class="progress-fill success" style="width:88%"></div></div>
+              </div>
+              <div>
+                <div class="flex-between mb-1"><span style="font-size:12px">Marks entry on time</span><span style="font-size:12px;font-weight:600;color:var(--color-danger-text)">62%</span></div>
+                <div class="progress-bar"><div class="progress-fill danger" style="width:62%"></div></div>
+              </div>
+              <div>
+                <div class="flex-between mb-1"><span style="font-size:12px">Overall performance</span><span style="font-size:12px;font-weight:600;color:var(--color-success-text)">84%</span></div>
+                <div class="progress-bar"><div class="progress-fill success" style="width:84%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

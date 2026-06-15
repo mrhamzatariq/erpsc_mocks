@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Timetable — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tt-grid { display:grid; grid-template-columns:80px repeat(5,1fr); gap:2px; }
+  .tt-header { background:var(--brand-900); color:#fff; padding:10px 8px; text-align:center; font-size:12px; font-weight:600; border-radius:var(--radius-sm); }
+  .tt-time { background:var(--bg-secondary); padding:8px 6px; text-align:center; font-size:11px; color:var(--text-muted); font-weight:500; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; }
+  .tt-slot { border-radius:var(--radius-sm); padding:8px; min-height:64px; cursor:pointer; transition:all .15s; border:1px solid transparent; position:relative; }
+  .tt-slot:hover { filter:brightness(0.95); }
+  .tt-slot.cs    { background:var(--color-info-bg);    border-color:var(--color-info-border); }
+  .tt-slot.math  { background:var(--color-success-bg); border-color:var(--color-success-border); }
+  .tt-slot.eng   { background:var(--color-warning-bg); border-color:var(--color-warning-border); }
+  .tt-slot.hu    { background:var(--brand-50);         border-color:var(--brand-200); }
+  .tt-slot.lab   { background:#F5F0FF;                 border-color:#C4B5FD; }
+  .tt-slot.free  { background:var(--bg-secondary);     border-color:var(--border-light); cursor:default; }
+  .tt-slot.break { background:var(--bg-tertiary);      border-color:var(--border-light); cursor:default; display:flex; align-items:center; justify-content:center; }
+  .tt-subject { font-size:12px; font-weight:600; margin-bottom:2px; }
+  .tt-meta    { font-size:10px; color:var(--text-muted); }
+  .tt-room    { font-size:10px; color:var(--text-secondary); margin-top:3px; }
+  .tt-now     { position:absolute; top:4px; right:4px; width:7px; height:7px; border-radius:50%; background:var(--color-warning-text); }
+  .legend-item { display:flex; align-items:center; gap:6px; font-size:12px; }
+  .legend-dot  { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
+  .view-toggle { display:flex; background:var(--bg-secondary); border:1px solid var(--border-light); border-radius:var(--radius-md); overflow:hidden; }
+  .view-btn { padding:6px 14px; font-size:12px; font-weight:500; cursor:pointer; border:none; background:transparent; color:var(--text-muted); transition:all .15s; }
+  .view-btn.active { background:var(--bg-surface); color:var(--text-primary); box-shadow:var(--shadow-sm); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">Faculty Member</div>
+      <div class="role-sub">Dept. Computer Science</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="03-faculty-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">Teaching</div>
+      <a class="nav-item active" href="#"><span class="nav-icon">📅</span><span>My Timetable</span></a>
+      <a class="nav-item" href="13-attendance-marking.html"><span class="nav-icon">✅</span><span>Attendance</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📚</span><span>My Subjects</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>My Students</span></a>
+
+      <div class="sidebar-section-label">Assessment</div>
+      <a class="nav-item" href="#"><span class="nav-icon">📝</span><span>Marks Entry</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">AM</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Dr. Ayesha Malik</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">CS Department</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Teaching</span><span>›</span>
+        <span class="crumb-active">My Timetable</span>
+      </div>
+      <div class="topbar-actions" style="margin-left:auto">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">AM</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>My Timetable</h1>
+          <p>Dr. Ayesha Malik · Dept. Computer Science · GC Lahore · Jan 13–17, 2025</p>
+        </div>
+        <div class="page-header-actions">
+          <div class="view-toggle">
+            <div class="view-btn active">Week</div>
+            <div class="view-btn">Day</div>
+            <div class="view-btn">Month</div>
+          </div>
+          <button class="btn btn-secondary">← Prev week</button>
+          <button class="btn btn-secondary">This week</button>
+          <button class="btn btn-secondary">Next week →</button>
+          <button class="btn btn-ghost btn-sm">🖨 Print</button>
+        </div>
+      </div>
+
+      <!-- Summary KPIs -->
+      <div class="grid grid-4 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Classes this week</div>
+          <div class="metric-value">12</div>
+          <div class="metric-delta delta-neutral">4 subjects</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Teaching hours</div>
+          <div class="metric-value">18 hrs</div>
+          <div class="metric-delta delta-neutral">of 20 max</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Completed today</div>
+          <div class="metric-value" style="color:var(--color-success-text)">2 / 4</div>
+          <div class="metric-delta delta-neutral">Wed, 15 Jan</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Next class</div>
+          <div class="metric-value" style="font-size:16px">2:00 PM</div>
+          <div class="metric-delta delta-neutral">OOP Lab · Lab 2</div>
+        </div>
+      </div>
+
+      <!-- Timetable grid -->
+      <div class="card" style="overflow-x:auto;padding:20px">
+
+        <div class="tt-grid">
+          <!-- Headers -->
+          <div></div>
+          <div class="tt-header">Monday<br><span style="font-weight:400;opacity:.7;font-size:10px">13 Jan</span></div>
+          <div class="tt-header">Tuesday<br><span style="font-weight:400;opacity:.7;font-size:10px">14 Jan</span></div>
+          <div class="tt-header" style="background:var(--brand-500)">Wednesday<br><span style="font-weight:400;opacity:.8;font-size:10px">15 Jan · Today</span></div>
+          <div class="tt-header">Thursday<br><span style="font-weight:400;opacity:.7;font-size:10px">16 Jan</span></div>
+          <div class="tt-header">Friday<br><span style="font-weight:400;opacity:.7;font-size:10px">17 Jan</span></div>
+
+          <!-- 8:00–9:00 AM -->
+          <div class="tt-time">8:00<br>9:00</div>
+          <div class="tt-slot cs">
+            <div class="tt-subject" style="color:var(--color-info-text)">Data Structures</div>
+            <div class="tt-meta">CS-301 · BS-CS 3rd</div>
+            <div class="tt-room">Room 14 · 44 students</div>
+          </div>
+          <div class="tt-slot free"><span style="font-size:11px;color:var(--text-muted)">Free</span></div>
+          <div class="tt-slot cs" style="position:relative">
+            <div class="tt-subject" style="color:var(--color-info-text)">Data Structures</div>
+            <div class="tt-meta">CS-301 · BS-CS 3rd</div>
+            <div class="tt-room">Room 14 · 44 students</div>
+            <span class="badge badge-success" style="position:absolute;top:4px;right:4px;font-size:9px">Done</span>
+          </div>
+          <div class="tt-slot cs">
+            <div class="tt-subject" style="color:var(--color-info-text)">Data Structures</div>
+            <div class="tt-meta">CS-301 · BS-CS 3rd</div>
+            <div class="tt-room">Room 14 · 44 students</div>
+          </div>
+          <div class="tt-slot free"><span style="font-size:11px;color:var(--text-muted)">Free</span></div>
+
+          <!-- 9:00–10:00 AM -->
+          <div class="tt-time">9:00<br>10:00</div>
+          <div class="tt-slot math">
+            <div class="tt-subject" style="color:var(--color-success-text)">Discrete Math</div>
+            <div class="tt-meta">DM-201 · BS-CS 2nd</div>
+            <div class="tt-room">Room 6 · 52 students</div>
+          </div>
+          <div class="tt-slot cs">
+            <div class="tt-subject" style="color:var(--color-info-text)">Data Structures</div>
+            <div class="tt-meta">CS-301 · BS-CS 3rd</div>
+            <div class="tt-room">Room 14 · 44 students</div>
+          </div>
+          <div class="tt-slot free"><span style="font-size:11px;color:var(--text-muted)">Free</span></div>
+          <div class="tt-slot math">
+            <div class="tt-subject" style="color:var(--color-success-text)">Discrete Math</div>
+            <div class="tt-meta">DM-201 · BS-CS 2nd</div>
+            <div class="tt-room">Room 6 · 52 students</div>
+          </div>
+          <div class="tt-slot cs">
+            <div class="tt-subject" style="color:var(--color-info-text)">Data Structures</div>
+            <div class="tt-meta">CS-301 · BS-CS 3rd</div>
+            <div class="tt-room">Room 14 · 44 students</div>
+          </div>
+
+          <!-- 10:00–11:00 AM -->
+          <div class="tt-time">10:00<br>11:00</div>
+          <div class="tt-slot free"><span style="font-size:11px;color:var(--text-muted)">Free</span></div>
+          <div class="tt-slot eng">
+            <div class="tt-subject" style="color:var(--color-warning-text)">Algorithms</div>
+            <div class="tt-meta">CS-401 · BS-CS 5th</div>
+            <div class="tt-room">Room 8 · 38 students</div>
+          </div>
+          <div class="tt-slot eng" style="position:relative">
+            <div class="tt-subject" style="color:var(--color-warning-text)">Algorithms</div>
+            <div class="tt-meta">CS-401 · BS-CS 5th</div>
+            <div class="tt-room">Room 8 · 38 students</div>
+            <div class="tt-now" title="Ongoing now"></div>
+            <span class="badge badge-warning" style="position:absolute;bottom:4px;right:4px;font-size:9px">Now</span>
+          </div>
+          <div class="tt-slot free"><span style="font-size:11px;color:var(--text-muted)">Free</span></div>
+          <div class="tt-slot eng">
+            <div class="tt-subject" style="color:var(--color-warning-text)">Algorithms</div>
+            <div class="tt-meta">CS-401 · BS-CS 5th</div>
+            <div class="tt-room">Room 8 · 38 students</div>
+          </div>
+
+          <!-- Break -->
+          <div class="tt-time" style="color:var(--text-muted)">11:00<br>12:00</div>
+          <div class="tt-slot break"><span style="font-size:11px;color:var(--text-muted)">Break</span></div>
+          <div class="tt-slot break"><span style="font-size:11px;color:var(--text-muted)">Break</span></div>
+          <div class="tt-slot break"><span style="font-size:11px;color:var(--text-muted)">Break</span></div>
+          <div class="tt-slot break"><span style="font-size:11px;color:var(--text-muted)">Break</span></div>
+          <div class="tt-slot break"><span style="font-size:11px;color:var(--text-muted)">Break / Jumu'ah</span></div>
+
+          <!-- 12:00–1:00 PM -->
+          <div class="tt-time">12:00<br>1:00</div>
+          <div class="tt-slot hu">
+            <div class="tt-subject" style="color:var(--brand-600)">Islamic Studies</div>
+            <div class="tt-meta">HU-201 · BS-CS 2nd</div>
+            <div class="tt-room">Room 3 · 52 students</div>
+          </div>
+          <div class="tt-slot free"><span style="font-size:11px;color:var(--text-muted)">Free</span></div>
+          <div class="tt-slot hu">
+            <div class="tt-subject" style="color:var(--brand-600)">Islamic Studies</div>
+            <div class="tt-meta">HU-201 · BS-CS 2nd</div>
+            <div class="tt-room">Room 3 · 52 students</div>
+          </div>
+          <div class="tt-slot hu">
+            <div class="tt-subject" style="color:var(--brand-600)">Islamic Studies</div>
+            <div class="tt-meta">HU-201 · BS-CS 2nd</div>
+            <div class="tt-room">Room 3 · 52 students</div>
+          </div>
+          <div class="tt-slot free"><span style="font-size:11px;color:var(--text-muted)">Free</span></div>
+
+          <!-- 2:00–4:00 PM (lab — spans 2 rows) -->
+          <div class="tt-time">2:00<br>4:00</div>
+          <div class="tt-slot free"><span style="font-size:11px;color:var(--text-muted)">Free</span></div>
+          <div class="tt-slot lab">
+            <div class="tt-subject" style="color:#7C3AED">OOP Lab</div>
+            <div class="tt-meta">CS-211L · BS-CS 2nd</div>
+            <div class="tt-room">Lab 2 · 32 students · 2 hrs</div>
+          </div>
+          <div class="tt-slot lab">
+            <div class="tt-subject" style="color:#7C3AED">OOP Lab</div>
+            <div class="tt-meta">CS-211L · BS-CS 2nd</div>
+            <div class="tt-room">Lab 2 · 32 students · 2 hrs</div>
+          </div>
+          <div class="tt-slot free"><span style="font-size:11px;color:var(--text-muted)">Free</span></div>
+          <div class="tt-slot lab">
+            <div class="tt-subject" style="color:#7C3AED">OOP Lab</div>
+            <div class="tt-meta">CS-211L · BS-CS 2nd</div>
+            <div class="tt-room">Lab 2 · 32 students · 2 hrs</div>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div style="display:flex;gap:16px;margin-top:16px;flex-wrap:wrap">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--color-info-bg);border:1px solid var(--color-info-border)"></div>Data Structures (CS-301)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--color-warning-bg);border:1px solid var(--color-warning-border)"></div>Algorithms (CS-401)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--color-success-bg);border:1px solid var(--color-success-border)"></div>Discrete Math (DM-201)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--brand-50);border:1px solid var(--brand-200)"></div>Islamic Studies (HU-201)</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#F5F0FF;border:1px solid #C4B5FD"></div>OOP Lab (CS-211L)</div>
+          <div class="legend-item" style="margin-left:auto">
+            <div style="width:7px;height:7px;border-radius:50%;background:var(--color-warning-text)"></div>
+            <span>Ongoing now</span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Faculty Dashboard — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .class-slot { border-radius:var(--radius-md); padding:12px 14px; margin-bottom:8px; border:1px solid var(--border-light); position:relative; }
+  .class-slot.done    { background:var(--color-success-bg); border-color:var(--color-success-border); }
+  .class-slot.current { background:var(--color-warning-bg); border-color:var(--color-warning-border); }
+  .class-slot.upcoming{ background:var(--bg-secondary); }
+  .class-slot.lab     { background:var(--color-info-bg); border-color:var(--color-info-border); }
+  .class-time { font-size:11px; color:var(--text-muted); margin-bottom:4px; }
+  .class-name { font-size:14px; font-weight:600; margin-bottom:2px; }
+  .class-meta { font-size:12px; color:var(--text-secondary); }
+  .student-alert-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border-light); font-size:13px; }
+  .student-alert-row:last-child { border-bottom:none; }
+  .task-row2 { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border-light); font-size:13px; }
+  .task-row2:last-child { border-bottom:none; }
+  .workload-ring { display:flex; justify-content:center; align-items:center; margin:8px 0 16px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">Faculty Member</div>
+      <div class="role-sub">Dept. Computer Science</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item active" href="#"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">Teaching</div>
+      <a class="nav-item" href="#"><span class="nav-icon">📅</span><span>My Timetable</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">✅</span><span>Attendance</span><span class="nav-badge warn">3</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📚</span><span>My Subjects</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>My Students</span></a>
+
+      <div class="sidebar-section-label">Assessment</div>
+      <a class="nav-item" href="#"><span class="nav-icon">📝</span><span>Marks Entry</span><span class="nav-badge">1</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📋</span><span>Assignments</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🏆</span><span>Results</span></a>
+
+      <div class="sidebar-section-label">Profile</div>
+      <a class="nav-item" href="#"><span class="nav-icon">👤</span><span>My Profile</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📊</span><span>Workload Report</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">AM</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Dr. Ayesha Malik</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">CS Department</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>GC Lahore</span><span>›</span>
+        <span class="crumb-active">My Dashboard</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search students, subjects…</span>
+        <span style="margin-left:auto;font-size:11px;background:var(--bg-tertiary);padding:1px 6px;border-radius:4px;color:var(--text-muted)">⌘K</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">AM</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Good morning, Dr. Ayesha 👋</h1>
+          <p>Computer Science Department · GC Lahore · Wednesday, 15 Jan 2025</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">📅 My timetable</button>
+          <button class="btn btn-primary">✅ Mark attendance</button>
+        </div>
+      </div>
+
+      <!-- KPI strip -->
+      <div class="grid grid-5 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Assigned subjects</div>
+          <div class="metric-value">4</div>
+          <div class="metric-delta delta-neutral">This semester</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Total students</div>
+          <div class="metric-value">182</div>
+          <div class="metric-delta delta-neutral">Across 4 classes</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Avg attendance</div>
+          <div class="metric-value">81%</div>
+          <div class="metric-delta delta-up">▲ On track</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Assessments due</div>
+          <div class="metric-value" style="color:var(--color-warning-text)">3</div>
+          <div class="metric-delta" style="color:var(--color-danger-text)">1 overdue</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Weekly workload</div>
+          <div class="metric-value">18 hrs</div>
+          <div class="metric-delta delta-neutral">of 20 max allowed</div>
+        </div>
+      </div>
+
+      <!-- Main grid -->
+      <div class="grid" style="grid-template-columns:1.2fr 1fr 1fr;gap:16px">
+
+        <!-- TODAY'S SCHEDULE -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Today's schedule</div>
+              <div class="card-subtitle">Wednesday, 15 Jan 2025</div>
+            </div>
+            <button class="btn btn-ghost btn-sm">Full week →</button>
+          </div>
+
+          <div class="class-slot done">
+            <div class="class-time">8:00 AM – 9:00 AM · Room 14</div>
+            <div class="class-name">Data Structures (CS-301)</div>
+            <div class="class-meta">BS-CS 3rd Semester · 44 students</div>
+            <span class="badge badge-success" style="margin-top:6px">✓ Completed · 91% attended</span>
+          </div>
+
+          <div class="class-slot current">
+            <div class="class-time">10:00 AM – 11:00 AM · Room 8</div>
+            <div class="class-name">Algorithms (CS-401)</div>
+            <div class="class-meta">BS-CS 5th Semester · 38 students</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+              <span class="badge badge-warning">🟡 In progress now</span>
+              <button class="btn btn-secondary btn-sm">Mark attendance</button>
+            </div>
+          </div>
+
+          <div class="class-slot upcoming">
+            <div class="class-time">12:00 PM – 1:00 PM · Room 3</div>
+            <div class="class-name">Islamic Studies (HU-201)</div>
+            <div class="class-meta">BS-CS 2nd Semester · 52 students</div>
+            <span class="badge badge-neutral" style="margin-top:6px">Upcoming</span>
+          </div>
+
+          <div class="class-slot lab">
+            <div class="class-time">2:00 PM – 4:00 PM · Lab 2</div>
+            <div class="class-name">OOP Lab (CS-211L)</div>
+            <div class="class-meta">BS-CS 2nd Semester · 32 students · 2 hrs</div>
+            <span class="badge badge-info" style="margin-top:6px">Lab session</span>
+          </div>
+        </div>
+
+        <!-- PENDING TASKS -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Pending tasks</div>
+              <div class="card-subtitle">Requires your action</div>
+            </div>
+            <span class="badge badge-danger">1 overdue</span>
+          </div>
+
+          <div>
+            <div class="task-row2">
+              <div style="flex:1">
+                <div style="font-weight:500">Mid-term marks entry</div>
+                <div style="font-size:11px;color:var(--text-muted)">CS-301 · 44 students</div>
+              </div>
+              <span class="badge badge-danger">Overdue</span>
+            </div>
+            <div class="task-row2">
+              <div style="flex:1">
+                <div style="font-weight:500">Quiz 3 — CS-301</div>
+                <div style="font-size:11px;color:var(--text-muted)">Upload marks</div>
+              </div>
+              <span class="badge badge-warning">Due today</span>
+            </div>
+            <div class="task-row2">
+              <div style="flex:1">
+                <div style="font-weight:500">Assignment grading</div>
+                <div style="font-size:11px;color:var(--text-muted)">CS-401 · 38 submissions</div>
+              </div>
+              <span class="badge badge-info">Due Fri</span>
+            </div>
+            <div class="task-row2">
+              <div style="flex:1">
+                <div style="font-weight:500">Practical marks — Lab</div>
+                <div style="font-size:11px;color:var(--text-muted)">CS-211L · 32 students</div>
+              </div>
+              <span class="badge badge-info">Due Sat</span>
+            </div>
+            <div class="task-row2">
+              <div style="flex:1">
+                <div style="font-weight:500">Lecture plan submission</div>
+                <div style="font-size:11px;color:var(--text-muted)">February plan</div>
+              </div>
+              <span class="badge badge-neutral">Next week</span>
+            </div>
+          </div>
+          <button class="btn btn-secondary" style="width:100%;margin-top:12px;font-size:12px">View all tasks →</button>
+
+          <!-- Workload summary -->
+          <div class="divider"></div>
+          <div class="card-title mb-2">Workload summary</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div>
+              <div class="flex-between mb-1"><span style="font-size:12px">Weekly hours</span><span style="font-size:12px;font-weight:600">18 / 20</span></div>
+              <div class="progress-bar"><div class="progress-fill brand" style="width:90%"></div></div>
+            </div>
+            <div>
+              <div class="flex-between mb-1"><span style="font-size:12px">Lectures delivered</span><span style="font-size:12px;font-weight:600">74 / 80</span></div>
+              <div class="progress-bar"><div class="progress-fill success" style="width:92%"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOW ATTENDANCE ALERTS -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Low attendance alerts</div>
+              <div class="card-subtitle">Students below 75%</div>
+            </div>
+            <span class="badge badge-danger">6 students</span>
+          </div>
+
+          <div>
+            <div class="student-alert-row">
+              <div class="avatar sm" style="background:#E24B4A;color:#fff">BA</div>
+              <div style="flex:1">
+                <div style="font-weight:500">Bilal Ahmed</div>
+                <div style="font-size:11px;color:var(--text-muted)">CS-301 — Roll 2024-CS-0341</div>
+              </div>
+              <span class="badge badge-danger">58%</span>
+            </div>
+            <div class="student-alert-row">
+              <div class="avatar sm" style="background:#E24B4A;color:#fff">SN</div>
+              <div style="flex:1">
+                <div style="font-weight:500">Sara Noor</div>
+                <div style="font-size:11px;color:var(--text-muted)">CS-401 — Roll 2022-CS-0112</div>
+              </div>
+              <span class="badge badge-danger">62%</span>
+            </div>
+            <div class="student-alert-row">
+              <div class="avatar sm" style="background:#EF9F27;color:#fff">HR</div>
+              <div style="flex:1">
+                <div style="font-weight:500">Hamza Raza</div>
+                <div style="font-size:11px;color:var(--text-muted)">CS-211L — Roll 2024-CS-0198</div>
+              </div>
+              <span class="badge badge-warning">67%</span>
+            </div>
+            <div class="student-alert-row">
+              <div class="avatar sm" style="background:#EF9F27;color:#fff">FK</div>
+              <div style="flex:1">
+                <div style="font-weight:500">Fatima Khan</div>
+                <div style="font-size:11px;color:var(--text-muted)">CS-301 — Roll 2024-CS-0089</div>
+              </div>
+              <span class="badge badge-warning">69%</span>
+            </div>
+            <div class="student-alert-row">
+              <div class="avatar sm" style="background:#EF9F27;color:#fff">UI</div>
+              <div style="flex:1">
+                <div style="font-weight:500">Umar Irfan</div>
+                <div style="font-size:11px;color:var(--text-muted)">CS-401 — Roll 2022-CS-0207</div>
+              </div>
+              <span class="badge badge-warning">71%</span>
+            </div>
+            <div class="student-alert-row">
+              <div class="avatar sm" style="background:#EF9F27;color:#fff">RA</div>
+              <div style="flex:1">
+                <div style="font-weight:500">Rabia Aslam</div>
+                <div style="font-size:11px;color:var(--text-muted)">CS-211L — Roll 2024-CS-0312</div>
+              </div>
+              <span class="badge badge-warning">73%</span>
+            </div>
+          </div>
+          <button class="btn btn-secondary" style="width:100%;margin-top:12px;font-size:12px">Send alerts to students →</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

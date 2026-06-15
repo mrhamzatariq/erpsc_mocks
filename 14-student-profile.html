@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Student Profile — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar { display:flex; gap:0; border-bottom:1px solid var(--border-light); margin-bottom:var(--space-5); }
+  .tab-item { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; }
+  .tab-item.active { color:var(--brand-600); border-bottom-color:var(--brand-600); }
+  .info-row  { display:flex; padding:8px 0; border-bottom:1px solid var(--border-light); font-size:13px; gap:8px; }
+  .info-row:last-child { border-bottom:none; }
+  .info-key  { color:var(--text-muted); width:160px; flex-shrink:0; }
+  .info-val  { font-weight:500; }
+  .sem-card  { border:1px solid var(--border-light); border-radius:var(--radius-md); padding:12px 14px; }
+  .sem-title { font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; }
+  .subject-row { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid var(--border-light); font-size:12px; }
+  .subject-row:last-child { border-bottom:none; }
+  .profile-banner { background:linear-gradient(135deg, var(--brand-900) 0%, var(--brand-600) 100%); border-radius:var(--radius-xl); padding:24px 28px; margin-bottom:20px; color:#fff; display:flex; align-items:center; gap:20px; }
+  .profile-stat { text-align:center; }
+  .profile-stat .val { font-size:20px; font-weight:700; }
+  .profile-stat .lbl { font-size:11px; opacity:.6; margin-top:1px; }
+  .doc-item { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border-light); font-size:13px; }
+  .doc-item:last-child { border-bottom:none; }
+  .doc-icon-box { width:32px; height:32px; background:var(--color-info-bg); border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">College Administration</div>
+      <div class="role-sub">GC Lahore</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Students</div>
+      <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>Student List</span></a>
+      <a class="nav-item active" href="#"><span class="nav-icon">👤</span><span>Student Profile</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🎓</span><span>Admissions</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">🔄</span><span>Transfers</span></a>
+
+      <div class="sidebar-section-label">Academics</div>
+      <a class="nav-item" href="#"><span class="nav-icon">📅</span><span>Timetable</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">✅</span><span>Attendance</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📝</span><span>Examinations</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">💳</span><span>Finance</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">MK</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Muhammad Kamran</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">Admin Officer</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Students</span><span>›</span>
+        <span>Student List</span><span>›</span>
+        <span class="crumb-active">Zara Ahmed — 2024-CS-1142</span>
+      </div>
+      <div class="topbar-actions" style="margin-left:auto">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">MK</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <!-- Action bar -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="breadcrumb" style="margin-bottom:4px"><span style="font-size:12px;color:var(--text-muted)">← Back to student list</span></div>
+          <h1>Student Profile</h1>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">✏ Edit profile</button>
+          <button class="btn btn-secondary">🖨 Print profile</button>
+          <button class="btn btn-secondary">📄 Issue certificate</button>
+          <button class="btn btn-primary">⬇ Transcript</button>
+        </div>
+      </div>
+
+      <!-- Profile banner -->
+      <div class="profile-banner">
+        <div class="avatar xl" style="background:rgba(255,255,255,.15);font-size:22px;color:#fff;width:64px;height:64px">ZA</div>
+        <div style="flex:1">
+          <div style="font-size:20px;font-weight:700;margin-bottom:4px">Zara Ahmed</div>
+          <div style="font-size:13px;opacity:.7">Roll: 2024-CS-1142 &nbsp;·&nbsp; B.Sc Computer Science &nbsp;·&nbsp; 5th Semester &nbsp;·&nbsp; GC Lahore</div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <span style="background:rgba(255,255,255,.12);padding:3px 10px;border-radius:20px;font-size:11px">📧 zara.ahmed@student.gcc.edu.pk</span>
+            <span style="background:rgba(255,255,255,.12);padding:3px 10px;border-radius:20px;font-size:11px">📱 0321-XXXXXXX</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:0;align-items:center">
+          <div class="profile-stat" style="padding:0 20px;border-right:1px solid rgba(255,255,255,.2)">
+            <div class="val" style="color:#90EE90">3.72</div>
+            <div class="lbl">CGPA</div>
+          </div>
+          <div class="profile-stat" style="padding:0 20px;border-right:1px solid rgba(255,255,255,.2)">
+            <div class="val">84%</div>
+            <div class="lbl">Attendance</div>
+          </div>
+          <div class="profile-stat" style="padding:0 20px;border-right:1px solid rgba(255,255,255,.2)">
+            <div class="val">96</div>
+            <div class="lbl">Credit hrs</div>
+          </div>
+          <div class="profile-stat" style="padding:0 20px">
+            <div class="val" style="color:#90EE90">Active</div>
+            <div class="lbl">Status</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active">Personal info</div>
+        <div class="tab-item">Academic record</div>
+        <div class="tab-item">Attendance</div>
+        <div class="tab-item">Fee history</div>
+        <div class="tab-item">Documents</div>
+        <div class="tab-item">Activity log</div>
+      </div>
+
+      <!-- Content: 3-col grid -->
+      <div class="grid" style="grid-template-columns:1fr 1fr 1fr;gap:16px">
+
+        <!-- Personal details -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Personal information</div></div>
+          <div>
+            <div class="info-row"><span class="info-key">Full name</span><span class="info-val">Zara Ahmed</span></div>
+            <div class="info-row"><span class="info-key">Father's name</span><span class="info-val">Ahmed Khan</span></div>
+            <div class="info-row"><span class="info-key">CNIC</span><span class="info-val font-mono">35201-9812345-2</span></div>
+            <div class="info-row"><span class="info-key">Date of birth</span><span class="info-val">12 Mar 2005</span></div>
+            <div class="info-row"><span class="info-key">Gender</span><span class="info-val">Female</span></div>
+            <div class="info-row"><span class="info-key">Religion</span><span class="info-val">Islam</span></div>
+            <div class="info-row"><span class="info-key">Nationality</span><span class="info-val">Pakistani</span></div>
+            <div class="info-row"><span class="info-key">Domicile</span><span class="info-val">Lahore</span></div>
+            <div class="info-row"><span class="info-key">Address</span><span class="info-val">House 42, Street 7, Model Town, Lahore</span></div>
+            <div class="info-row"><span class="info-key">Phone</span><span class="info-val">0321-XXXXXXX</span></div>
+            <div class="info-row"><span class="info-key">Email</span><span class="info-val">zara.ahmed@gmail.com</span></div>
+          </div>
+        </div>
+
+        <!-- Academic info -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Academic information</div></div>
+          <div>
+            <div class="info-row"><span class="info-key">Roll number</span><span class="info-val font-mono">2024-CS-1142</span></div>
+            <div class="info-row"><span class="info-key">Program</span><span class="info-val">B.Sc Computer Science</span></div>
+            <div class="info-row"><span class="info-key">Current semester</span><span class="info-val">5th (of 8)</span></div>
+            <div class="info-row"><span class="info-key">Session</span><span class="info-val">2024–25</span></div>
+            <div class="info-row"><span class="info-key">Admission date</span><span class="info-val">12 Sep 2022</span></div>
+            <div class="info-row"><span class="info-key">Section</span><span class="info-val">BS-CS-A</span></div>
+            <div class="info-row"><span class="info-key">Credit hrs done</span><span class="info-val">96 of 130</span></div>
+            <div class="info-row"><span class="info-key">CGPA</span><span class="info-val" style="color:var(--brand-600);font-size:15px;font-weight:700">3.72</span></div>
+            <div class="info-row"><span class="info-key">Class position</span><span class="info-val" style="color:var(--color-success-text)">3rd of 44</span></div>
+            <div class="info-row"><span class="info-key">Expected grad.</span><span class="info-val">Jun 2026</span></div>
+          </div>
+        </div>
+
+        <!-- Guardian + fee -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="card">
+            <div class="card-header"><div class="card-title">Guardian information</div></div>
+            <div>
+              <div class="info-row"><span class="info-key">Father's name</span><span class="info-val">Ahmed Khan</span></div>
+              <div class="info-row"><span class="info-key">Father's CNIC</span><span class="info-val font-mono">35201-7654321-1</span></div>
+              <div class="info-row"><span class="info-key">Father's phone</span><span class="info-val">0300-XXXXXXX</span></div>
+              <div class="info-row"><span class="info-key">Occupation</span><span class="info-val">Government employee</span></div>
+              <div class="info-row"><span class="info-key">Relationship</span><span class="info-val">Father</span></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><div class="card-title">Fee status</div></div>
+            <div>
+              <div class="info-row"><span class="info-key">Sem 5 fee</span><span class="badge badge-success">Paid</span></div>
+              <div class="info-row"><span class="info-key">Sem 6 due</span><span style="font-size:12px;color:var(--color-warning-text);font-weight:600">₨ 18,500 by Jan 31</span></div>
+              <div class="info-row"><span class="info-key">Waiver</span><span class="badge badge-neutral">None</span></div>
+              <div class="info-row"><span class="info-key">Scholarship</span><span class="badge badge-brand">Merit — 10%</span></div>
+            </div>
+            <button class="btn btn-secondary" style="width:100%;margin-top:10px;font-size:12px">View full fee history →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Academic record: semester cards -->
+      <div style="margin-top:20px">
+        <h3 style="margin-bottom:12px">Semester academic record</h3>
+        <div class="grid" style="grid-template-columns:repeat(3,1fr);gap:12px">
+
+          <div class="sem-card">
+            <div class="sem-title">Semester 1 · 2022–23</div>
+            <div class="subject-row"><span>Introduction to Computing</span><span class="badge badge-success">A (88)</span></div>
+            <div class="subject-row"><span>Calculus</span><span class="badge badge-success">B+ (82)</span></div>
+            <div class="subject-row"><span>English-I</span><span class="badge badge-info">B (76)</span></div>
+            <div class="subject-row"><span>Islamic Studies</span><span class="badge badge-success">A (84)</span></div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;padding-top:8px;border-top:1px dashed var(--border-light)">
+              <span style="color:var(--text-muted)">GPA</span>
+              <span style="font-weight:700;color:var(--brand-600)">3.52</span>
+            </div>
+          </div>
+
+          <div class="sem-card">
+            <div class="sem-title">Semester 2 · 2022–23</div>
+            <div class="subject-row"><span>OOP</span><span class="badge badge-success">A+ (91)</span></div>
+            <div class="subject-row"><span>Discrete Math</span><span class="badge badge-success">A (85)</span></div>
+            <div class="subject-row"><span>English-II</span><span class="badge badge-info">B (74)</span></div>
+            <div class="subject-row"><span>Pak Studies</span><span class="badge badge-info">B (72)</span></div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;padding-top:8px;border-top:1px dashed var(--border-light)">
+              <span style="color:var(--text-muted)">GPA</span>
+              <span style="font-weight:700;color:var(--brand-600)">3.65</span>
+            </div>
+          </div>
+
+          <div class="sem-card">
+            <div class="sem-title">Semester 5 · 2024–25 (current)</div>
+            <div class="subject-row"><span>Data Structures</span><span class="badge badge-success">A (82)</span></div>
+            <div class="subject-row"><span>Algorithms</span><span class="badge badge-success">B+ (79)</span></div>
+            <div class="subject-row"><span>OOP Lab</span><span class="badge badge-success">A (88)</span></div>
+            <div class="subject-row"><span>Islamic Studies</span><span class="badge badge-info">B (71)</span></div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:12px;padding-top:8px;border-top:1px dashed var(--border-light)">
+              <span style="color:var(--text-muted)">GPA (so far)</span>
+              <span style="font-weight:700;color:var(--brand-600)">3.72</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Documents section -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-header">
+          <div class="card-title">Uploaded documents</div>
+          <button class="btn btn-secondary btn-sm">+ Upload document</button>
+        </div>
+        <div>
+          <div class="doc-item">
+            <div class="doc-icon-box">📄</div>
+            <div style="flex:1">
+              <div style="font-weight:500">Matriculation DMC</div>
+              <div style="font-size:11px;color:var(--text-muted)">PDF · 340 KB · Uploaded 12 Sep 2022</div>
+            </div>
+            <span class="badge badge-success">Verified</span>
+            <button class="btn btn-ghost btn-sm">⬇ View</button>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon-box">📄</div>
+            <div style="flex:1">
+              <div style="font-weight:500">CNIC copy</div>
+              <div style="font-size:11px;color:var(--text-muted)">PDF · 218 KB · Uploaded 12 Sep 2022</div>
+            </div>
+            <span class="badge badge-success">Verified</span>
+            <button class="btn btn-ghost btn-sm">⬇ View</button>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon-box">📷</div>
+            <div style="flex:1">
+              <div style="font-weight:500">Student photograph</div>
+              <div style="font-size:11px;color:var(--text-muted)">JPG · 85 KB · Uploaded 12 Sep 2022</div>
+            </div>
+            <span class="badge badge-success">Verified</span>
+            <button class="btn btn-ghost btn-sm">⬇ View</button>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon-box">📄</div>
+            <div style="flex:1">
+              <div style="font-weight:500">Domicile certificate</div>
+              <div style="font-size:11px;color:var(--text-muted)">PDF · 156 KB · Uploaded 14 Sep 2022</div>
+            </div>
+            <span class="badge badge-success">Verified</span>
+            <button class="btn btn-ghost btn-sm">⬇ View</button>
+          </div>
+          <div class="doc-item">
+            <div class="doc-icon-box" style="background:var(--color-warning-bg)">📋</div>
+            <div style="flex:1">
+              <div style="font-weight:500">Character certificate</div>
+              <div style="font-size:11px;color:var(--text-muted)">Not uploaded yet</div>
+            </div>
+            <span class="badge badge-warning">Pending</span>
+            <button class="btn btn-secondary btn-sm">Request</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>
