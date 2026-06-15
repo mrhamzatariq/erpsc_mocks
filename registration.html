@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register — ERP System for Colleges</title>
+
+    <link rel="stylesheet" href="design-system.css" />
+
+    <style>
+        body {
+            background: var(--brand-900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .login-shell {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            min-height: 760px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-left {
+            background: linear-gradient(160deg,
+                    var(--brand-700) 0%,
+                    var(--brand-900) 100%);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .login-right {
+            background: var(--bg-surface);
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .brand-mark {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba(255, 255, 255, .15);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .brand-name {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .brand-sub {
+            color: rgba(255, 255, 255, .55);
+            font-size: 12px;
+        }
+
+        .hero-headline {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .hero-sub {
+            color: rgba(255, 255, 255, .65);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .stat-pill {
+            background: rgba(255, 255, 255, .10);
+            border-radius: var(--radius-full);
+            padding: 6px 14px;
+            color: rgba(255, 255, 255, .85);
+            display: inline-block;
+            font-size: 12px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .registration-card {
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .step-content {
+            margin-top: 24px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+        }
+
+        .password-rules {
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .login-link a {
+            color: var(--brand-600);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media(max-width:900px) {
+
+            .login-shell {
+                grid-template-columns: 1fr;
+                max-width: 700px;
+            }
+
+            .login-left {
+                display: none;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-shell">
+
+        <!-- LEFT SIDE -->
+        <div class="login-left">
+
+            <div>
+
+                <div class="brand-mark">
+                    <div class="brand-icon">E</div>
+
+                    <div>
+                        <div class="brand-name">
+                            ERP System for Colleges
+                        </div>
+
+                        <div class="brand-sub">
+                            Higher Education Department, Punjab
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-headline">
+                    Create your ERP account
+                </div>
+
+                <div class="hero-sub">
+                    Register once and access admissions,
+                    academics, examinations, attendance,
+                    faculty management and student services
+                    from a single platform.
+                </div>
+
+                <br>
+
+                <div class="stat-pill">800 Colleges</div>
+                <div class="stat-pill">750K Students</div>
+                <div class="stat-pill">18K Faculty</div>
+
+            </div>
+
+            <div>
+                <div style="font-size:11px;color:rgba(255,255,255,.35)">
+                    Powered By
+                </div>
+
+                <div style="font-size:13px;color:rgba(255,255,255,.6)">
+                    Punjab Information Technology Board
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="login-right">
+
+            <h2>Create Account</h2>
+
+            <p class="text-muted">
+                Complete the registration process to access ERP services.
+            </p>
+
+            <!-- Stepper -->
+            <div class="registration-card">
+
+                <div class="stepper">
+
+                    <div class="step-item">
+                        <div class="step-label-wrap">
+                            <div class="step-circle active">1</div>
+                            <div class="step-label active">
+                                Verification
+                            </div>
+                        </div>
+
+                        <div class="step-connector"></div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-label-wrap">
+                            <div class="step-circle pending">2</div>
+                            <div class="step-label pending">
+                                Profile
+                            </div>
+                        </div>
+
+                        <div class="step-connector"></div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-label-wrap">
+                            <div class="step-circle pending">3</div>
+                            <div class="step-label pending">
+                                Security
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- STEP 1 -->
+
+                <div class="step-content">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                CNIC
+                                <span class="required">*</span>
+                            </label>
+
+                            <input class="form-input" placeholder="35202-1234567-1">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Mobile Number
+                                <span class="required">*</span>
+                            </label>
+
+                            <input class="form-input" placeholder="0300-1234567">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="form-label">
+                                Email Address
+                                <span class="required">*</span>
+                            </label>
+
+                            <input class="form-input" placeholder="example@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                OTP
+                            </label>
+
+                            <input class="form-input" placeholder="Enter OTP">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">&nbsp;</label>
+
+                            <button type="button" class="btn btn-secondary" style="width:100%">
+                                Send OTP
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <div class="alert alert-info mt-4">
+                        OTP will be sent to your registered
+                        email and mobile number.
+                    </div>
+
+                    <div class="actions">
+                        <span></span>
+
+                        <button class="btn btn-primary">
+                            Next →
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- PROFILE SECTION -->
+
+            <div class="registration-card">
+
+                <div class="card-title mb-3">
+                    Profile Information
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            First Name
+                        </label>
+
+                        <input class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Last Name
+                        </label>
+
+                        <input class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Role
+                        </label>
+
+                        <select class="form-select">
+                            <option>Select Role</option>
+                            <option>Student</option>
+                            <option>Parent</option>
+                            <option>Faculty Member</option>
+                            <option>College Staff</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Gender
+                        </label>
+
+                        <select class="form-select">
+                            <option>Select Gender</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label class="form-label">
+                            College / Institution
+                        </label>
+
+                        <select class="form-select">
+                            <option>Select College</option>
+                        </select>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- SECURITY SECTION -->
+
+            <div class="registration-card">
+
+                <div class="card-title mb-3">
+                    Account Security
+                </div>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Password
+                        </label>
+
+                        <input type="password" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Confirm Password
+                        </label>
+
+                        <input type="password" class="form-input">
+                    </div>
+
+                </div>
+
+                <div class="password-rules">
+                    Password must contain at least 8 characters,
+                    one uppercase letter, one number and one
+                    special character.
+                </div>
+
+                <div style="margin-top:20px">
+                    <label style="display:flex;gap:8px;align-items:flex-start">
+
+                        <input type="checkbox">
+
+                        <span style="font-size:12px">
+                            I agree to the Terms &
+                            Conditions and Privacy Policy.
+                        </span>
+
+                    </label>
+                </div>
+
+                <div class="actions">
+
+                    <button class="btn btn-secondary">
+                        ← Back
+                    </button>
+
+                    <button class="btn btn-primary">
+                        Create Account
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="login-link">
+                Already have an account?
+                <a href="08-login.html">
+                    Sign In
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

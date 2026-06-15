@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register — ERP System for Colleges</title>
+
+    <link rel="stylesheet" href="design-system.css" />
+
+    <style>
+        body {
+            background: var(--brand-900);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .login-shell {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            min-height: 760px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-left {
+            background: linear-gradient(160deg,
+                    var(--brand-700) 0%,
+                    var(--brand-900) 100%);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .login-right {
+            background: var(--bg-surface);
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .brand-mark {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba(255, 255, 255, .15);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .brand-name {
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .brand-sub {
+            color: rgba(255, 255, 255, .55);
+            font-size: 12px;
+        }
+
+        .hero-headline {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .hero-sub {
+            color: rgba(255, 255, 255, .65);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .stat-pill {
+            background: rgba(255, 255, 255, .10);
+            border-radius: var(--radius-full);
+            padding: 6px 14px;
+            color: rgba(255, 255, 255, .85);
+            display: inline-block;
+            font-size: 12px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .registration-card {
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .step-content {
+            margin-top: 24px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+        }
+
+        .password-rules {
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .login-link a {
+            color: var(--brand-600);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media(max-width:900px) {
+
+            .login-shell {
+                grid-template-columns: 1fr;
+                max-width: 700px;
+            }
+
+            .login-left {
+                display: none;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="sidebar-logo">
+                <div class="sidebar-logo-mark">E</div>
+                <div>
+                    <div class="sidebar-logo-text">ERP System</div>
+                    <div class="sidebar-logo-sub">Super Admin</div>
+                </div>
+            </div>
+
+            <div class="sidebar-nav">
+                <a class="nav-item" href="#">
+                    <span class="nav-icon">📊</span>
+                    Dashboard
+                </a>
+
+                <a class="nav-item active" href="#">
+                    <span class="nav-icon">🔐</span>
+                    Roles & Permissions
+                </a>
+
+                <a class="nav-item" href="#">
+                    <span class="nav-icon">👥</span>
+                    Users
+                </a>
+
+                <a class="nav-item" href="#">
+                    <span class="nav-icon">⚙️</span>
+                    Settings
+                </a>
+            </div>
+
+        </aside>
+
+        <!-- MAIN -->
+        <div class="main-area">
+
+            <div class="topbar">
+
+                <div class="breadcrumb">
+                    Administration
+                    <span>/</span>
+                    <span class="crumb-active">
+                        Roles & Permissions
+                    </span>
+                </div>
+
+                <div class="ml-auto">
+                    <button class="btn btn-secondary">
+                        Audit Log
+                    </button>
+
+                    <button class="btn btn-primary">
+                        + Create Role
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="page-body">
+
+                <!-- PAGE HEADER -->
+
+                <div class="page-header">
+
+                    <div class="page-header-left">
+                        <h1>Roles & Permissions</h1>
+
+                        <p>
+                            Manage role based access control across ERP.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- METRICS -->
+
+                <div class="grid grid-4 mb-6">
+
+                    <div class="metric-card">
+                        <div class="metric-label">Total Roles</div>
+                        <div class="metric-value">27</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-label">Active Roles</div>
+                        <div class="metric-value">25</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-label">Users Assigned</div>
+                        <div class="metric-value">18,432</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-label">Custom Roles</div>
+                        <div class="metric-value">8</div>
+                    </div>
+
+                </div>
+
+                <!-- MAIN CONTENT -->
+
+                <div class="grid" style="grid-template-columns:280px 1fr;">
+
+                    <!-- ROLES PANEL -->
+
+                    <div class="card">
+
+                        <div class="card-header">
+                            <div class="card-title">
+                                Roles
+                            </div>
+                        </div>
+
+                        <div class="sidebar-nav" style="padding:0">
+
+                            <a class="nav-item active">
+                                🔐 Super Administrator
+                            </a>
+
+                            <a class="nav-item">
+                                🏛 HED Administrator
+                            </a>
+
+                            <a class="nav-item">
+                                🏢 DPI Administrator
+                            </a>
+
+                            <a class="nav-item">
+                                📋 Directorate Officer
+                            </a>
+
+                            <a class="nav-item">
+                                👨‍💼 Principal
+                            </a>
+
+                            <a class="nav-item">
+                                🏫 College Admin
+                            </a>
+
+                            <a class="nav-item">
+                                👨‍🏫 Faculty
+                            </a>
+
+                            <a class="nav-item">
+                                🎓 Student
+                            </a>
+
+                            <a class="nav-item">
+                                👪 Parent
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    <!-- DETAILS PANEL -->
+
+                    <div>
+
+                        <!-- ROLE DETAILS -->
+
+                        <div class="card mb-4">
+
+                            <div class="card-header">
+
+                                <div>
+                                    <div class="card-title">
+                                        Super Administrator
+                                    </div>
+
+                                    <div class="card-subtitle">
+                                        Full access across Punjab
+                                    </div>
+                                </div>
+
+                                <div>
+
+                                    <button class="btn btn-secondary">
+                                        Clone Role
+                                    </button>
+
+                                    <button class="btn btn-primary">
+                                        Save Changes
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <div class="alert alert-info mb-4">
+                                Users assigned to this role have unrestricted
+                                access to all ERP modules.
+                            </div>
+
+                            <!-- PERMISSIONS -->
+
+                            <div class="table-wrapper">
+
+                                <table>
+
+                                    <thead>
+
+                                        <tr>
+                                            <th>Module</th>
+                                            <th>View</th>
+                                            <th>Create</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+                                            <th>Approve</th>
+                                            <th>Export</th>
+                                            <th>Config</th>
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td>User Management</td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Roles & Permissions</td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Colleges</td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Admissions</td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Students</td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td></td>
+                                            <td><input type="checkbox" checked></td>
+                                            <td></td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                        <!-- DATA SCOPE -->
+
+                        <div class="grid grid-2 mb-4">
+
+                            <div class="card">
+
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        Data Scope
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-2">
+                                    <label>
+                                        <input type="radio" checked>
+                                        Entire Punjab
+                                    </label>
+                                </div>
+
+                                <div class="form-group mb-2">
+                                    <label>
+                                        <input type="radio">
+                                        Directorate Level
+                                    </label>
+                                </div>
+
+                                <div class="form-group mb-2">
+                                    <label>
+                                        <input type="radio">
+                                        Region Level
+                                    </label>
+                                </div>
+
+                                <div class="form-group mb-2">
+                                    <label>
+                                        <input type="radio">
+                                        District Level
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>
+                                        <input type="radio">
+                                        College Level
+                                    </label>
+                                </div>
+
+                            </div>
+
+                            <!-- ASSIGNED USERS -->
+
+                            <div class="card">
+
+                                <div class="card-header">
+
+                                    <div class="card-title">
+                                        Assigned Users
+                                    </div>
+
+                                    <span class="badge badge-brand">
+                                        42 Users
+                                    </span>
+
+                                </div>
+
+                                <table>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td>Ali Raza</td>
+                                            <td>DPI</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Ahmed Khan</td>
+                                            <td>HED</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>Sara Malik</td>
+                                            <td>Finance</td>
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                        <!-- AUDIT -->
+
+                        <div class="card">
+
+                            <div class="card-header">
+                                <div class="card-title">
+                                    Permission Change History
+                                </div>
+                            </div>
+
+                            <div class="timeline">
+
+                                <div class="tl-item">
+
+                                    <div class="tl-left">
+
+                                        <div class="tl-dot done">
+                                            ✓
+                                        </div>
+
+                                        <div class="tl-line done"></div>
+
+                                    </div>
+
+                                    <div class="tl-content">
+
+                                        <div class="tl-title">
+                                            Role Updated
+                                        </div>
+
+                                        <div class="tl-meta">
+                                            Hamza Tariq • 15-Jun-2026 09:34 AM
+                                        </div>
+
+                                        <div class="tl-comment">
+                                            Export permission enabled for
+                                            Directorate Officer.
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="tl-item">
+
+                                    <div class="tl-left">
+
+                                        <div class="tl-dot done">
+                                            ✓
+                                        </div>
+
+                                    </div>
+
+                                    <div class="tl-content">
+
+                                        <div class="tl-title">
+                                            Role Created
+                                        </div>
+
+                                        <div class="tl-meta">
+                                            System Administrator
+                                        </div>
+
+                                        <div class="tl-comment">
+                                            College Admin role created.
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
