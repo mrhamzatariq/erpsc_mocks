@@ -1,0 +1,2520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Program</title>
+
+    <!-- Design System -->
+    <link rel="stylesheet" href="design-system.css">
+
+    <!-- Select2 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        /* Select2 theme overrides to match design system */
+        .select2-container--default .select2-selection--single {
+            height: 36px;
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            background: var(--bg-surface);
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: var(--text-primary);
+            line-height: 34px;
+            padding-left: 11px;
+            font-size: 13px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 34px;
+        }
+
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: var(--brand-500);
+        }
+
+        .select2-container--focus .select2-selection--single,
+        .select2-container--default.select2-container--open .select2-selection--single {
+            border-color: var(--brand-500);
+            box-shadow: 0 0 0 3px rgba(107, 99, 212, 0.12);
+            outline: none;
+        }
+
+        .select2-dropdown {
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            font-size: 13px;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .select2-search--dropdown .select2-search__field {
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-sm);
+            padding: 6px 10px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        /* Page layout */
+        body {
+            padding: var(--space-6);
+        }
+
+        .form-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Section card headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-5);
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .section-header-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-md);
+            background: var(--brand-50);
+            color: var(--brand-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .section-header p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Add Group section */
+        .add-group-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-top: var(--space-3);
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .add-group-toggle input[type="checkbox"] {
+            width: auto;
+            accent-color: var(--brand-500);
+        }
+
+        #subjectCombinationSection {
+            margin-top: var(--space-3);
+            padding: var(--space-4);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+        }
+
+        .subject-row {
+            margin-bottom: var(--space-3);
+        }
+
+        .subject-row:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Disabled input style */
+        input:disabled,
+        .form-input:disabled {
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        /* Page breadcrumb */
+        .page-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: var(--space-5);
+        }
+
+        .page-breadcrumb .active {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .page-breadcrumb span {
+            opacity: 0.4;
+        }
+
+        /* Action bar */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-2);
+            padding-top: var(--space-5);
+            margin-top: var(--space-2);
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* Subject table */
+        #subjectTableWrapper {
+            display: none;
+            margin-top: var(--space-4);
+        }
+
+        #subjectTableWrapper.has-subjects {
+            display: block;
+        }
+
+        #subjectTable {
+            width: 100%;
+        }
+
+        #subjectTable th {
+            background: var(--bg-secondary);
+        }
+
+        /* Output message */
+        #output {
+            font-size: 13px;
+            color: var(--color-success-text);
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-container">
+
+        <!-- Breadcrumb -->
+        <div class="page-breadcrumb">
+            <span>Academic Setup</span>
+            <span>›</span>
+            <span>Programs</span>
+            <span>›</span>
+            <span class="active">Add Program</span>
+        </div>
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-header-left">
+                <h1>Add Program</h1>
+                <p>Define a new academic program with its subjects and course details.</p>
+            </div>
+        </div>
+
+        <!-- Section 1: Program Details -->
+        <div class="card mb-4">
+            <div class="section-header">
+                <div class="section-header-icon">🎓</div>
+                <div>
+                    <h2>Program Details</h2>
+                    <p>Basic information about the academic program</p>
+                </div>
+            </div>
+
+            <!-- Row 1: Level, Program Name, Major -->
+            <div class="grid grid-3 mb-4">
+
+                <div class="form-group">
+                    <label class="form-label">Level</label>
+                    <select id="level" class="form-select">
+                        <option>Intermediate</option>
+                        <option selected>Bachelor (ADP/BS)</option>
+                        <option>Masters</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Program Name <span class="required">*</span></label>
+                    <select id="programName" class="form-select">
+                        <option value="">Select Program</option>
+                        <option value="humanities">Humanities</option>
+                        <option value="general-science">General Science</option>
+                        <option value="pre-engineering">Pre-Engineering</option>
+                        <option value="pre-medical">Pre-Medical</option>
+                        <option value="commerce">Commerce</option>
+                        <option value="fine-arts">Fine Arts</option>
+                        <option value="technical">Technical</option>
+                        <option value="adp">ADP</option>
+                        <option value="bs">BS</option>
+                        <option value="bba">BBA</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Major / Title</label>
+                    <select id="major" class="form-select">
+                        <option>Arts</option>
+                        <option>Commerce</option>
+                        <option>General</option>
+                        <option>Science</option>
+                        <option>Computer Science</option>
+                        <option>Information Technology</option>
+                        <option>Software Engineering</option>
+                        <option>Mathematics</option>
+                        <option>English</option>
+                        <option>Physics</option>
+                        <option>Chemistry</option>
+                        <option>Biology</option>
+                        <option>Artificial Intelligence</option>
+                        <option>Cyber Security</option>
+                        <option>Economics</option>
+                    </select>
+
+                    <label class="add-group-toggle mt-2">
+                        <input type="checkbox" id="subjectCombinationChk">
+                        Add Group / Subject Combination
+                    </label>
+
+                    <div id="subjectCombinationSection" style="display:none;">
+                        <div id="combinationSubjects"></div>
+                        <button type="button" class="btn btn-ghost btn-sm mt-2" onclick="addCombinationSubject()">
+                            + Add Subject
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Row 2: Shift, Duration, Session Type, Academic Session -->
+            <div class="grid grid-4">
+
+                <div class="form-group">
+                    <label class="form-label">Shift</label>
+                    <select id="shift" class="form-select">
+                        <option>Morning | 1st Shift</option>
+                        <option>Evening | 2nd Shift</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Duration (Years)</label>
+                    <select id="duration" class="form-select">
+                        <option value="2">2 Years</option>
+                        <option value="4">4 Years</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Session Type</label>
+                    <select id="sessionType" class="form-select">
+                        <option>Annual</option>
+                        <option>Semester</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Academic Session</label>
+                    <input type="text" id="academicSession" class="form-input" value="2026-25" disabled>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Section 2: Course Details -->
+        <div class="card mb-4">
+            <div class="section-header">
+                <div class="section-header-icon">📚</div>
+                <div>
+                    <h2>Course Details</h2>
+                    <p>Add subjects to this program by class and department</p>
+                </div>
+            </div>
+
+            <!-- Class, Department, Type -->
+            <div class="grid grid-4 mb-4">
+                <!-- Subject -->
+                <div class="form-group mb-4">
+                    <label class="form-label">Subject</label>
+                    <select id="subject" class="form-select">
+                        <option>19th Century Poetry</option>
+                        <option>20th Century British Literature : Poetry and Drama</option>
+                        <option>20th Century Fiction and Prose</option>
+                        <option>A Science of Society - I</option>
+                        <option>Accounting</option>
+                        <option>Accounting - I</option>
+                        <option>Accounting and Book Keeping</option>
+                        <option>Accounting and Finance</option>
+                        <option>Accounting and Taxation</option>
+                        <option>Active Citizenship</option>
+                        <option>Actuarial Science</option>
+                        <option>Actuarial Sciences and Risk Management</option>
+                        <option>Adapted Physical Education</option>
+                        <option>Adbi Istalahaat</option>
+                        <option>Administration and Management in Sports</option>
+                        <option>Administrative Sciences</option>
+                        <option>Advanced Electronics - I (Theory)</option>
+                        <option>Advanced Electronics - III (Theory)</option>
+                        <option>Advanced Auditing (Accounting Specialization)</option>
+                        <option>Advanced Clothing and Fashion</option>
+                        <option>Advanced Electronics - II (Lab)</option>
+                        <option>Advanced Electronics - IV (Lab)</option>
+                        <option>Advanced Experimental Design (Lab)</option>
+                        <option>Advanced Experimental Design (Theory)</option>
+                        <option>Advanced Financial Accounting - I</option>
+                        <option>Advanced Financial Accounting - II</option>
+                        <option>Advanced Macroeconomics</option>
+                        <option>Advanced materials Engineering</option>
+                        <option>Advanced Mathematical Economics</option>
+                        <option>Advanced Microeconomics</option>
+                        <option>Advanced Reading and Writing Skills</option>
+                        <option>Advanced Reporting</option>
+                        <option>Advanced Sampling Techniques (Lab)</option>
+                        <option>Advanced Sampling Techniques (Theory)</option>
+                        <option>Advanced Solid State Physics</option>
+                        <option>Advanced Sub-Editing</option>
+                        <option>Advances in Aquaculture - I</option>
+                        <option>Advances in Aquaculture - II</option>
+                        <option>Advertising - I</option>
+                        <option>Advertising - II</option>
+                        <option>Advertising and Marketing Communication</option>
+                        <option>Aerospace and Avionics Engineering</option>
+                        <option>Africa: South of Sahara</option>
+                        <option>Agricultural Economics</option>
+                        <option>Agricultural Geography</option>
+                        <option>Agriculture</option>
+                        <option>Agriculture Agronomy</option>
+                        <option>Agriculture Biotechnology</option>
+                        <option>Agriculture Business</option>
+                        <option>Agriculture Business and Marketing</option>
+                        <option>Agriculture Economics</option>
+                        <option>Agriculture Engineering</option>
+                        <option>Agriculture Entomology</option>
+                        <option>Agriculture Extension</option>
+                        <option>Agriculture Food Technology</option>
+                        <option>Agriculture Horticulture</option>
+                        <option>Agriculture Major Forestry</option>
+                        <option>Agriculture Plant Breeding and Genetics</option>
+                        <option>Agriculture Plant Pathology</option>
+                        <option>Agriculture Soil Sciences</option>
+                        <option>Agriculture Water Management</option>
+                        <option>Agro - Industrial Engineering Technology</option>
+                        <option>Agronomy</option>
+                        <option>Air Pollution, its Impacts and Control</option>
+                        <option>Air Pollution, its Impacts and Control (Lab)</option>
+                        <option>Aircraft Maintenance Engineering Technology</option>
+                        <option>American Literature</option>
+                        <option>Analysis of Development</option>
+                        <option>Analysis of Development (Lab)</option>
+                        <option>Analytical Chemistry</option>
+                        <option>Analytical Chemistry (Lab)</option>
+                        <option>Analytical Chemistry (Sp. (Theory) - I)</option>
+                        <option>Analytical Chemistry (Sp. (Theory) - II)</option>
+                        <option>Analytical Chemistry (Sp. Practical)</option>
+                        <option>Analytical Dynamics</option>
+                        <option>Analytical Geometry</option>
+                        <option>Analytical Study of English Literature</option>
+                        <option>Anatomy</option>
+                        <option>Anatomy and Histology</option>
+                        <option>Ancient India</option>
+                        <option>Anesthesia</option>
+                        <option>Anesthesia Technology</option>
+                        <option>Anesthesiology</option>
+                        <option>Animal Behavior</option>
+                        <option>Animal Behavior (Lab)</option>
+                        <option>Animal Breeding and Genetics</option>
+                        <option>Animal Diversity - I (Invertebrates)</option>
+                        <option>Animal Diversity - I-(Lab)</option>
+                        <option>Animal Diversity - II (Chordates)</option>
+                        <option>Animal Form and Function - I</option>
+                        <option>Animal Nutrition</option>
+                        <option>Animal Physiology - II</option>
+                        <option>Animal Physiology - II (Lab)</option>
+                        <option>Animal Sciences</option>
+                        <option>Anthropological Linguistics</option>
+                        <option>Anthropology</option>
+                        <option>Application of Computer in Physical Education (Compulsory 8)</option>
+                        <option>Application of modern technologies in Sports (General 4)</option>
+                        <option>Application of Statistics in Physical Education (General 7)</option>
+                        <option>Applied Accounting</option>
+                        <option>Applied and Computing Mathematics</option>
+                        <option>Applied Areas of Psychology</option>
+                        <option>Applied Chemistry</option>
+                        <option>Applied Chemistry (Lab)</option>
+                        <option>Applied Chemistry (Practical)</option>
+                        <option>Applied Chemistry (Theory - I)</option>
+                        <option>Applied Chemistry (Theory - II)</option>
+                        <option>Applied Econometrics (Lab)</option>
+                        <option>Applied Econometrics (Theory)</option>
+                        <option>Applied Economics</option>
+                        <option>Applied Geology</option>
+                        <option>Applied Grammar - I</option>
+                        <option>Applied Grammar - II</option>
+                        <option>Applied Hydrology</option>
+                        <option>Applied Linguistics</option>
+                        <option>Applied Management</option>
+                        <option>Applied Mathematics</option>
+                        <option>Applied Mechanics and Design</option>
+                        <option>Applied Microbiology</option>
+                        <option>Applied Physics</option>
+                        <option>Applied Psychology</option>
+                        <option>Applied Statistics</option>
+                        <option>Arabic</option>
+                        <option>Arabic - I</option>
+                        <option>Arabic - II</option>
+                        <option>Arabic - III</option>
+                        <option>Arabic - IV</option>
+                        <option>Arabic - V</option>
+                        <option>Arabic - VI</option>
+                        <option>Arabic - VII</option>
+                        <option>Arabic - VIII</option>
+                        <option>Arabic Composition - II</option>
+                        <option>Arabic Composition I</option>
+                        <option>Arabic Elective</option>
+                        <option>Arabic Language</option>
+                        <option>Arabic Language - I</option>
+                        <option>Arabic Language - II</option>
+                        <option>Arabic Literature</option>
+                        <option>Arabic Literature in the Subcontinent</option>
+                        <option>Arabic Prosody</option>
+                        <option>Arabic Rhetoric</option>
+                        <option>Archaeology</option>
+                        <option>Architecture</option>
+                        <option>Architecture Engineering</option>
+                        <option>Architecture Technology</option>
+                        <option>Art Education</option>
+                        <option>Art History</option>
+                        <option>Artificial Insemination Technician Diploma</option>
+                        <option>Artificial Intelligence</option>
+                        <option>Artificial Intelligence and Embedded Systems</option>
+                        <option>Arts and Design</option>
+                        <option>Arts and Humanities - I</option>
+                        <option>Arts and Humanities - II</option>
+                        <option>Asoolay Tehqiqu o Tadveen</option>
+                        <option>Astrophysics</option>
+                        <option>Athletics - I (Sprint Races)</option>
+                        <option>Athletics - II (Long Races)</option>
+                        <option>Athletics - III (Jump Events)</option>
+                        <option>Athletics - IV (Throwing Events)</option>
+                        <option>Audiology</option>
+                        <option>Auditing</option>
+                        <option>Auditing and Control Systems</option>
+                        <option>Australia</option>
+                        <option>Automobile Engineering Technology</option>
+                        <option>Automotive Engineering</option>
+                        <option>Automotive Technology</option>
+                        <option>Aviation Engineering Technology</option>
+                        <option>Aviation Management</option>
+                        <option>Aviation Technology</option>
+                        <option>Bacteriology</option>
+                        <option>Bankari</option>
+                        <option>Banking</option>
+                        <option>Banking and Finance</option>
+                        <option>Banking and Financial Economics</option>
+                        <option>Banking Law and Practice</option>
+                        <option>Banking/ Insurance/ Salesmanship</option>
+                        <option>Basic Econometrics (Lab)</option>
+                        <option>Basic Econometrics (Theory)</option>
+                        <option>Basic Economics - I</option>
+                        <option>Basic Economics - II</option>
+                        <option>Basic Economics - III</option>
+                        <option>Basic Economics - IV</option>
+                        <option>Basic Economics (Lab) - I</option>
+                        <option>Basic Economics (Lab) - II</option>
+                        <option>Basic Economics (Lab) - III</option>
+                        <option>Basic Economics (Lab) - IV</option>
+                        <option>Basic Electronics</option>
+                        <option>Basic Field Surveying</option>
+                        <option>Basic Grammar - I</option>
+                        <option>Basic Grammar - II</option>
+                        <option>Basic Psychology</option>
+                        <option>Basic Science and Related Studies</option>
+                        <option>Basic Writing Skills</option>
+                        <option>Basics of Human Anatomy</option>
+                        <option>Basics of Human Anatomy (Foundation 6)</option>
+                        <option>Basics of Human Physiology</option>
+                        <option>Basics of Human Physiology (Foundation 8)</option>
+                        <option>Bayan o Badi Arooz</option>
+                        <option>Behavioural Sciences</option>
+                        <option>Biblical Studies</option>
+                        <option>Biochemistry</option>
+                        <option>Biochemistry - I</option>
+                        <option>Biochemistry - II</option>
+                        <option>Biochemistry - II (Lab)</option>
+                        <option>Biochemistry (General 2)</option>
+                        <option>Biochemistry (Lab)</option>
+                        <option>Biochemistry and Molecular Biology</option>
+                        <option>Biochemistry Practical</option>
+                        <option>Biodegradation and Bioremediation</option>
+                        <option>Biodegradation and Bioremediation ((Lab).)</option>
+                        <option>Biodegradation and Bioremediation (Lab)</option>
+                        <option>Bioelectronics</option>
+                        <option>Biohazards, Biosafety, (Lab)</option>
+                        <option>Biohazards, Biosafety, Bioethics</option>
+                        <option>Bioinformatics</option>
+                        <option>Biological Basis of Behavior</option>
+                        <option>Biological Basis of Behavior Practical</option>
+                        <option>Biological Sciences</option>
+                        <option>Biological Techniques</option>
+                        <option>Biology</option>
+                        <option>Biology - I</option>
+                        <option>Biology - II</option>
+                        <option>Biomechanics</option>
+                        <option>Biomedical Engineering Technology</option>
+                        <option>Biomedical Physics</option>
+                        <option>Biomedical Sciences</option>
+                        <option>Biomedical Technology</option>
+                        <option>Biophysics - II  (Theory)</option>
+                        <option>Biophysics - II (Lab)</option>
+                        <option>Biophysics - III (Theory)</option>
+                        <option>Biophysics - IV (Lab)</option>
+                        <option>Biosciences</option>
+                        <option>Biostatistics</option>
+                        <option>Biotechnology</option>
+                        <option>Bisvey Saadi May Nawal Ka Irtaka Aur Es Kay Fiqri O Funny Mubahas</option>
+                        <option>Book Illustration</option>
+                        <option>Book Keeping</option>
+                        <option>Botany</option>
+                        <option>Botany - I (Plant Diversity)</option>
+                        <option>Botany - I + Botany - I-(Lab)</option>
+                        <option>Botany - I(Plant Diversity)</option>
+                        <option>Botany - II</option>
+                        <option>Botany - II (Plant Systematic Anatomy and Development (Theory))</option>
+                        <option>Botany - III</option>
+                        <option>Botany - III (Cell Biology, Genetics and Evolution)</option>
+                        <option>Botany - III (Plant Physiology and Ecology)</option>
+                        <option>Botany - IV (Plant Physiology and Ecology)</option>
+                        <option>Botany (Lab) - I (Plant Diversity)</option>
+                        <option>Botany (Lab) - II (Plant Systematic Anatomy and Development (Theory))</option>
+                        <option>Botany (Lab) - III (Cell Biology, Genetics and Evolution)</option>
+                        <option>Botany (Lab) - IV (Plant Physiology and Ecology)</option>
+                        <option>Botany II (Plant Systematic Anatomy and Development (Theory))</option>
+                        <option>Broadcast Journalism</option>
+                        <option>Building and Architectural Design</option>
+                        <option>Building and Construction</option>
+                        <option>Business</option>
+                        <option>Business Accounting and Finance</option>
+                        <option>Business Administration</option>
+                        <option>Business Analytics</option>
+                        <option>Business and Industrial Law</option>
+                        <option>Business and Information Systems</option>
+                        <option>Business and Information Technology</option>
+                        <option>Business and Marketing Communication</option>
+                        <option>Business Economics</option>
+                        <option>Business Education</option>
+                        <option>Business Geography</option>
+                        <option>Business Information Technology</option>
+                        <option>Business Law</option>
+                        <option>Business Management</option>
+                        <option>Business Management and Accounting</option>
+                        <option>Business Mathematics</option>
+                        <option>Business Mathematics and Statistics</option>
+                        <option>Business Statistics</option>
+                        <option>Business Statistics and Management</option>
+                        <option>Business Studies</option>
+                        <option>Business Writings</option>
+                        <option>C++ Computer Programming Language</option>
+                        <option>Calculus - I</option>
+                        <option>Calculus - II</option>
+                        <option>Calculus (IT) - I</option>
+                        <option>Calculus (IT)- II</option>
+                        <option>Calculus and Analytical Geometry</option>
+                        <option>Capstone Project</option>
+                        <option>Cardiac Perfusion</option>
+                        <option>Cardiac Surgery</option>
+                        <option>Cardiology</option>
+                        <option>Cell and Molecular Biology - II</option>
+                        <option>Cell and Molecular Biology - II (Lab)</option>
+                        <option>Cell Biology</option>
+                        <option>Cell Biology, Genetics and Evolution</option>
+                        <option>Cellular and Molecular Biology</option>
+                        <option>Central Asia</option>
+                        <option>Ceramic and Glass Design</option>
+                        <option>Ceramic Design</option>
+                        <option>Ceramics</option>
+                        <option>Challenges of a Changing Earth</option>
+                        <option>Challenges of a Changing Earth ((Lab).)</option>
+                        <option>Challenges of a Changing Earth (Lab)</option>
+                        <option>Chemical Engineering</option>
+                        <option>Chemical Engineering Technology</option>
+                        <option>Chemical Pathology</option>
+                        <option>Chemical Technology</option>
+                        <option>Chemistry</option>
+                        <option>Chemistry - I (Inorganic Chemistry) + Chemistry - I-(Lab)</option>
+                        <option>Chemistry - I (Physical Chemistry)</option>
+                        <option>Chemistry - I + Chemistry - I-(Lab)</option>
+                        <option>Chemistry - II (Inorganic Chemistry)</option>
+                        <option>Chemistry - II(Organic Chemistry)</option>
+                        <option>Chemistry - III</option>
+                        <option>Chemistry - III (Organic Chemistry)</option>
+                        <option>Chemistry - IV (General Chemistry)</option>
+                        <option>Chemistry (Lab) - I (Physical Chemistry)</option>
+                        <option>Chemistry (Lab) - II (Inorganic Chemistry)</option>
+                        <option>Chemistry (Lab) - III (Organic Chemistry)</option>
+                        <option>Chemistry (Lab) - IV (General Chemistry)</option>
+                        <option>Chemistry II Organic Chemistry</option>
+                        <option>Child and Adult Psychology</option>
+                        <option>Child Development and Family life</option>
+                        <option>Child development and family living</option>
+                        <option>Child Guidance and Educational Counseling</option>
+                        <option>Childhood Education</option>
+                        <option>China</option>
+                        <option>Chinese Language - I</option>
+                        <option>Chinese Language - II</option>
+                        <option>Chordates Diversity</option>
+                        <option>Christian Studies</option>
+                        <option>Citizenship Education (Human Rights)</option>
+                        <option>City and Regional Planning</option>
+                        <option>Civics</option>
+                        <option>Civil Engineering</option>
+                        <option>Civil Engineering Technology</option>
+                        <option>Civil Society Organizations and Development</option>
+                        <option>Civil Technology</option>
+                        <option>Classical  Electrodynamics - II</option>
+                        <option>Classical Arabic Poetry</option>
+                        <option>Classical Arabic Prose</option>
+                        <option>Classical Electrodynamics - I</option>
+                        <option>Classical Electrodynamics - I</option>
+                        <option>Classical Electrodynamics - II</option>
+                        <option>Classical Mechanics</option>
+                        <option>Classical Sociological (Theory)</option>
+                        <option>Classics in Drama</option>
+                        <option>Classification of Insects</option>
+                        <option>Climate Change</option>
+                        <option>Climatology</option>
+                        <option>Clinical and Counseling Psychology</option>
+                        <option>Clinical Medicine</option>
+                        <option>Clinical Medicine and Surgery</option>
+                        <option>Clinical Nutrition</option>
+                        <option>Clinical Nutrition and Dietetics</option>
+                        <option>Clinical Oncology</option>
+                        <option>Clinical Psychology</option>
+                        <option>Clinical Psychology - I</option>
+                        <option>Clinical Psychology - II</option>
+                        <option>Clinical Sociology</option>
+                        <option>Clothing and Textile</option>
+                        <option>Clothing and Textiles</option>
+                        <option>Coal Technology</option>
+                        <option>Cognitive Psychology</option>
+                        <option>Commerce</option>
+                        <option>Commerce and Finance</option>
+                        <option>Commercial Geography</option>
+                        <option>Commercial Law</option>
+                        <option>Common Sports Injuries, Treatment and Rehabilitation</option>
+                        <option>Communication  Electronics - I (Theory)</option>
+                        <option>Communication and Agricultural Development</option>
+                        <option>Communication and Information Technology</option>
+                        <option>Communication and Media Studies</option>
+                        <option>Communication and New Media Technology</option>
+                        <option>Communication and Presentation Skills</option>
+                        <option>Communication Design</option>
+                        <option>Communication Electronics - II (Lab)</option>
+                        <option>Communication Electronics - III (Theory)</option>
+                        <option>Communication Electronics - IV (Lab)</option>
+                        <option>Communication Skill</option>
+                        <option>Communication Skills (Eng III)</option>
+                        <option>Communication Skills (IT)</option>
+                        <option>Communication Skills of English</option>
+                        <option>Communication Studies</option>
+                        <option>Communication Studies Film and television</option>
+                        <option>Communication Systems</option>
+                        <option>Communication Technology</option>
+                        <option>Community Development and Environmental Management</option>
+                        <option>Community Medicine</option>
+                        <option>Community Medicine and Public Health</option>
+                        <option>Community Organization and Development</option>
+                        <option>Community Work</option>
+                        <option>Comparative and Developmental Politics - I</option>
+                        <option>Comparative and Developmental Politics - II</option>
+                        <option>Comparative Economic System</option>
+                        <option>Comparative Literature</option>
+                        <option>Comparative Study of Religions - I</option>
+                        <option>Comparative Study of Religions - II</option>
+                        <option>Complex Analysis - I</option>
+                        <option>Complex Analysis - II</option>
+                        <option>Computational Physics</option>
+                        <option>Computational Physics - I</option>
+                        <option>Computational Physics - II</option>
+                        <option>Computer - I</option>
+                        <option>Computer - II</option>
+                        <option>Computer - III</option>
+                        <option>Computer - IV</option>
+                        <option>Computer (Introduction and Applications)</option>
+                        <option>Computer (Introduction Application)</option>
+                        <option>Computer (Lab) - I</option>
+                        <option>Computer (Lab) - II</option>
+                        <option>Computer (Lab) - III</option>
+                        <option>Computer (Lab) - IV</option>
+                        <option>Computer Applications</option>
+                        <option>Computer Applications in Business</option>
+                        <option>Computer Applications to Business - I</option>
+                        <option>Computer Arts</option>
+                        <option>Computer Based Correspondence</option>
+                        <option>Computer Engineering</option>
+                        <option>Computer Networking</option>
+                        <option>Computer Networking and Infrastructure</option>
+                        <option>Computer Networks</option>
+                        <option>Computer Networks (CMP)</option>
+                        <option>Computer Networks (Lab)</option>
+                        <option>Computer Networks and (Lab) (CMP)</option>
+                        <option>Computer Organization and Assembly Language</option>
+                        <option>Computer Organization and Assembly Language (Lab)</option>
+                        <option>Computer Organization and Design</option>
+                        <option>Computer Science</option>
+                        <option>Computer Science - I</option>
+                        <option>Computer Science - II</option>
+                        <option>Computer Studies</option>
+                        <option>Computer System Engineering</option>
+                        <option>Computing and Data Science</option>
+                        <option>Concepts of Modem Physics</option>
+                        <option>Conflict And Alternative Dispute Resolution</option>
+                        <option>Conservation of Resources</option>
+                        <option>Construction and Engineering Management</option>
+                        <option>Consumer Behavior (Marketing Specialization)</option>
+                        <option>Contemporary Muslim World</option>
+                        <option>Contemporary Sociological (Theory)</option>
+                        <option>Contemporary World Media</option>
+                        <option>Continental Literature</option>
+                        <option>Control Systems</option>
+                        <option>Corporate Finance (Finance specialization)</option>
+                        <option>Corporate Law</option>
+                        <option>Corporate Strategy</option>
+                        <option>Cosmetology and Dermatological Sciences</option>
+                        <option>Cost Accounting</option>
+                        <option>Counseling Psychology</option>
+                        <option>Course Title</option>
+                        <option>Craft and Textile Design</option>
+                        <option>Creative Art and Craft</option>
+                        <option>Criminology</option>
+                        <option>Criminology and Criminal Justice</option>
+                        <option>Criminology and Security Studies</option>
+                        <option>Criticism and (Theory) - I</option>
+                        <option>Criticism and (Theory) - II</option>
+                        <option>Cross Cultural Psychology</option>
+                        <option>Cultural Anthropology</option>
+                        <option>Cultural Geography</option>
+                        <option>Cultural Studies</option>
+                        <option>Currency and Finance</option>
+                        <option>Curriculum Development in Physical Education (Major 9)</option>
+                        <option>Cyber Security</option>
+                        <option>Cyber Security and Digital Forensics</option>
+                        <option>Cyber Security and Forensics</option>
+                        <option>Cyber Space Forensics and Information Security</option>
+                        <option>Cyber Technology</option>
+                        <option>D-Pharmacy</option>
+                        <option>Dairy Science</option>
+                        <option>Dairy Technology</option>
+                        <option>Data Analysis using SPSS</option>
+                        <option>Data Science</option>
+                        <option>Data Structures and Algorithms</option>
+                        <option>Data Structures and Algorithms (Lab)</option>
+                        <option>Database Administration</option>
+                        <option>Database Administration and Management</option>
+                        <option>Database Administration and Management (Lab)</option>
+                        <option>Database Management System</option>
+                        <option>Database Systems</option>
+                        <option>Database Systems (Lab)</option>
+                        <option>Database Systems(CMP)</option>
+                        <option>Dawa o Irshad</option>
+                        <option>Defense and Diplomatic Studies</option>
+                        <option>Demographic Survey</option>
+                        <option>Dental Hygiene</option>
+                        <option>Dental Science</option>
+                        <option>Dental Surgery</option>
+                        <option>Dental Technology</option>
+                        <option>Dermatological Sciences</option>
+                        <option>Dermatology</option>
+                        <option>Design and Analysis of Algorithms</option>
+                        <option>Design and Analysis of Experiments (Lab)</option>
+                        <option>Design and Analysis of Experiments (Theory)</option>
+                        <option>Design and Development</option>
+                        <option>Development Economics</option>
+                        <option>Development Economics - I</option>
+                        <option>Development Economics - Il</option>
+                        <option>Development Economics and Public Policy</option>
+                        <option>Development Policy</option>
+                        <option>Development Studies</option>
+                        <option>Developmental Communication / Journalism</option>
+                        <option>Developmental Pediatrics</option>
+                        <option>Developmental Psychology (Revised)</option>
+                        <option>Developments of Social Thoughts</option>
+                        <option>Diagnostic Radiology</option>
+                        <option>Diagnostic Ultrasound</option>
+                        <option>Dietetics and Nutrition Sciences</option>
+                        <option>Differential  Equations - II</option>
+                        <option>Differential Equations</option>
+                        <option>Differential Equations - I</option>
+                        <option>Differential Geometry</option>
+                        <option>Digital Cartography</option>
+                        <option>Digital Design</option>
+                        <option>Digital Electronics</option>
+                        <option>Digital Forensics</option>
+                        <option>Digital Logic Design</option>
+                        <option>Digital Logic Design (Lab)</option>
+                        <option>Digital Media</option>
+                        <option>Diplomacy</option>
+                        <option>Diplomacy and Strategic Studies</option>
+                        <option>Discourse Analysis</option>
+                        <option>Discrete Mathematics</option>
+                        <option>Discrete Mathematics (IT)</option>
+                        <option>Discrete Structures</option>
+                        <option>Doctor of Physical Therapy</option>
+                        <option>Doctor of Veterinary Medicine</option>
+                        <option>E-Commerce</option>
+                        <option>Early Childhood Education</option>
+                        <option>Earth Sciences</option>
+                        <option>Eastern Asia China, Japan and Korea</option>
+                        <option>Eastern Medicine</option>
+                        <option>Eastern Medicine and Surgery</option>
+                        <option>Econometrics - I</option>
+                        <option>Econometrics - II</option>
+                        <option>Econometrics I</option>
+                        <option>Econometrics II</option>
+                        <option>Economic  Dynamics</option>
+                        <option>Economic Development and Policy Study</option>
+                        <option>Economic Geography</option>
+                        <option>Economic Principles, Strategies and Techniques of Marketing</option>
+                        <option>Economic Zoology</option>
+                        <option>Economics</option>
+                        <option>Economics and Finance</option>
+                        <option>Economics of Pakistan</option>
+                        <option>Economics with Data Science</option>
+                        <option>Education</option>
+                        <option>Education and Language Studies</option>
+                        <option>Education Leadership and Management</option>
+                        <option>Educational Leadership and Innovation</option>
+                        <option>Educational Leadership and Management</option>
+                        <option>Educational Leadership and Policy Studies</option>
+                        <option>Educational Management</option>
+                        <option>Educational Planning and Management</option>
+                        <option>Educational Research and Assessment</option>
+                        <option>Electric Power and Energy Engineering</option>
+                        <option>Electrical and Computer Engineering</option>
+                        <option>Electrical and Computer Systems</option>
+                        <option>Electrical Engineering</option>
+                        <option>Electrical Engineering Technology</option>
+                        <option>Electrical Power Engineering</option>
+                        <option>Electrical Power Systems</option>
+                        <option>Electrical System</option>
+                        <option>Electrical Technology</option>
+                        <option>Electricity and Magnetism</option>
+                        <option>Electromagnetic (Theory) - I</option>
+                        <option>Electromagnetic (Theory) - II</option>
+                        <option>Electromagnetics</option>
+                        <option>Electronic Devices and Circuits</option>
+                        <option>Electronic Journalism</option>
+                        <option>Electronic Media and Virtual Society</option>
+                        <option>Electronics</option>
+                        <option>Electronics - I</option>
+                        <option>Electronics - II</option>
+                        <option>Electronics and Communication</option>
+                        <option>Electronics and Electrical Systems</option>
+                        <option>Electronics System Design</option>
+                        <option>Electronics Technology</option>
+                        <option>Elementary Education</option>
+                        <option>Elementary Mathematics - I (Algebra)</option>
+                        <option>Elementary Mathematics - II</option>
+                        <option>Elementary Mathematics - II (Calculus)</option>
+                        <option>Elementary Mathematics I</option>
+                        <option>Elementary Mathematics-1 (Algebra)</option>
+                        <option>Elementary Mechanic</option>
+                        <option>Elementary Number (Theory)</option>
+                        <option>Elementary Statistics</option>
+                        <option>Emergency and Intensive Care Sciences</option>
+                        <option>Endocrinology</option>
+                        <option>Energy and Environmental Engineering</option>
+                        <option>Energy Economics</option>
+                        <option>Energy Engineering</option>
+                        <option>Energy Systems</option>
+                        <option>Energy Systems Engineering</option>
+                        <option>Energy Technology</option>
+                        <option>Engineering and Technology</option>
+                        <option>Engineering Hydrology</option>
+                        <option>Engineering Management</option>
+                        <option>English</option>
+                        <option>English - I</option>
+                        <option>English - I (Functional English)</option>
+                        <option>English - I (Language in Use)</option>
+                        <option>English - I (Reading and Writing Skills)</option>
+                        <option>English - I: Functional English</option>
+                        <option>English - II</option>
+                        <option>English - II (Academic Reading and Writing)</option>
+                        <option>English - II (Communication Skill)</option>
+                        <option>English - II (Composition Writing)</option>
+                        <option>English - II: Communication Skills</option>
+                        <option>English - III</option>
+                        <option>English - III (Advance Communication Skills)</option>
+                        <option>English - III (Business Communication - I)</option>
+                        <option>English - III (Communication Skills)</option>
+                        <option>English - III: Technical Writing and Presentation Skills</option>
+                        <option>English - IV (Advance Academic Reading and Writing)</option>
+                        <option>English - IV (Business Communication - II)</option>
+                        <option>English - IV (English for Practical Aims)</option>
+                        <option>English (Language and Literature)</option>
+                        <option>English (Literature and Linguistics)</option>
+                        <option>English (Literature)</option>
+                        <option>English (Teaching of English- TESOL)</option>
+                        <option>English (Translation and Interpreting)</option>
+                        <option>English (Translation Studies)</option>
+                        <option>English Advance</option>
+                        <option>English as Official Language / Univ. Optional (Compulsory 9)</option>
+                        <option>English Composition and Comprehension</option>
+                        <option>English Elective</option>
+                        <option>English Ill {Technical Writing and Presentation Skills)</option>
+                        <option>English IV</option>
+                        <option>English Language</option>
+                        <option>English Language and Teaching</option>
+                        <option>English Language Teaching and Linguistics</option>
+                        <option>English Linguistics</option>
+                        <option>English Literature</option>
+                        <option>English Shorthand</option>
+                        <option>English Typing</option>
+                        <option>English‐II (Academic Reading and Writing)</option>
+                        <option>English‐III (Advance Communication Skills)</option>
+                        <option>Enterprise Application Development</option>
+                        <option>Enterprise Systems</option>
+                        <option>Entomology</option>
+                        <option>Entomology (Morphology, Physiology of Insects)</option>
+                        <option>Entrepreneurship</option>
+                        <option>Entrepreneurship (Commerce)</option>
+                        <option>Entrepreneurship and Innovation</option>
+                        <option>Entrepreneurship and SME Management</option>
+                        <option>Environmental and Natural Resource Economics</option>
+                        <option>Environmental Biology</option>
+                        <option>Environmental Biology (Lab)</option>
+                        <option>Environmental Biology of Fishes</option>
+                        <option>Environmental Chemistry</option>
+                        <option>Environmental Engineering</option>
+                        <option>Environmental Engineering and Management</option>
+                        <option>Environmental Geography</option>
+                        <option>Environmental Management</option>
+                        <option>Environmental Microbiology</option>
+                        <option>Environmental Psychology (Revised)</option>
+                        <option>Environmental Science and Policy</option>
+                        <option>Environmental Sciences</option>
+                        <option>Environmental Sciences (General 6)</option>
+                        <option>Epidemiology and Public Health</option>
+                        <option>Ethical Issues in Psychology (Revised)</option>
+                        <option>Ethics</option>
+                        <option>Europe</option>
+                        <option>Everyday Science</option>
+                        <option>Evolution</option>
+                        <option>Evolution (Lab)</option>
+                        <option>Evolutionary Trends in Tracheophytes</option>
+                        <option>Evolutionary Trends in Tracheophytes (Lab)</option>
+                        <option>Exercise Physiology (Major 7)</option>
+                        <option>Experimental and Behavioral Economics</option>
+                        <option>Experimental Psychology</option>
+                        <option>Experiments</option>
+                        <option>Exploring Quantitative Skills</option>
+                        <option>Expository Writing - I (Reading and Writing Skills)</option>
+                        <option>Expository Writing - II (Academic Writing)</option>
+                        <option>Expository Writing - III (Professional Writing)</option>
+                        <option>Fables, Wisdom Literature, and Epic</option>
+                        <option>Family and Consumer Sciences</option>
+                        <option>Family Medicine</option>
+                        <option>Family Sociology</option>
+                        <option>Fantasy</option>
+                        <option>Farm Management</option>
+                        <option>Fashion and Fiber Studies</option>
+                        <option>Fashion and Luxury Management</option>
+                        <option>Fashion and Textile Design</option>
+                        <option>Fashion Design</option>
+                        <option>Fashion Design and Technology</option>
+                        <option>Fashion Designing</option>
+                        <option>Fashion Marketing and Merchandising</option>
+                        <option>Feature, Column and Editorial Writing ((Theory) and Practice)</option>
+                        <option>Feminist Theories</option>
+                        <option>Field Epidemiology</option>
+                        <option>FIELD STUDY / SURVEYS</option>
+                        <option>Field Study/Field Survey</option>
+                        <option>Field Work - I and Report Writing</option>
+                        <option>Field Work - II and Report Writing</option>
+                        <option>Field Work - III and Report Writing</option>
+                        <option>Field Work - IV</option>
+                        <option>Film and Television</option>
+                        <option>Final Year Project - I</option>
+                        <option>Final Year Project - II</option>
+                        <option>Finance</option>
+                        <option>Finance and Accounting</option>
+                        <option>Finance and Business Computing</option>
+                        <option>Financial Accounting</option>
+                        <option>Financial Accounting - I</option>
+                        <option>Financial Accounting - II</option>
+                        <option>Financial Management (Commerce)</option>
+                        <option>Financial Mathematics</option>
+                        <option>Financial Reporting (Accounting Specialization)</option>
+                        <option>Financial Risk Management</option>
+                        <option>Fine Arts</option>
+                        <option>Fine Arts and Design</option>
+                        <option>Fine Arts and Graphic Design</option>
+                        <option>Fiqh - II</option>
+                        <option>Fiqh - III</option>
+                        <option>Fiqh-1</option>
+                        <option>Fiscal Policy</option>
+                        <option>Fisheries and Aquaculture</option>
+                        <option>Fluid Mechanics - I</option>
+                        <option>Fluid Mechanics - II</option>
+                        <option>Food and Drug Analysis</option>
+                        <option>Food and Nutrition</option>
+                        <option>Food and Safety Controls</option>
+                        <option>Food Engineering</option>
+                        <option>Food Safety and Quality Management</option>
+                        <option>Food Sciences and Human Nutrition</option>
+                        <option>Food Sciences and Nutrition</option>
+                        <option>Food Sciences and Technology</option>
+                        <option>Food Security Management</option>
+                        <option>Food Service Management</option>
+                        <option>Food Technology</option>
+                        <option>Foreign Language - I</option>
+                        <option>Foreign Language - II</option>
+                        <option>Foreign Policies of USA and UK</option>
+                        <option>Foreign Policy Analysis</option>
+                        <option>Foreign Policy of Pakistan</option>
+                        <option>Foreign Policy of Pakistan (1947-1997)</option>
+                        <option>Forensic Chemistry</option>
+                        <option>Forensic Medicine</option>
+                        <option>Forensic Sciences</option>
+                        <option>Forestry</option>
+                        <option>Forestry and Range Management</option>
+                        <option>Forestry Range and Wildlife Management</option>
+                        <option>Formal Logic</option>
+                        <option>FORTRAN Language</option>
+                        <option>Foundation Of Linguistic Thought</option>
+                        <option>French</option>
+                        <option>Functional Analysis - I</option>
+                        <option>Functional Analysis - III</option>
+                        <option>Functional Analysis- II</option>
+                        <option>Functional Arabic - I</option>
+                        <option>Functional Arabic - II</option>
+                        <option>Functional English</option>
+                        <option>Functional English)</option>
+                        <option>Functional Urdu</option>
+                        <option>Fundamental Application of Algebra</option>
+                        <option>Fundamental application of Calculus</option>
+                        <option>Fundamental Application of Physics</option>
+                        <option>Fundamentals of  Economics</option>
+                        <option>Fundamentals of Chemistry</option>
+                        <option>Fundamentals of Economics</option>
+                        <option>Fundamentals of Geographical Information System</option>
+                        <option>Fundamentals of Geography</option>
+                        <option>Fundamentals of Physics</option>
+                        <option>Fundamentals of Psychology</option>
+                        <option>Furniture Design and Manufacture</option>
+                        <option>Game Design and Development</option>
+                        <option>Games - I (Badminton, Basketball and Football)</option>
+                        <option>Games - II (Tennis, Netball and Hockey)</option>
+                        <option>Games - III (Squash, Table Tennis, Volleyball, Handball and Cricket)</option>
+                        <option>Games - IV (Rifle Shooting, Archery, Wrestling, Boxing and Weightlifting)</option>
+                        <option>Gaming and Multimedia</option>
+                        <option>Gastroenterology</option>
+                        <option>Gender and Crime</option>
+                        <option>Gender and Development</option>
+                        <option>Gender and Development Studies</option>
+                        <option>Gender and Education</option>
+                        <option>Gender and Environment</option>
+                        <option>Gender and Health</option>
+                        <option>Gender and Human Rights</option>
+                        <option>Gender and Media</option>
+                        <option>Gender and Politics</option>
+                        <option>Gender and Population</option>
+                        <option>Gender and Psychology</option>
+                        <option>Gender and Religion</option>
+                        <option>Gender Based Violence</option>
+                        <option>Gender Issues in Psychology (Revised)</option>
+                        <option>Gender Issues in Urbanization</option>
+                        <option>Gender Project Cycle Management</option>
+                        <option>Gender Studies</option>
+                        <option>Gender Studies‐I (MAS)</option>
+                        <option>Gender Studies‐II (MAS)</option>
+                        <option>Gender, Art and Literature</option>
+                        <option>Gender, Development and Globalization</option>
+                        <option>Gender, Peace and Security</option>
+                        <option>Gene Cloning (Advance Course)</option>
+                        <option>Gene Cloning (Advance Course) (Lab)</option>
+                        <option>General Course</option>
+                        <option>General Equilibrium and Welfare Economics</option>
+                        <option>General Mathematics</option>
+                        <option>General Microbiology</option>
+                        <option>General Physics (Lab) - I</option>
+                        <option>General Physics (Lab) - II</option>
+                        <option>General Science</option>
+                        <option>General Surgery</option>
+                        <option>Genetics</option>
+                        <option>Genetics and Molecular Biology</option>
+                        <option>Geo - Informatics</option>
+                        <option>Geo-environmental Conservation and Sustainable Development</option>
+                        <option>GEOG-436 Thesis (In lieu of two optional Papers)</option>
+                        <option>Geographic Information System</option>
+                        <option>Geographic Thought</option>
+                        <option>Geography</option>
+                        <option>Geography of Manufacturing</option>
+                        <option>Geography of Pakistan</option>
+                        <option>Geography of the Muslim World</option>
+                        <option>Geological Engineering</option>
+                        <option>Geology</option>
+                        <option>Geomorphology</option>
+                        <option>Geotechnical Engineering</option>
+                        <option>Global Feminist Movements</option>
+                        <option>Governance and Social policy</option>
+                        <option>Government and Politics in Pakistan - I (1947-1971)</option>
+                        <option>Government and Politics in Pakistan - II (1971-2000)</option>
+                        <option>GPS and Levelling</option>
+                        <option>Graph (Theory)</option>
+                        <option>Graphic Design</option>
+                        <option>Group (Theory) - I</option>
+                        <option>Group (Theory) - II</option>
+                        <option>Group (Theory) - III</option>
+                        <option>Group Research</option>
+                        <option>Growth Theories and Models</option>
+                        <option>Gymnastics - I (Rolling and Twisting)</option>
+                        <option>Gymnastics - II (Drills and Rhythmic Exercises</option>
+                        <option>Hadith - I</option>
+                        <option>Hadith - II</option>
+                        <option>Hadith - III</option>
+                        <option>Hadith and Seerah</option>
+                        <option>Hadith Literature</option>
+                        <option>Health Administration</option>
+                        <option>Health and Physical Education</option>
+                        <option>Health Care Management</option>
+                        <option>Health Professional Education</option>
+                        <option>Health Psychology</option>
+                        <option>Health Safety and Environment</option>
+                        <option>Healthcare Management</option>
+                        <option>Hematology</option>
+                        <option>Higher Fungi</option>
+                        <option>Higher Fungi (Lab)</option>
+                        <option>Histopathology</option>
+                        <option>History</option>
+                        <option>History and Civilization</option>
+                        <option>History and Pakistan Studies</option>
+                        <option>History and Principles of Hadith</option>
+                        <option>History and Principles of Tafsir</option>
+                        <option>History Indo Pak</option>
+                        <option>History of  Economics Thoughts</option>
+                        <option>History of Arabic Literature - I</option>
+                        <option>History of Arabic Literature - II</option>
+                        <option>History of Economic Thought</option>
+                        <option>History of England (1688-1919)</option>
+                        <option>History of Europe</option>
+                        <option>History of Europe (1453-1789)</option>
+                        <option>History of Freedom Movement (1857-1930)</option>
+                        <option>History of India</option>
+                        <option>History of International Relations</option>
+                        <option>History of Islam</option>
+                        <option>History of Islam (610-750 A.D.)</option>
+                        <option>History of Modern World</option>
+                        <option>History of Muslim Hind</option>
+                        <option>History of Muslim India</option>
+                        <option>History of Pakistan</option>
+                        <option>History of the Ottoman Empire (1288-1924)</option>
+                        <option>History of the Punjab (1707-1947)</option>
+                        <option>History of Umayyads and Abbasids (661-1258)</option>
+                        <option>History of World Civilizations (Early Life to 600 A.D.)</option>
+                        <option>Home Economics</option>
+                        <option>Home Management</option>
+                        <option>Home Nursing</option>
+                        <option>Homeopathic Medical Science</option>
+                        <option>Horticultural Sciences</option>
+                        <option>Horticulture</option>
+                        <option>Hospital Administration</option>
+                        <option>Hospital Management</option>
+                        <option>Hospitality and Tourism Management</option>
+                        <option>Hospitality Management</option>
+                        <option>Hotel and Restaurant Management</option>
+                        <option>Housing and Community Development</option>
+                        <option>Human Biology</option>
+                        <option>Human Development and Family Studies</option>
+                        <option>Human Diet and Nutrition</option>
+                        <option>Human Genetics</option>
+                        <option>Human Geography</option>
+                        <option>Human Growth and Personality Development</option>
+                        <option>Human Nutrition</option>
+                        <option>Human Nutrition and Dietetics</option>
+                        <option>Human Resource Development</option>
+                        <option>Human Resource Management</option>
+                        <option>Human Rights</option>
+                        <option>Humanities / Social Science</option>
+                        <option>HVAC Engineering Technology</option>
+                        <option>Hydraulics Engineering</option>
+                        <option>Hydro Geography</option>
+                        <option>Hydrological Survey</option>
+                        <option>Hydropower Engineering</option>
+                        <option>Iabal Ka Ka Hsoosi Mutaila (Fiqri O Funny Mutaila Aur Tashrey Maton)</option>
+                        <option>Imaging Technology</option>
+                        <option>Immunology</option>
+                        <option>Immunology and Molecular Pathology</option>
+                        <option>Income Tax Law</option>
+                        <option>Industrial and Manufacturing Engineering</option>
+                        <option>Industrial and Manufacturing System</option>
+                        <option>Industrial and Organizational Psychology</option>
+                        <option>Industrial Chemistry</option>
+                        <option>Industrial Engineering</option>
+                        <option>Industrial Engineering and Management</option>
+                        <option>Industrial Management</option>
+                        <option>Industrial Organizational Psychology</option>
+                        <option>Industrial Survey</option>
+                        <option>Information and Communication Technology</option>
+                        <option>Information and Cyber Security</option>
+                        <option>Information and Operational Management</option>
+                        <option>Information Engineering Technology</option>
+                        <option>Information Management</option>
+                        <option>Information Science</option>
+                        <option>Information Security</option>
+                        <option>Information Systems</option>
+                        <option>Information Systems (IT)</option>
+                        <option>Information Systems and Technology</option>
+                        <option>Information Technology</option>
+                        <option>Information Technology - I</option>
+                        <option>Information Technology Management</option>
+                        <option>Innovation and Entrepreneurship</option>
+                        <option>Inorganic Chemistry</option>
+                        <option>Inorganic Chemistry (Lab)</option>
+                        <option>Inorganic Chemistry (Sp. (Theory) - I)</option>
+                        <option>Inorganic Chemistry (Sp. (Theory) - II)</option>
+                        <option>Inorganic Chemistry (Sp. Practical)</option>
+                        <option>Institutional Economics</option>
+                        <option>Insurance</option>
+                        <option>Insurance and Risk Management</option>
+                        <option>Insurance Practice</option>
+                        <option>Integrated Building Design</option>
+                        <option>Integrated Pest Management</option>
+                        <option>Intellectual Property Law</option>
+                        <option>Intelligent Systems and Robotics</option>
+                        <option>Interdisciplinary Expanded Design and Art</option>
+                        <option>Interior Design</option>
+                        <option>Intermediate Macro Economics</option>
+                        <option>Intermediate Macroeconomics</option>
+                        <option>Intermediate Micro Economics</option>
+                        <option>Intermediate Microeconomics</option>
+                        <option>Internal Medicine</option>
+                        <option>International Business and Finance</option>
+                        <option>International Finance</option>
+                        <option>International Marketing (Marketing Specialization)</option>
+                        <option>International Organizations</option>
+                        <option>International Relations</option>
+                        <option>International Relations (1919-1989)</option>
+                        <option>international Trade</option>
+                        <option>International Trade (Theory)</option>
+                        <option>Internet Programming (IT)</option>
+                        <option>Internship</option>
+                        <option>Interpersonal Skills</option>
+                        <option>introduction  to Philosophy</option>
+                        <option>Introduction to Advertising and Public Relations</option>
+                        <option>Introduction to Arabic</option>
+                        <option>Introduction to Archaeology</option>
+                        <option>Introduction to Business</option>
+                        <option>Introduction to Business Administration</option>
+                        <option>Introduction to Business Law</option>
+                        <option>Introduction to Cartography</option>
+                        <option>Introduction to Chinese</option>
+                        <option>Introduction to Computer</option>
+                        <option>Introduction to Computers</option>
+                        <option>Introduction to Computers (Revised)</option>
+                        <option>Introduction to Computing</option>
+                        <option>Introduction to Criminology</option>
+                        <option>Introduction to Economics</option>
+                        <option>Introduction to Education</option>
+                        <option>Introduction to Environmental Science</option>
+                        <option>Introduction to Expository Writing</option>
+                        <option>Introduction to French</option>
+                        <option>Introduction to Gender Studies</option>
+                        <option>Introduction to Gender Studies - I</option>
+                        <option>Introduction to Gender Studies - II</option>
+                        <option>Introduction to Geography</option>
+                        <option>Introduction to German</option>
+                        <option>Introduction to Historiography and Philosophy of History</option>
+                        <option>Introduction to History</option>
+                        <option>Introduction to Human Geography</option>
+                        <option>Introduction to ICT</option>
+                        <option>Introduction to ICT (Lab)</option>
+                        <option>Introduction to International Relations</option>
+                        <option>Introduction to Italian</option>
+                        <option>Introduction to Journalism</option>
+                        <option>Introduction to Linguistics     المدخل إلى اللسانيات</option>
+                        <option>Introduction to Linguistics - I</option>
+                        <option>Introduction to Linguistics - II</option>
+                        <option>Introduction to Linguistics - III (Phonetics and English Phonology)</option>
+                        <option>Introduction to Linguistics - IV (The Structure of English)</option>
+                        <option>Introduction to Literature - I (History of English Literature - I)</option>
+                        <option>Introduction to Literature - II (Poetry and One Act Plays)</option>
+                        <option>Introduction to Literature - III (Fiction and Non-Fiction)</option>
+                        <option>Introduction to Literature - IV (History of Literature - II)</option>
+                        <option>Introduction to Local Government</option>
+                        <option>Introduction to Management</option>
+                        <option>Introduction to Mass Communication</option>
+                        <option>Introduction to Modern Technologies</option>
+                        <option>Introduction to National and International Organizations</option>
+                        <option>Introduction to Persian</option>
+                        <option>Introduction to Philosophy</option>
+                        <option>Introduction to Philosophy (Rev)</option>
+                        <option>Introduction to Photonics</option>
+                        <option>Introduction to Physical Geography</option>
+                        <option>Introduction to Political Science</option>
+                        <option>Introduction to Population Studies</option>
+                        <option>Introduction to Psychology</option>
+                        <option>Introduction to Psychology (HM)</option>
+                        <option>Introduction to Psychology (Revised)</option>
+                        <option>Introduction to Research Methods in Applied Linguistics</option>
+                        <option>Introduction to Social Legislation</option>
+                        <option>Introduction to Social Work</option>
+                        <option>Introduction to Sociology</option>
+                        <option>Introduction to Sociology (SS)</option>
+                        <option>Introduction to Sociology and Sociological Theories</option>
+                        <option>Introduction to Spanish</option>
+                        <option>Introduction to Statistical Analysis (SPSS)</option>
+                        <option>Introduction to Turkish</option>
+                        <option>Introduction to Urdu</option>
+                        <option>Introductory Particle Physics</option>
+                        <option>Invertebrate Diversity + (Lab)</option>
+                        <option>Investigative Ophthalmology</option>
+                        <option>Investment Analysis and Management (Finance specialization)</option>
+                        <option>Islamiat</option>
+                        <option>Islamiat / Ethics</option>
+                        <option>Islamiat / Ethics ISE</option>
+                        <option>Islamiat Elective</option>
+                        <option>Islamiat or Ethics (Annexture 2)</option>
+                        <option>Islamiat/Ethics</option>
+                        <option>Islamic / Ethics</option>
+                        <option>Islamic and Commercial Banking</option>
+                        <option>Islamic and modern Political Thoughts</option>
+                        <option>Islamic and Modern Social Thought</option>
+                        <option>Islamic Banking</option>
+                        <option>Islamic Banking and Finance</option>
+                        <option>Islamic Business and Economics</option>
+                        <option>Islamic Business and Finance</option>
+                        <option>Islamic Economics</option>
+                        <option>Islamic Economics - I</option>
+                        <option>Islamic Economics - II</option>
+                        <option>Islamic Education</option>
+                        <option>Islamic Finance</option>
+                        <option>Islamic history</option>
+                        <option>Islamic History - II</option>
+                        <option>Islamic Jurisprudence and its History</option>
+                        <option>Islamic Principles of Business and Finance</option>
+                        <option>Islamic Sciences</option>
+                        <option>Islamic Studies</option>
+                        <option>Islamic Studies - II</option>
+                        <option>Islamic Studies / Ethics</option>
+                        <option>Islamic Studies / Ethics (Compulsory 5)</option>
+                        <option>Islamic Studies I</option>
+                        <option>Islamic Studies Optional</option>
+                        <option>Islamic Studies/Ethics</option>
+                        <option>Islamic Thought and Civilization</option>
+                        <option>Islamic Thought and Culture</option>
+                        <option>IT Project Management</option>
+                        <option>Jewelry Design and Gemological Sciences</option>
+                        <option>Journalism</option>
+                        <option>Journalism and Mass Communication</option>
+                        <option>Journalistic Discourse</option>
+                        <option>Kashmir Studies</option>
+                        <option>Laboratory Techniques</option>
+                        <option>Land forms Survey</option>
+                        <option>Land Use Survey</option>
+                        <option>Landscape Architecture</option>
+                        <option>Language And Gender</option>
+                        <option>Language In Education</option>
+                        <option>Language in Use</option>
+                        <option>Language of Newspapers   لغة الجرائد</option>
+                        <option>Language, Culture And Identity</option>
+                        <option>Languages and Translation Studies</option>
+                        <option>Laser and Optics</option>
+                        <option>Later Mughals and British India (1707-1857)</option>
+                        <option>Law</option>
+                        <option>Leather Accessories and Footwear</option>
+                        <option>Liberal Arts</option>
+                        <option>Liberal Studies</option>
+                        <option>Library and Information Management</option>
+                        <option>Library and Information Sciences</option>
+                        <option>Library Science</option>
+                        <option>Library Sciences</option>
+                        <option>Linear Algebra</option>
+                        <option>Linear Algebra (MA)</option>
+                        <option>Linguistics</option>
+                        <option>List of Elective Courses</option>
+                        <option>List of Elective Papers Economics Courses</option>
+                        <option>List of Elective Papers: Geography Courses</option>
+                        <option>List of Elective Papers: Regional Geography</option>
+                        <option>List of Foreign Language Course</option>
+                        <option>List of General Course</option>
+                        <option>List of Optional Courses: (Non-Economic)</option>
+                        <option>Literary Criticism    النقد الأدبي</option>
+                        <option>Literature</option>
+                        <option>Livestock Management</option>
+                        <option>Livestock Production</option>
+                        <option>Local Government in Pakistan</option>
+                        <option>Logic and Critical Thinking</option>
+                        <option>Logic and Critical Thinking (Commerce)</option>
+                        <option>Macro Economics</option>
+                        <option>Magazine and Book Production</option>
+                        <option>Major Issues in Pakistan Economy</option>
+                        <option>Major Issues in Pakistan's Economy</option>
+                        <option>Management Accounting</option>
+                        <option>Management and Administrative Sciences</option>
+                        <option>Management and Business Computing</option>
+                        <option>Management and HRM</option>
+                        <option>Management and Technology</option>
+                        <option>Management Consulting and Organization Development</option>
+                        <option>Management Information System</option>
+                        <option>Management Sciences</option>
+                        <option>Managerial  Economics</option>
+                        <option>Managerial Communication</option>
+                        <option>Managerial Economics</option>
+                        <option>Manufacturing Engineering</option>
+                        <option>Map Reading and Map Work</option>
+                        <option>Marketing Management</option>
+                        <option>Marriage and Family Laws in Pakistan</option>
+                        <option>Mas Media in Pakistan</option>
+                        <option>Mass Communication</option>
+                        <option>Mass Communication and Media Studies</option>
+                        <option>Materia ls Science - II (Lab)</option>
+                        <option>Material Science and Engineering</option>
+                        <option>Material Sciences</option>
+                        <option>Materials Science - I (Theory)</option>
+                        <option>Materials Science - III (Theory)</option>
+                        <option>Materials Science - IV (Lab)</option>
+                        <option>Maternal and Child Health</option>
+                        <option>Math Deficiency - II</option>
+                        <option>Math Deficiency I</option>
+                        <option>Mathematical Economics - I</option>
+                        <option>Mathematical Economics II</option>
+                        <option>Mathematical Methods of Physics - I</option>
+                        <option>Mathematical Methods of Physics - II</option>
+                        <option>Mathematical Statistics - I</option>
+                        <option>Mathematical Statistics - II</option>
+                        <option>Mathematics</option>
+                        <option>Mathematics - I</option>
+                        <option>Mathematics - I (Algebra)</option>
+                        <option>Mathematics A</option>
+                        <option>Mathematics A - I</option>
+                        <option>Mathematics A - I [Calculus (I)]</option>
+                        <option>Mathematics A - II</option>
+                        <option>Mathematics A - II [Plane Curves and Analytic Geometry]</option>
+                        <option>Mathematics A - III</option>
+                        <option>Mathematics A - III [Linear Algebra]</option>
+                        <option>Mathematics A - IV</option>
+                        <option>Mathematics A - IV [Ordinary Differential Equations]</option>
+                        <option>Mathematics and Computing</option>
+                        <option>Mathematics B</option>
+                        <option>Mathematics B - I [Vectors and Mechanics (I)]</option>
+                        <option>Mathematics B - II [Mechanics (II)]</option>
+                        <option>Mathematics B - III [Calculus (II)]</option>
+                        <option>Mathematics B - IV [Metric Spaces and Group (Theory)]</option>
+                        <option>Measure (Theory) and Lebesgue Integration</option>
+                        <option>Meat Science and Technology</option>
+                        <option>Mechanical Design Engineering</option>
+                        <option>Mechanical Engineering</option>
+                        <option>Mechanical Engineering Technology</option>
+                        <option>Mechanics</option>
+                        <option>Mechanics and Wave Motion</option>
+                        <option>Mechatronics</option>
+                        <option>Mechatronics and Control Engineering</option>
+                        <option>Mechatronics Engineering</option>
+                        <option>Media and Communication Studies</option>
+                        <option>Media and Mass Communication Studies</option>
+                        <option>Media Ethics and Laws</option>
+                        <option>Media Management and Marketing</option>
+                        <option>Media Seminar</option>
+                        <option>Media Studies</option>
+                        <option>Medical  Physics - II (Lab)</option>
+                        <option>Medical (Lab) Sciences</option>
+                        <option>Medical (Lab) Technology</option>
+                        <option>Medical Diagnostic Ultrasound</option>
+                        <option>Medical Education</option>
+                        <option>Medical Entomology</option>
+                        <option>Medical Geography</option>
+                        <option>Medical Imaging and Electronics</option>
+                        <option>Medical Imaging and Ultrasonography</option>
+                        <option>Medical Imaging Sciences</option>
+                        <option>Medical Imaging Technology</option>
+                        <option>Medical Physics</option>
+                        <option>Medical Physics - II (Theory)</option>
+                        <option>Medical Physics - III (Theory)</option>
+                        <option>Medical Physics - IV (Lab)</option>
+                        <option>Medical Radiology and Diagnostics</option>
+                        <option>Medical Social Work</option>
+                        <option>Medical Ultrasound Technology</option>
+                        <option>Medicine</option>
+                        <option>Men and Masculinities</option>
+                        <option>Metallurgical and Materials Engineering</option>
+                        <option>Meteorology And Climatology - I (Theory)</option>
+                        <option>Meteorology And Climatology - II (Lab)</option>
+                        <option>Meteorology And Climatology - III (Theory)</option>
+                        <option>Meteorology And Climatology - IV (Lab)</option>
+                        <option>Methods of Mathematical Physics</option>
+                        <option>Methods of Study and Research</option>
+                        <option>Micro Economics</option>
+                        <option>Microbes, Man and the Environment</option>
+                        <option>Microbes, Man and the Environment ((Lab).)</option>
+                        <option>Microbes, Man and the Environment (Lab)</option>
+                        <option>Microbial and Molecular Genetics</option>
+                        <option>Microbial and Molecular Genetics (Lab)</option>
+                        <option>Microbiology</option>
+                        <option>Microbiology ((Lab).)</option>
+                        <option>Microbiology (Lab)</option>
+                        <option>Microbiology and Molecular Genetics</option>
+                        <option>Miniature</option>
+                        <option>Miniature Painting</option>
+                        <option>Mining Engineering</option>
+                        <option>Mobile Application Development</option>
+                        <option>Modeling and Simulation</option>
+                        <option>Modern Arabic Poetry   الشعر العربي الحديث</option>
+                        <option>Modern Arabic Prose           النثر العربي الحديث</option>
+                        <option>Modern History</option>
+                        <option>Modern Middle East (1919-2000)</option>
+                        <option>Modern Physics</option>
+                        <option>Modern Tools of Research</option>
+                        <option>Molecular Biology</option>
+                        <option>Molecular Biology and Biotechnology</option>
+                        <option>Molecular Genetics - II</option>
+                        <option>Molecular Genetics - II (Lab)</option>
+                        <option>Molecular Pathology and Genomics</option>
+                        <option>Monetary (Theory) and Policy</option>
+                        <option>Monetary Economics</option>
+                        <option>Money Banking and Finance</option>
+                        <option>Money, Banking and Financial Institutions</option>
+                        <option>Montessori Education</option>
+                        <option>Morbid Anatomy and Hispathology</option>
+                        <option>Mountain Conservation and Watershed Management</option>
+                        <option>Multilingualism</option>
+                        <option>Multimedia Arts</option>
+                        <option>Multimedia Technology</option>
+                        <option>Multivariate Analysis</option>
+                        <option>Multivariate Techniques (Lab)</option>
+                        <option>Multivariate Techniques (Theory)</option>
+                        <option>Music</option>
+                        <option>Musicology</option>
+                        <option>Muslim Contribution to Arts, Science and Architecture</option>
+                        <option>Muslim Political Philosophy - I</option>
+                        <option>Muslim Political Philosophy - II</option>
+                        <option>Muslim Rule in South Asia (1526-1707)</option>
+                        <option>Muslim Rule in South Asia (712-1526)</option>
+                        <option>Muslim Rule in Spain</option>
+                        <option>Muslim Struggle for Independence (1930-1947)</option>
+                        <option>Naayay Tanqidi Mubahas</option>
+                        <option>Nanobiology</option>
+                        <option>Nanotechnology</option>
+                        <option>Nasri Isnaaf - Taruf o Tafheem - II</option>
+                        <option>Nasri Isnaaf- Taruf o Tafheem - I</option>
+                        <option>National and International affairs</option>
+                        <option>Natural Hazards and Disaster Management</option>
+                        <option>Natural Science (Chemistry/Biology)</option>
+                        <option>Natural Sciences - I (A. Fundamentals of Geography)</option>
+                        <option>Natural Sciences - I (B. Introduction to Information and Communication Technologies)
+                        </option>
+                        <option>Natural Sciences - II (A. Introduction to Computer)</option>
+                        <option>Natural Sciences - II (B. Statistics)</option>
+                        <option>Nephrology</option>
+                        <option>Network Management and Administration</option>
+                        <option>Network Security</option>
+                        <option>Neuro Electrophysiology</option>
+                        <option>Neurology</option>
+                        <option>Neurosurgery</option>
+                        <option>News Reporting and Writing</option>
+                        <option>Newspaper Production</option>
+                        <option>North African Countries</option>
+                        <option>North America</option>
+                        <option>Novel (18th and 19th Century)</option>
+                        <option>Nuclear Physics - I</option>
+                        <option>Nuclear Physics - II</option>
+                        <option>Number (Theory) - I</option>
+                        <option>Number (Theory) - II</option>
+                        <option>Numerical Analysis - I</option>
+                        <option>Numerical Analysis - II</option>
+                        <option>Nursing</option>
+                        <option>Nutrition and Dietetics</option>
+                        <option>Nutrition Sciences</option>
+                        <option>Object Oriented Analysis and Design (ICS)</option>
+                        <option>Object Oriented Programming</option>
+                        <option>Object Oriented Programming (Lab)</option>
+                        <option>Obstetrics and Gynecology</option>
+                        <option>Occupational Therapy</option>
+                        <option>Oceanography</option>
+                        <option>Oncology</option>
+                        <option>ONE GROUP OF THE FOLLOWING FOUR (OPTIONAL)</option>
+                        <option>ONE GROUP OF THE FOLLOWING SIX (OPTIONAL)</option>
+                        <option>ONE GROUP OF THE FOLLOWING THREE (OPTIONAL)</option>
+                        <option>One Health</option>
+                        <option>ONE PAIR OF THE FOLLOWING EIGHT (OPTIONAL)</option>
+                        <option>ONE PAIR OF THE FOLLOWING THREE (OPTIONAL)</option>
+                        <option>Online Journalism</option>
+                        <option>Operating Systems</option>
+                        <option>Operating Systems (CMP)</option>
+                        <option>Operating Systems (Lab)</option>
+                        <option>Operation and Production Management</option>
+                        <option>Operation and Supply Chain Management</option>
+                        <option>Operation Research</option>
+                        <option>Operation Theater Technology</option>
+                        <option>Operational Research</option>
+                        <option>Operations and Supply Chain Management</option>
+                        <option>Operations Management</option>
+                        <option>Operations Research - I</option>
+                        <option>Operations Research - II</option>
+                        <option>Operative Dentistry</option>
+                        <option>Ophthalmology</option>
+                        <option>Optometry</option>
+                        <option>Optometry and Orthoptics</option>
+                        <option>Oral and Maxillofacial Surgery</option>
+                        <option>Oral Biology</option>
+                        <option>Oral Pathology</option>
+                        <option>Ordinary Differential Equations</option>
+                        <option>Organic Chemistry</option>
+                        <option>Organic Chemistry (Lab)</option>
+                        <option>Organic Chemistry (Sp. (Theory) - I)</option>
+                        <option>Organic Chemistry (Sp. (Theory) - II)</option>
+                        <option>Organic Chemistry (Sp. Practical)</option>
+                        <option>Organization and Business Psychology</option>
+                        <option>Organization Development and Consultancy</option>
+                        <option>Organizational Behavior</option>
+                        <option>Organizational Behavior and Human Resource Development</option>
+                        <option>Organizational Behavior and Human Resource Management</option>
+                        <option>Organizational Development and Consultancy</option>
+                        <option>Organizational Psychology</option>
+                        <option>Organizations and Organizational Behavior</option>
+                        <option>Oriental Languages and Linguistics (اللسانيات الشرقية)</option>
+                        <option>Oriental Literature      الآداب الشرقية</option>
+                        <option>Orthodontics</option>
+                        <option>Orthopedic Surgery</option>
+                        <option>Orthoptics</option>
+                        <option>Orthotics and Prosthetics</option>
+                        <option>Otorhinolaryngology</option>
+                        <option>Painting</option>
+                        <option>Pak Studies</option>
+                        <option>Pakistan Affairs</option>
+                        <option>Pakistan May Farogh Urdu Kay Aham Adaray</option>
+                        <option>Pakistan Movement</option>
+                        <option>Pakistan Studies</option>
+                        <option>Pakistan Studies</option>
+                        <option>Pakistan Studies (Compulsory 2)</option>
+                        <option>Pakistan’s Economy-An Historical Survey</option>
+                        <option>Pakistani Literature</option>
+                        <option>Pakistani Society and Culture</option>
+                        <option>Paleontology</option>
+                        <option>Palynology (Advance course)</option>
+                        <option>Palynology (Lab)</option>
+                        <option>Paralegal</option>
+                        <option>Parametric and Nonparametric Tests (Lab)</option>
+                        <option>Parametric and Nonparametric Tests (Theory)</option>
+                        <option>Parasitology</option>
+                        <option>Partial Differential Equations</option>
+                        <option>Particle Physics - I</option>
+                        <option>Particle Physics - II</option>
+                        <option>Particle Physics - III</option>
+                        <option>Particle Physics - IV</option>
+                        <option>Pathology</option>
+                        <option>Pathology Lab Sciences</option>
+                        <option>PCM</option>
+                        <option>Peace and Conflict Studies</option>
+                        <option>Peace and Counter Terrorism</option>
+                        <option>Peace Psychology (revised)</option>
+                        <option>Pedagogical Grammar</option>
+                        <option>Pediatric Medicine</option>
+                        <option>Pediatric Surgery</option>
+                        <option>Pediatrics</option>
+                        <option>Performance Management</option>
+                        <option>Periodontology</option>
+                        <option>Persian</option>
+                        <option>Persian Elective</option>
+                        <option>Persian Literature</option>
+                        <option>Persian Optional</option>
+                        <option>Pet Animal Practices</option>
+                        <option>Petroleum</option>
+                        <option>Petroleum and Gas Engineering</option>
+                        <option>Petroleum and Gas Process Engineering</option>
+                        <option>Petroleum Engineering Technology</option>
+                        <option>Pharm-D</option>
+                        <option>Pharmaceutical Chemistry</option>
+                        <option>Pharmaceutics</option>
+                        <option>Pharmacognosy</option>
+                        <option>Pharmacognosy and Pharmacy Practice</option>
+                        <option>Pharmacology</option>
+                        <option>Pharmacology and Therapeutics</option>
+                        <option>Pharmacology and Toxicology</option>
+                        <option>Pharmacy practice</option>
+                        <option>Philosophical Basis of Physical Education</option>
+                        <option>Philosophical basis of Physical Education (Foundation 1)</option>
+                        <option>Philosophy</option>
+                        <option>Photography</option>
+                        <option>Phycology</option>
+                        <option>Physical Chemistry</option>
+                        <option>Physical Chemistry (Lab)</option>
+                        <option>Physical Chemistry (Sp. (Theory) - I)</option>
+                        <option>Physical Chemistry (Sp. (Theory) - II)</option>
+                        <option>Physical Chemistry (Sp. Practical)</option>
+                        <option>Physical Education</option>
+                        <option>Physical Education and Sports Sciences</option>
+                        <option>Physical Education for Special Population</option>
+                        <option>Physical Education for Special population (Elective 1)</option>
+                        <option>Physical Geography</option>
+                        <option>Physical Therapy</option>
+                        <option>Physics</option>
+                        <option>Physics - I</option>
+                        <option>Physics - I (Mechanics and Optics)</option>
+                        <option>Physics - II</option>
+                        <option>Physics - II (Waves and Oscillation)</option>
+                        <option>Physics - III</option>
+                        <option>Physics - III ((Electricity and Magnetism)</option>
+                        <option>Physics - III (Electricity and Magnetism)</option>
+                        <option>Physics - IV</option>
+                        <option>Physics - IV (Concepts of Modern Physics)</option>
+                        <option>Physics (Lab) - I</option>
+                        <option>Physics (Lab) - I (Mechanics and Optics)</option>
+                        <option>Physics (Lab) - II</option>
+                        <option>Physics (Lab) - II (Waves and Oscillation)</option>
+                        <option>Physics (Lab) - III</option>
+                        <option>Physics (Lab) - III ((Electricity and Magnetism)</option>
+                        <option>Physics (Lab) - III (Electricity and Magnetism)</option>
+                        <option>Physics (Lab) - III (Modern Physics)</option>
+                        <option>Physics (Lab) - IV</option>
+                        <option>Physics (Lab) - IV (Concepts of Modern Physics)</option>
+                        <option>Physics (Lab) - IV (Electronics)</option>
+                        <option>Physics (Lab)-V</option>
+                        <option>Physics (Lab)-VI</option>
+                        <option>Physiology</option>
+                        <option>Physiotherapy</option>
+                        <option>Phytomedicine</option>
+                        <option>Planning Sports Facilities</option>
+                        <option>Planning Sports Facilities (Foundation 9)</option>
+                        <option>Plant Anatomy (Advance Course)</option>
+                        <option>Plant Anatomy (Advance Course) (Lab)</option>
+                        <option>Plant Breeding and Genetics</option>
+                        <option>Plant Diversity + (Lab)</option>
+                        <option>Plant Nutrition and Soil Fertility</option>
+                        <option>Plant Nutrition and Soil Fertility ((Lab).)</option>
+                        <option>Plant Nutrition and Soil Fertility (Lab)</option>
+                        <option>Plant Pathology</option>
+                        <option>Plant Taxonomy, Anatomy and Development</option>
+                        <option>Plant Tissue Culture (Advance course)</option>
+                        <option>Plant Tissue Culture (Lab)</option>
+                        <option>Plastic Surgery</option>
+                        <option>Pleistocene Geomorphology</option>
+                        <option>Poetry ( 14th to 18th Century)</option>
+                        <option>Political Economy</option>
+                        <option>Political Geography</option>
+                        <option>Political Ideologies</option>
+                        <option>Political Science</option>
+                        <option>Political Science - I</option>
+                        <option>Political Science - I (MAS)</option>
+                        <option>Political Science - II</option>
+                        <option>Political Science - II (MAS)</option>
+                        <option>Political Science and International Relations</option>
+                        <option>Political Systems (Developed)</option>
+                        <option>Political Systems (Developing)</option>
+                        <option>Politics and International Relationship</option>
+                        <option>Politics and Parliamentary Studies</option>
+                        <option>Polymer and Process Engineering</option>
+                        <option>Polymer Engineering</option>
+                        <option>Polymer Science and Engineering</option>
+                        <option>Population Economics</option>
+                        <option>Population Geography</option>
+                        <option>Population Sciences</option>
+                        <option>Population Studies</option>
+                        <option>Population Welfare and Demography</option>
+                        <option>Positive Psychology (revised)</option>
+                        <option>Poultry Production</option>
+                        <option>Poultry Sciences</option>
+                        <option>Poverty and Income Distribution</option>
+                        <option>Power and Energy Systems</option>
+                        <option>Power Electronics</option>
+                        <option>Power Energy</option>
+                        <option>Power Engineering</option>
+                        <option>Practical (Games)</option>
+                        <option>Practical (Teaching Practice)</option>
+                        <option>Practical (Track and Field)</option>
+                        <option>Practical’s in Psychology (Revised)</option>
+                        <option>Practicum/Case Reports - I</option>
+                        <option>Pragmatics</option>
+                        <option>Preschool Education</option>
+                        <option>Preventive Medicine</option>
+                        <option>Principle of Systematics</option>
+                        <option>Principles of Accounting</option>
+                        <option>Principles of Banking</option>
+                        <option>Principles of Business</option>
+                        <option>Principles of Commerce</option>
+                        <option>Principles of Economics</option>
+                        <option>Principles of Macro Economics</option>
+                        <option>Principles of Macroeconomics</option>
+                        <option>Principles of Management</option>
+                        <option>Principles of Management (SS)</option>
+                        <option>Principles of Marketing</option>
+                        <option>Principles of Micro Economics</option>
+                        <option>Principles of Microeconomics</option>
+                        <option>Principles of Remote Sensing</option>
+                        <option>Principles of Statistics</option>
+                        <option>Principles of Systematics</option>
+                        <option>Principles of Trade</option>
+                        <option>Probability (Theory) (Lab)</option>
+                        <option>Probability (Theory) (Theory)</option>
+                        <option>Probability and Probability Distributions</option>
+                        <option>Probability and Statistics</option>
+                        <option>Probability Distributions (Lab)</option>
+                        <option>Probability Distributions (Theory)</option>
+                        <option>Product and Industrial Design</option>
+                        <option>Product Design</option>
+                        <option>Product Design and Development</option>
+                        <option>Professional Practices</option>
+                        <option>Programming Fundamentals</option>
+                        <option>Programming Fundamentals (Lab)</option>
+                        <option>Project and Operation Management</option>
+                        <option>Project Appraisal and Investment Analysis</option>
+                        <option>Project Management</option>
+                        <option>Project Planning and Implementation</option>
+                        <option>Project Planning and Management</option>
+                        <option>Prosthodontics</option>
+                        <option>Psychiatry</option>
+                        <option>Psycho-Pathology</option>
+                        <option>Psycholinguistics</option>
+                        <option>Psychological Assessment</option>
+                        <option>Psychological Sciences</option>
+                        <option>Psychology</option>
+                        <option>Psychology - I (MAS)</option>
+                        <option>Psychology - II (MAS)</option>
+                        <option>Psychology Assessment Practical</option>
+                        <option>Public Administration</option>
+                        <option>Public Finance</option>
+                        <option>Public Health</option>
+                        <option>Public International Law - I</option>
+                        <option>Public International Law - II</option>
+                        <option>Public Management</option>
+                        <option>Public Policy</option>
+                        <option>Public Relations - I</option>
+                        <option>Public Relations - II</option>
+                        <option>Public Relations and Advertising</option>
+                        <option>Public Sector Economics</option>
+                        <option>Pulmonology</option>
+                        <option>Punjabi</option>
+                        <option>Punjabi Optional</option>
+                        <option>Pure Mathematics</option>
+                        <option>Quality and Performance Management</option>
+                        <option>Quality Management</option>
+                        <option>Quantitative  Geography</option>
+                        <option>Quantitative Reasoning - I (Exploring Quantitative Skills)</option>
+                        <option>Quantitative Reasoning - II (Tools for Quantitative Reasoning)</option>
+                        <option>Quantum  Mechanics - II</option>
+                        <option>Quantum Electronics</option>
+                        <option>Quantum Information (Theory)</option>
+                        <option>Quantum Mechanics - I</option>
+                        <option>Quantum Mechanics - II</option>
+                        <option>Quantum Physics</option>
+                        <option>Quantum Solid State Magnetism</option>
+                        <option>Quran and Tafseer</option>
+                        <option>Quranic Literature    الأدب القرآني</option>
+                        <option>Radio News Reporting and Production</option>
+                        <option>Radio Program Production</option>
+                        <option>Radiography and Imaging Technology</option>
+                        <option>Radiology</option>
+                        <option>Radiotherapy</option>
+                        <option>Real Analysis -I</option>
+                        <option>Real Analysis -II</option>
+                        <option>Real Estate Management</option>
+                        <option>Regional Concepts</option>
+                        <option>Regional Economics</option>
+                        <option>Regional Organizations</option>
+                        <option>Regional Planning and Development</option>
+                        <option>Relativistic Quantum Mechanics</option>
+                        <option>Relativity and Cosmology</option>
+                        <option>Remote Sensing and GIS</option>
+                        <option>Renal Dialysis Technology</option>
+                        <option>Renewable Energy</option>
+                        <option>Research and Projects In Applied Linguistics</option>
+                        <option>Research Design and Sociometry</option>
+                        <option>Research Methodology</option>
+                        <option>Research Methodology   منهج البحث</option>
+                        <option>Research Methodology - I</option>
+                        <option>Research Methodology - II</option>
+                        <option>Research Methodology in Physical Education</option>
+                        <option>Research Methodology in Physical Education (Major 3)</option>
+                        <option>Research Methods</option>
+                        <option>Research Methods - I</option>
+                        <option>Research Methods - II</option>
+                        <option>Research Methods - Il</option>
+                        <option>Research Methods in Business</option>
+                        <option>Research Paper</option>
+                        <option>Research Project</option>
+                        <option>Research Project / Internship - I</option>
+                        <option>Research Project / Internship - II</option>
+                        <option>Research Proposal</option>
+                        <option>Research Report</option>
+                        <option>Research Thesis</option>
+                        <option>Research work</option>
+                        <option>Respiratory Therapy</option>
+                        <option>Ring (Theory)</option>
+                        <option>Rings and Vector Spaces</option>
+                        <option>Risk and Reliability Engineering</option>
+                        <option>Role of Media in Sports (Elective 3)</option>
+                        <option>Rules and Techniques of Games</option>
+                        <option>Rules and Techniques of Games (Practical)</option>
+                        <option>Rules and Techniques of Swimming and Gymnastics</option>
+                        <option>Rules and Techniques of Swimming and Gymnastics (Practical)</option>
+                        <option>Rural Development</option>
+                        <option>Rural Settlement Geography</option>
+                        <option>Rural Sociology</option>
+                        <option>Russia</option>
+                        <option>S. West Asia</option>
+                        <option>Sales and Marketing</option>
+                        <option>Sales Management</option>
+                        <option>Sales Tax Custom and Federal Excise Duty</option>
+                        <option>Salesmanship</option>
+                        <option>Sampling Techniques (Lab)</option>
+                        <option>Sampling Techniques (Theory)</option>
+                        <option>Saraiki</option>
+                        <option>School Leadership and Management</option>
+                        <option>School Management</option>
+                        <option>Schools and Perspectives in Psychology</option>
+                        <option>Science Education</option>
+                        <option>Science of Dental Materials</option>
+                        <option>Science of Sports Training</option>
+                        <option>Science of Sports Training  (Major 1)</option>
+                        <option>Sciences of Quran</option>
+                        <option>Scientific Sports Coaching (Foundation 10)</option>
+                        <option>Sculpture</option>
+                        <option>Second Language Acquisition</option>
+                        <option>Secondary Education</option>
+                        <option>Secretarial Practice</option>
+                        <option>Security and Strategic Studies</option>
+                        <option>Seed Science and Technology</option>
+                        <option>Seerat un Nabi</option>
+                        <option>Select any one of the following UN language</option>
+                        <option>Select any three courses from the following</option>
+                        <option>Select any two courses from the following thee</option>
+                        <option>Select One Course for Specialization</option>
+                        <option>Semantics</option>
+                        <option>SEMESTER - I</option>
+                        <option>SEMESTER - II</option>
+                        <option>SEMESTER - III</option>
+                        <option>SEMESTER - IV</option>
+                        <option>SEMESTER-V</option>
+                        <option>SEMESTER-VI</option>
+                        <option>SEMESTER-VII</option>
+                        <option>SEMESTER-VIII</option>
+                        <option>Semi Conductors and Nanotechnology</option>
+                        <option>Seminar</option>
+                        <option>Set (Theory)</option>
+                        <option>Shairi Isnaaf - Taruf o Tafheem - II</option>
+                        <option>Shairi Isnaaf -Taruf  o Tafheem - I</option>
+                        <option>Signal and Image Processing</option>
+                        <option>Simulation and Modeling</option>
+                        <option>Social Action</option>
+                        <option>Social Anthropology</option>
+                        <option>Social Case Work</option>
+                        <option>Social Development</option>
+                        <option>Social Gerontology</option>
+                        <option>Social Group Work</option>
+                        <option>Social Management</option>
+                        <option>Social Policy and Planning</option>
+                        <option>Social Problems of Pakistan</option>
+                        <option>Social Psychology</option>
+                        <option>Social Psychology (Revised)</option>
+                        <option>Social Research Methods</option>
+                        <option>Social Sciences</option>
+                        <option>Social Sciences - I (A. Sociology)</option>
+                        <option>Social Sciences - I (B. Introduction to Social Work)</option>
+                        <option>Social Sciences - I (C. Concepts of Education)</option>
+                        <option>Social Sciences - II (A. Political Science)</option>
+                        <option>Social Sciences - II (B. Islamic Education)</option>
+                        <option>Social Service</option>
+                        <option>Social Statistics</option>
+                        <option>Social Transformation</option>
+                        <option>Social Welfare in Pakistan</option>
+                        <option>Social Work</option>
+                        <option>Society and Social Institutions</option>
+                        <option>Socio-Cultural Aspects of Gender</option>
+                        <option>Sociolinguistics</option>
+                        <option>Sociology</option>
+                        <option>Sociology - I</option>
+                        <option>Sociology - II</option>
+                        <option>Sociology (General 5)</option>
+                        <option>Sociology and Socio-Cultural Studies</option>
+                        <option>Sociology of Development</option>
+                        <option>Sociology of Education</option>
+                        <option>Sociology of Globalization</option>
+                        <option>Sociology of Health and Illness</option>
+                        <option>Sociology of Law and Human Rights</option>
+                        <option>Sociology‐I (MAS)</option>
+                        <option>Sociology‐II (MAS)</option>
+                        <option>Software Development</option>
+                        <option>Software Engineering</option>
+                        <option>Software Quality Assurance</option>
+                        <option>Software Requirements Engineering</option>
+                        <option>Soil Sciences</option>
+                        <option>Soil Survey</option>
+                        <option>Solid State Physics - I</option>
+                        <option>Solid State Physics - II</option>
+                        <option>Solid State Physics - III</option>
+                        <option>Solid State Physics - IV</option>
+                        <option>South America</option>
+                        <option>South Asia</option>
+                        <option>South Asian Literature</option>
+                        <option>South East Asia</option>
+                        <option>Space Science</option>
+                        <option>Special Education</option>
+                        <option>Special Theory of Relativity</option>
+                        <option>Specialization in one game (Elective 2)</option>
+                        <option>Specialization in One Group of Track and Field</option>
+                        <option>Specialization in one group of track and field (Elective 4)</option>
+                        <option>Specialization in One Group of Track and Field (Practical)</option>
+                        <option>Specialized Journalism</option>
+                        <option>Speech and Language Pathology</option>
+                        <option>Speech Language and Hearing Sciences</option>
+                        <option>Speech Language and Pathology</option>
+                        <option>Speech Therapy</option>
+                        <option>Sport Sciences</option>
+                        <option>Sports and Tourism Management</option>
+                        <option>Sports Medicine (Major 8)</option>
+                        <option>Sports Nutrition</option>
+                        <option>Sports Nutrition (Major 2)</option>
+                        <option>Sports Psychology (Major 5)</option>
+                        <option>Sports Sciences and Physical Education</option>
+                        <option>State and Society in Medieval India (1206-1707)</option>
+                        <option>Statistical Computer Packages</option>
+                        <option>Statistical Inference - I (Lab)</option>
+                        <option>Statistical Inference - I (Theory)</option>
+                        <option>Statistical Inference - II (Lab)</option>
+                        <option>Statistical Inference - II (Theory)</option>
+                        <option>Statistical Mechanics</option>
+                        <option>Statistical Physics</option>
+                        <option>Statistics</option>
+                        <option>Statistics - I</option>
+                        <option>Statistics - II</option>
+                        <option>Statistics - III</option>
+                        <option>Statistics - IV</option>
+                        <option>Statistics (Lab) - I</option>
+                        <option>Statistics (Lab) - II</option>
+                        <option>Statistics (Lab) - III</option>
+                        <option>Statistics (Lab) - IV</option>
+                        <option>Statistics (Lab)- I</option>
+                        <option>Statistics (Lab)- II</option>
+                        <option>Statistics in Psychology</option>
+                        <option>Statistics in Social Sciences</option>
+                        <option>Strategic Management</option>
+                        <option>Structural Engineering</option>
+                        <option>Study of Arab World   دراسة العالم العربي</option>
+                        <option>Stylistics</option>
+                        <option>Sub Editing and Page Designing ((Theory) and Practice)</option>
+                        <option>Supply Chain Management</option>
+                        <option>Surgery</option>
+                        <option>Sustainable Engineering</option>
+                        <option>System and Network Administration</option>
+                        <option>System and Network Administration (Lab)</option>
+                        <option>Tafseer - I</option>
+                        <option>Tafseer - II</option>
+                        <option>Tafseer - III</option>
+                        <option>Tafseer - IV</option>
+                        <option>Talent Identification in Sports</option>
+                        <option>Tarikh Adab Urdu Aur Adbi Tehrikaay</option>
+                        <option>Tarjma Tadrees Quran</option>
+                        <option>Taxation</option>
+                        <option>Taxation Law</option>
+                        <option>Teaching English as a second language</option>
+                        <option>Teaching of Literature</option>
+                        <option>Teaching Practice (Practical)</option>
+                        <option>Technical and Business Writing</option>
+                        <option>Technical Writing and Presentation Skills of English (Compulsory 7)</option>
+                        <option>Techniques in Fisheries Research</option>
+                        <option>Techniques in RS and GIS {Practical)</option>
+                        <option>Technology Civil</option>
+                        <option>Technology Education</option>
+                        <option>Technology Electrical</option>
+                        <option>Technology Management</option>
+                        <option>Technology Mechanical</option>
+                        <option>Tehqeeq o Tanqeed (Bunyadi Mubahas)</option>
+                        <option>Tehreer o Insha (Practice)</option>
+                        <option>Telecommunication</option>
+                        <option>Telecommunication and Networks</option>
+                        <option>Telecommunication and Networks Engineering</option>
+                        <option>Telecommunication Engineering</option>
+                        <option>Telecommunication System</option>
+                        <option>TESOL 1- English Language Skills</option>
+                        <option>TESOL 11 - Syl(Lab)us And Materials Evaluation And Design</option>
+                        <option>Test Measurement and Evaluation in Physical Education and Sports</option>
+                        <option>Textile and Apparel Design</option>
+                        <option>Textile and Apparel Merchandizing</option>
+                        <option>Textile and Clothing</option>
+                        <option>Textile and Clothing Management</option>
+                        <option>Textile and Fashion</option>
+                        <option>Textile and Fashion Design</option>
+                        <option>Textile and Technology Management</option>
+                        <option>Textile Chemistry</option>
+                        <option>Textile Design and Technology</option>
+                        <option>Textile Design Technology</option>
+                        <option>Textile Designs</option>
+                        <option>Textile Engineering</option>
+                        <option>Textile Engineering Technology</option>
+                        <option>Textile Fashion and Design</option>
+                        <option>Textile Marketing and Management</option>
+                        <option>Textile Technology</option>
+                        <option>Textiles</option>
+                        <option>Textiles and Clothing</option>
+                        <option>Theology and Religious Studies</option>
+                        <option>Theories of Communication - I</option>
+                        <option>Theories of Communication - II</option>
+                        <option>Theories of Personality (Revised)</option>
+                        <option>Theory of Approximation and Splines - I</option>
+                        <option>Theory of Approximation and Splines - II</option>
+                        <option>Theory of Automata (IT)</option>
+                        <option>Theory of Modules</option>
+                        <option>Theriogenology</option>
+                        <option>Thermal Physics</option>
+                        <option>Thermal Power Engineering</option>
+                        <option>Thermal System Engineering</option>
+                        <option>Thermo Fluid Engineering</option>
+                        <option>Thermodynamics and Kinetic (Theory)</option>
+                        <option>Thesis</option>
+                        <option>Thesis (In lieu of two elective courses of semester VIII</option>
+                        <option>Thesis (in lieu of two paper options</option>
+                        <option>Thesis or Any Paper (Sp. (Theory) - I) except Specialization</option>
+                        <option>Thoracic Surgery</option>
+                        <option>Time Series Analysis - I</option>
+                        <option>Time Series Analysis - II</option>
+                        <option>Topics in Solid State Physics</option>
+                        <option>Topology</option>
+                        <option>Total Quality Management</option>
+                        <option>Tourism and Hospitality</option>
+                        <option>Tourism and Hospitality Management</option>
+                        <option>Tourism Geography</option>
+                        <option>Tourism Survey</option>
+                        <option>Track and Field</option>
+                        <option>Track and Field (Practical)</option>
+                        <option>Trading</option>
+                        <option>Transfusion Medicine</option>
+                        <option>Transient Physiotherapy</option>
+                        <option>Transitional Doctor of Physiotherapy</option>
+                        <option>Translation   الترجمة بين اللّغتين</option>
+                        <option>Translation and Interpretation</option>
+                        <option>Translation of Holy Quran</option>
+                        <option>Translation Studies</option>
+                        <option>Transportation Engineering</option>
+                        <option>Transportation Geography</option>
+                        <option>Transportation Logistics Management</option>
+                        <option>Transportation Survey</option>
+                        <option>TV News Reporting and Production</option>
+                        <option>TV Program Production</option>
+                        <option>United States after Second World War</option>
+                        <option>Urban Ecology</option>
+                        <option>Urban Environmental Management</option>
+                        <option>Urban Geography</option>
+                        <option>Urban Sociology</option>
+                        <option>Urban Survey</option>
+                        <option>Urdu</option>
+                        <option>Urdu Adab</option>
+                        <option>Urdu Adab Ka Mabed No Aabdyati Mutila</option>
+                        <option>Urdu Adab Ka Ta Niysi Mutila</option>
+                        <option>Urdu Adab Kay Muntakhib Komi O Byno Ul Aqwami Marakaz</option>
+                        <option>Urdu Adab Ki Tawarikh Ka Mutiala</option>
+                        <option>Urdu Advance</option>
+                        <option>Urdu Afsaana Aur Drama: Fiqri O Funny Mutaila</option>
+                        <option>Urdu and Iqbaliat</option>
+                        <option>Urdu Dasstan Aur Naawal: Faqri O Funny Mubahas</option>
+                        <option>Urdu Elective</option>
+                        <option>Urdu Fiction May Tariki O Tehzibi Shaur</option>
+                        <option>Urdu Gazal Ka Fiqri O Funny Mutaila</option>
+                        <option>Urdu Language and Literature</option>
+                        <option>Urdu Literature</option>
+                        <option>Urdu Nasar Kay Asaliyab: Mazah Safar Nama Aap Biyti</option>
+                        <option>Urdu Nazam: Fiqri O Funny Mutaila</option>
+                        <option>Urdu Shorthand</option>
+                        <option>Urdu Typing</option>
+                        <option>Urdu Zuban- Qawad O Imla</option>
+                        <option>Urdu Zuban-Tashkeel O Irtaka</option>
+                        <option>Urology</option>
+                        <option>Vector and Tensor Analysis</option>
+                        <option>Veterinary Medicine</option>
+                        <option>Veterinary Medicine and Surgery</option>
+                        <option>Veterinary Parasitology</option>
+                        <option>Veterinary Pathology</option>
+                        <option>Veterinary Sciences</option>
+                        <option>Veterinary Surgery</option>
+                        <option>Veterinary Surgery and Pet Sciences</option>
+                        <option>Virology and Molecular Pathology</option>
+                        <option>Virtual Systems and Services</option>
+                        <option>Virtual Systems and Services (Lab)</option>
+                        <option>Vision Sciences</option>
+                        <option>Visionary Discourse</option>
+                        <option>Visual Arts</option>
+                        <option>Visual Communication</option>
+                        <option>Visual Communication Design</option>
+                        <option>Voluntary Work</option>
+                        <option>Water Pollution, its Management and Control</option>
+                        <option>Water Pollution, its Management and Control ((Lab).)</option>
+                        <option>Water Pollution, its Management and Control (Lab)</option>
+                        <option>Water Resource Engineering</option>
+                        <option>Water Resources and Irrigation Engineering</option>
+                        <option>Water Resources Management</option>
+                        <option>Waves and Optics</option>
+                        <option>Waves, Oscillations and Optics</option>
+                        <option>Web Design and Development</option>
+                        <option>Web Engineering</option>
+                        <option>Web Survey and SPSS</option>
+                        <option>Web Technologies</option>
+                        <option>Web Technologies (Lab)</option>
+                        <option>Welfare and Happiness Economics</option>
+                        <option>Western Political Philosophy - I</option>
+                        <option>Western Political Philosophy - II</option>
+                        <option>Wildlife</option>
+                        <option>Wildlife (Lab)</option>
+                        <option>Wildlife and Ecology</option>
+                        <option>Wildlife Management</option>
+                        <option>Women and Economics Empowerment</option>
+                        <option>Women in Work and Business</option>
+                        <option>Women’s History in Pakistan</option>
+                        <option>Work Ethics</option>
+                        <option>World   Economic   History</option>
+                        <option>World Englishes</option>
+                        <option>World Literatures in Translation</option>
+                        <option>Writing Workshop (IT)</option>
+                        <option>Writing Workshop (MAS)</option>
+                        <option>Zoogeography</option>
+                        <option>Zoology</option>
+                        <option>Zoology - I (Invertebrate Diversity)</option>
+                        <option>Zoology - II (Chordate Diversity)</option>
+                        <option>Zoology - III (Biochemistry)</option>
+                        <option>Zoology - IV (Physiology)</option>
+                        <option>Zoology (Lab) - I (Invertebrate Diversity)</option>
+                        <option>Zoology (Lab) - II (Chordate Diversity)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Department</label>
+                    <select id="department" class="form-select">
+                        <option>Agriculture</option>
+                        <option>Arabic</option>
+                        <option>Biology</option>
+                        <option>Botany</option>
+                        <option>Chemistry</option>
+                        <option>Civics</option>
+                        <option>Commerce</option>
+                        <option>Computer Science / Information Technology</option>
+                        <option>Economics</option>
+                        <option>Education</option>
+                        <option>English</option>
+                        <option>English Shorthand</option>
+                        <option>Fine Arts</option>
+                        <option>Geography</option>
+                        <option>Geology</option>
+                        <option>Health and Physical Education</option>
+                        <option>History</option>
+                        <option>Home Economics</option>
+                        <option>Islamiat</option>
+                        <option>Journalism</option>
+                        <option>Library Science</option>
+                        <option>Mass Communication</option>
+                        <option>Mathematics</option>
+                        <option>Music</option>
+                        <option>Pakistan Studies</option>
+                        <option>Persian</option>
+                        <option>Philosophy</option>
+                        <option>Physics</option>
+                        <option>Physiology</option>
+                        <option>Political Science</option>
+                        <option>Psychology</option>
+                        <option>Punjabi</option>
+                        <option>Saraiki</option>
+                        <option>Social Work</option>
+                        <option>Sociology</option>
+                        <option>Statistics</option>
+                        <option>Urdu</option>
+                        <option>Urdu Shorthand</option>
+                        <option>Zoology</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Class</label>
+                    <select id="classField" class="form-select">
+                        <option value="">Select Class</option>
+                        <option>Year 1</option>
+                        <option>Year 2</option>
+                        <option>Semester 1</option>
+                        <option>Semester 2</option>
+                        <option>Semester 3</option>
+                        <option>Semester 4</option>
+                        <option>Semester 5</option>
+                        <option>Semester 6</option>
+                        <option>Semester 7</option>
+                        <option>Semester 8</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Subject Type</label>
+                    <select id="type" class="form-select">
+                        <option>Compulsory</option>
+                        <option>Elective</option>
+                    </select>
+                </div>
+
+            </div>
+
+
+
+            <div class="flex gap-2">
+                <button type="button" class="btn btn-secondary" onclick="addSubject()">
+                    + Add Subject to List
+                </button>
+            </div>
+
+            <!-- Subject Table -->
+            <div id="subjectTableWrapper" class="mt-4">
+                <div class="table-wrapper card-sm"
+                    style="border:1px solid var(--border-light);border-radius:var(--radius-md);padding:0;">
+                    <table id="subjectTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Class</th>
+                                <th>Department</th>
+                                <th>Subject</th>
+                                <th>Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjectTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <p id="output" class="mt-3"></p>
+
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="history.back()">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="saveProgram()">💾 Save Program</button>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#programName').select2({ placeholder: "Select Program", width: '100%' });
+            $('#major').select2({ placeholder: "Select Major", width: '100%' });
+            $('#subject').select2({ placeholder: "Select Subject", width: '100%' });
+            $('#department').select2({ placeholder: "Select Department", width: '100%' });
+        });
+
+        let selectedProgram = "";
+        let subjectCount = 0;
+
+        function saveProgram() {
+            selectedProgram = document.getElementById("programName").value;
+            if (!selectedProgram) {
+                showOutput("⚠ Please select a Program Name before saving.", "warning");
+                return;
+            }
+            showOutput("✓ Program saved successfully. You can now add subjects.", "success");
+        }
+
+        function addSubject() {
+            let classField = document.getElementById("classField").value;
+            let department = document.getElementById("department").value;
+            let subject = document.getElementById("subject").value;
+            let type = document.getElementById("type").value;
+
+            if (!classField) {
+                showOutput("⚠ Please select a Class.", "warning");
+                return;
+            }
+            if (!subject) {
+                showOutput("⚠ Please select a Subject.", "warning");
+                return;
+            }
+
+            subjectCount++;
+            let tbody = document.getElementById("subjectTableBody");
+            let row = tbody.insertRow();
+            row.innerHTML = `
+            <td>${subjectCount}</td>
+            <td>${classField}</td>
+            <td>${department}</td>
+            <td>${subject}</td>
+            <td><span class="badge ${type === "Compulsory" ? "badge-info" : "badge-neutral"}">${type}</span></td>
+            <td>
+                <button class="row-action-btn danger btn-sm" onclick="this.closest('tr').remove(); updateSubjectCount();">Remove</button>
+            </td>
+        `;
+
+            document.getElementById("subjectTableWrapper").classList.add("has-subjects");
+            showOutput("✓ Subject added to list.", "success");
+        }
+
+        function updateSubjectCount() {
+            let rows = document.querySelectorAll("#subjectTableBody tr");
+            rows.forEach((row, i) => { row.cells[0].innerText = i + 1; });
+            if (rows.length === 0) {
+                document.getElementById("subjectTableWrapper").classList.remove("has-subjects");
+            }
+        }
+
+        function showOutput(msg, type) {
+            let el = document.getElementById("output");
+            el.textContent = msg;
+            el.className = "mt-3 text-" + (type === "success" ? "success" : "warning");
+            setTimeout(() => { el.textContent = ""; }, 4000);
+        }
+
+        function addCombinationSubject() {
+            let container = document.getElementById("combinationSubjects");
+            let count = container.querySelectorAll(".subject-row").length + 1;
+            let row = document.createElement("div");
+            row.className = "subject-row";
+            row.innerHTML = `
+            <div class="flex gap-2 mb-2" style="align-items:flex-end;">
+                <div class="form-group" style="flex:1;">
+                    <label class="form-label">Subject ${count}</label>
+                    <select class="form-select combination-subject">
+                        ${document.getElementById("subject").innerHTML}
+                    </select>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm" style="flex-shrink:0;"
+                    onclick="this.closest('.subject-row').remove();">
+                    Remove
+                </button>
+            </div>
+        `;
+            container.appendChild(row);
+            if (window.jQuery) {
+                $(row).find("select").select2({ width: "100%" });
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const chk = document.getElementById("subjectCombinationChk");
+            if (!chk) return;
+            chk.addEventListener("change", function () {
+                const section = document.getElementById("subjectCombinationSection");
+                if (this.checked) {
+                    section.style.display = "block";
+                    if (document.querySelectorAll("#combinationSubjects .subject-row").length === 0) {
+                        addCombinationSubject();
+                        addCombinationSubject();
+                    }
+                } else {
+                    section.style.display = "none";
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

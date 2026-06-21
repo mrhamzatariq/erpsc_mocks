@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Institute — EduGov ERP</title>
+  <link rel="stylesheet" href="design-system.css">
+  <style>
+    /* Page-specific layout only — everything else comes from design-system.css */
+    .form-page-wrap {
+      display: flex;
+      justify-content: center;
+      padding: var(--space-8) var(--space-6);
+    }
+
+    .form-page-inner {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .form-section+.form-section {
+      margin-top: var(--space-6);
+    }
+
+    .coord-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: var(--space-4);
+      align-items: end;
+    }
+
+    @media (max-width: 768px) {
+      .coord-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-page-wrap">
+    <div class="form-page-inner">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Add Institute</h1>
+          <p>Register a new college / office under the Punjab Higher Education Department</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Institute Details</div>
+            <div class="card-subtitle">Fields marked <span class="text-danger">*</span> are mandatory</div>
+          </div>
+        </div>
+
+        <form id="instituteForm">
+
+          <!-- ============ LOCATION ============ -->
+          <div class="form-section">
+            <div class="section-label mb-3">Location</div>
+            <div class="grid grid-3">
+
+              <div class="form-group">
+                <label class="form-label">Division <span class="required">*</span></label>
+                <select class="form-select" id="division_id" required>
+                  <option value="">Select Division</option>
+                  <option>Lahore</option>
+                  <option>Rawalpindi</option>
+                  <option>Multan</option>
+                  <option>Faisalabad</option>
+                  <option>Bahawalpur</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">District <span class="required">*</span></label>
+                <select class="form-select" id="district_id" required>
+                  <option value="">Select District</option>
+                  <option>Lahore</option>
+                  <option>Rawalpindi</option>
+                  <option>Multan</option>
+                  <option>Faisalabad</option>
+                  <option>Bahawalpur</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Tehsil <span class="required">*</span></label>
+                <select class="form-select" id="tehsil_id" required>
+                  <option value="">Select Tehsil</option>
+                  <option>Ahmadpur East</option>
+                  <option>Ahmadpur Sial</option>
+                  <option>Ali Pur Chatta</option>
+                  <option>Alipur</option>
+                  <option>Arifwala</option>
+                  <option>Athara Hazari</option>
+                  <option>Attock</option>
+                  <option>Bahawalnagar</option>
+                  <option>Bahawalpur City</option>
+                  <option>Bahawalpur Saddar</option>
+                  <option>Bhakkar</option>
+                  <option>Bhalwal</option>
+                  <option>Bhera</option>
+                  <option>Bhowana</option>
+                  <option>Burewala</option>
+                  <option>Chak Jhumra</option>
+                  <option>Chakwal</option>
+                  <option>Chaubara</option>
+                  <option>Chichawatni</option>
+                  <option>Chiniot</option>
+                  <option>Chishtian</option>
+                  <option>Choa Saidan Shah</option>
+                  <option>Chunian</option>
+                  <option>Darya Khan</option>
+                  <option>Daska</option>
+                  <option>Depalpur</option>
+                  <option>Dera Ghazi Khan</option>
+                  <option>Dina</option>
+                  <option>Dunyapur</option>
+                  <option>Faisalabad City</option>
+                  <option>Faisalabad Saddar</option>
+                  <option>Fateh Jang</option>
+                  <option>Ferozewala</option>
+                  <option>Fort Abbas</option>
+                  <option>Gojra</option>
+                  <option>Gujar Khan</option>
+                  <option>Gujranwala Saddar</option>
+                  <option>Gujrat</option>
+                  <option>Hafizabad</option>
+                  <option>Haroonabad</option>
+                  <option>Hasilpur</option>
+                  <option>Hassan Abdal</option>
+                  <option>Hazro</option>
+                  <option>Isakhel</option>
+                  <option>Jahanian</option>
+                  <option>Jalalpur Jattan</option>
+                  <option>Jalalpur Pirwala</option>
+                  <option>Jampur</option>
+                  <option>Jand</option>
+                  <option>Jaranwala</option>
+                  <option>Jatoi</option>
+                  <option>Jhang</option>
+                  <option>Jhelum</option>
+                  <option>Kabirwala</option>
+                  <option>Kahror Pacca</option>
+                  <option>Kahuta</option>
+                  <option>Kallar Kahar</option>
+                  <option>Kallar Syedan</option>
+                  <option>Kamalia</option>
+                  <option>Kamoke</option>
+                  <option>Karor Lal Esan</option>
+                  <option>Kasur</option>
+                  <option>Khairpur Tamewali</option>
+                  <option>Khanewal</option>
+                  <option>Khanpur</option>
+                  <option>Kharian</option>
+                  <option>Khushab</option>
+                  <option>Kot Addu</option>
+                  <option>Kot Chutta</option>
+                  <option>Kot Momin</option>
+                  <option>Kot Radha Kishan</option>
+                  <option>Kotli Sattian</option>
+                  <option>Lahore Cantt</option>
+                  <option>Lahore City</option>
+                  <option>Lalian</option>
+                  <option>Layyah</option>
+                  <option>Liaquatpur</option>
+                  <option>Lodhran</option>
+                  <option>Mailsi</option>
+                  <option>Malakwal</option>
+                  <option>Mandi Bahauddin</option>
+                  <option>Mankera</option>
+                  <option>Mian Channu</option>
+                  <option>Mianwali</option>
+                  <option>Minchinabad</option>
+                  <option>Model Town</option>
+                  <option>Multan City</option>
+                  <option>Multan Saddar</option>
+                  <option>Muridke</option>
+                  <option>Murree</option>
+                  <option>Muzaffargarh</option>
+                  <option>Nankana Sahib</option>
+                  <option>Narowal</option>
+                  <option>Naushera</option>
+                  <option>Noorpur Thal</option>
+                  <option>Nowshera Virkan</option>
+                  <option>Okara</option>
+                  <option>Pakpattan</option>
+                  <option>Pasrur</option>
+                  <option>Pattoki</option>
+                  <option>Phalia</option>
+                  <option>Pind Dadan Khan</option>
+                  <option>Pindi Bhattian</option>
+                  <option>Pindi Gheb</option>
+                  <option>Piplan</option>
+                  <option>Quaidabad</option>
+                  <option>Raiwind</option>
+                  <option>Rajanpur</option>
+                  <option>Rawalpindi</option>
+                  <option>Renala Khurd</option>
+                  <option>Rojhan</option>
+                  <option>Sadiqabad</option>
+                  <option>Safdarabad</option>
+                  <option>Sahiwal</option>
+                  <option>Sambrial</option>
+                  <option>Samundri</option>
+                  <option>Sangla Hill</option>
+                  <option>Sarai Alamgir</option>
+                  <option>Sargodha</option>
+                  <option>Shah Kot</option>
+                  <option>Shahpur</option>
+                  <option>Shakargarh</option>
+                  <option>Shalimar</option>
+                  <option>Sharaqpur</option>
+                  <option>Sheikhupura</option>
+                  <option>Shorkot</option>
+                  <option>Shujabad</option>
+                  <option>Sialkot</option>
+                  <option>Sillanwali</option>
+                  <option>Sohawa</option>
+                  <option>Talagang</option>
+                  <option>Tandlianwala</option>
+                  <option>Taunsa</option>
+                  <option>Taxila</option>
+                  <option>Toba Tek Singh</option>
+                  <option>Vehari</option>
+                  <option>Wazirabad</option>
+                  <option>Yazman</option>
+                  <option>Zafarwal</option>
+                </select>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- ============ CLASSIFICATION ============ -->
+          <div class="form-section">
+            <div class="section-label mb-3">Institute Classification</div>
+            <div class="grid grid-2">
+
+              <div class="form-group">
+                <label class="form-label">Institute Type <span class="required">*</span></label>
+                <select class="form-select" id="institute_type" required>
+                  <option value="">Select Institute Type</option>
+                  <option>Admin Unit</option>
+                  <option>Autonomous</option>
+                  <option>Commerce</option>
+                  <option>General</option>
+                  <option>Professional</option>
+                  <option>University</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Institute Level <span class="required">*</span></label>
+                <select class="form-select" id="institute_level" required>
+                  <option value="">Select Institute Level</option>
+                  <option>Associate</option>
+                  <option>Graduate</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Gender <span class="required">*</span></label>
+                <select class="form-select" id="gender" required>
+                  <option value="">Select Gender</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Co-Education</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Periphery Area <span class="required">*</span></label>
+                <select class="form-select" id="periphery_area" required>
+                  <option value="">Select Periphery Area</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Hard Area <span class="required">*</span></label>
+                <select class="form-select" id="hard_area" required>
+                  <option value="">Select Hard Area</option>
+                  <option>With Hard Area</option>
+                  <option>Without Hard Area</option>
+                </select>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- ============ IDENTITY ============ -->
+          <div class="form-section">
+            <div class="section-label mb-3">Identity</div>
+            <div class="grid grid-3">
+
+              <div class="form-group">
+                <label class="form-label">CMIS Code <span class="required">*</span></label>
+                <input type="text" class="form-input" id="cmis_code" placeholder="Enter 6-Digit CMIS Code" maxlength="6"
+                  required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Institute Name <span class="required">*</span></label>
+                <input type="text" class="form-input" id="institute_name" placeholder="Enter Institute Name"
+                  maxlength="255" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Institute Establishment Date</label>
+                <input type="date" class="form-input" id="establishment_date">
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- ============ GEO-TAGGING ============ -->
+          <div class="form-section">
+            <div class="section-label mb-3">Geo-Tagging</div>
+            <div class="form-group">
+              <label class="form-label">Coordinates</label>
+              <div class="coord-row">
+                <input type="text" class="form-input" id="latitude" placeholder="Latitude, e.g. 31.5204">
+                <input type="text" class="form-input" id="longitude" placeholder="Longitude, e.g. 74.3587">
+                <button type="button" class="btn btn-secondary" id="captureLocationBtn">📍 Use Current Location</button>
+              </div>
+              <div class="form-hint">Captured during the geotagged site visit, or entered manually.</div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- ============ CONTACT ============ -->
+          <div class="form-section">
+            <div class="section-label mb-3">Contact</div>
+            <div class="grid grid-2">
+
+              <div class="form-group">
+                <label class="form-label">Contact Number</label>
+                <input type="text" class="form-input" id="contact_number" placeholder="Enter Contact Number">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="email" placeholder="Enter Email Address">
+              </div>
+
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label class="form-label">Address</label>
+                <textarea class="form-textarea" id="address" rows="3" placeholder="Enter Complete Address"></textarea>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- ============ STATUS ============ -->
+          <div class="form-section">
+            <div class="section-label mb-3">Status</div>
+            <div class="grid grid-2">
+
+              <div class="form-group">
+                <label class="form-label">Status <span class="required">*</span></label>
+                <select class="form-select" id="status" required>
+                  <option value="">Select Status</option>
+                  <option>Active</option>
+                  <option>In-Active</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Operational Status <span class="required">*</span></label>
+                <select class="form-select" id="operational_status" required>
+                  <option value="">Select Operational Status</option>
+                  <option>Operational</option>
+                  <option>Non-Operational</option>
+                </select>
+              </div>
+
+              <div class="form-group" id="reasonSection" style="grid-column: 1 / -1; display:none;">
+                <label class="form-label">Reason <span class="required">*</span></label>
+                <textarea class="form-textarea" id="reason" rows="3" placeholder="Enter Reason"></textarea>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="flex gap-2" style="justify-content: flex-end;">
+            <button type="button" class="btn btn-secondary">Close</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    const instituteType = document.getElementById('institute_type');
+    const instituteLevel = document.getElementById('institute_level');
+    const genderSelect = document.getElementById('gender');
+    const peripherySelect = document.getElementById('periphery_area');
+    const hardAreaSelect = document.getElementById('hard_area');
+    const status = document.getElementById('status');
+    const operationalStatus = document.getElementById('operational_status');
+
+    // Store original options
+    [
+      instituteLevel,
+      genderSelect,
+      peripherySelect,
+      hardAreaSelect,
+      operationalStatus
+    ].forEach(function (sel) {
+      sel.dataset.originalOptions = sel.innerHTML;
+    });
+
+    function setNotApplicable(select, disable) {
+      if (disable) {
+        select.innerHTML = '<option selected>Not Applicable</option>';
+        select.disabled = true;
+        select.required = false;
+      } else {
+        select.innerHTML = select.dataset.originalOptions;
+        select.disabled = false;
+        select.required = true;
+        select.selectedIndex = 0;
+      }
+    }
+
+    // Institute Type Rules
+    instituteType.addEventListener('change', function () {
+
+      const value = this.value;
+
+      // Institute Level N/A for Admin Unit & University
+      setNotApplicable(
+        instituteLevel,
+        value === 'Admin Unit' || value === 'University'
+      );
+
+      // Gender, Periphery & Hard Area N/A for Admin Unit
+      const isAdminUnit = value === 'Admin Unit';
+
+      setNotApplicable(genderSelect, isAdminUnit);
+      setNotApplicable(peripherySelect, isAdminUnit);
+      setNotApplicable(hardAreaSelect, isAdminUnit);
+    });
+
+    // Status Rules
+    status.addEventListener('change', function () {
+
+      const isInactive = this.value === 'In-Active';
+
+      // Operational Status N/A when Status = In-Active
+      setNotApplicable(operationalStatus, isInactive);
+
+      toggleReason();
+    });
+
+    // Reason Logic
+    function toggleReason() {
+
+      const statusValue = status.value;
+      const operationalValue = operationalStatus.value;
+
+      const section = document.getElementById('reasonSection');
+      const reason = document.getElementById('reason');
+
+      const showReason =
+        statusValue === 'In-Active' ||
+        operationalValue === 'Non-Operational';
+
+      if (showReason) {
+        section.style.display = 'block';
+        reason.required = true;
+      } else {
+        section.style.display = 'none';
+        reason.required = false;
+        reason.value = '';
+      }
+    }
+
+    operationalStatus.addEventListener('change', toggleReason);
+
+    // CMIS Validation
+    document.getElementById('cmis_code').addEventListener('input', function () {
+      this.value = this.value.replace(/\D/g, '');
+    });
+
+    // Capture Location
+    document.getElementById('captureLocationBtn').addEventListener('click', function () {
+
+      if (!navigator.geolocation) {
+        alert('Geolocation is not supported by this browser.');
+        return;
+      }
+
+      const btn = this;
+
+      btn.disabled = true;
+      btn.textContent = 'Locating...';
+
+      navigator.geolocation.getCurrentPosition(
+        function (pos) {
+          document.getElementById('latitude').value =
+            pos.coords.latitude.toFixed(6);
+
+          document.getElementById('longitude').value =
+            pos.coords.longitude.toFixed(6);
+
+          btn.disabled = false;
+          btn.textContent = '📍 Use Current Location';
+        },
+        function () {
+          alert('Unable to retrieve location. Please enter coordinates manually.');
+          btn.disabled = false;
+          btn.textContent = '📍 Use Current Location';
+        }
+      );
+    });
+
+    // Form Validation
+    document.getElementById('instituteForm').addEventListener('submit', function (e) {
+
+      const cmis = document.getElementById('cmis_code').value;
+
+      if (cmis.length !== 6) {
+        e.preventDefault();
+        alert('CMIS Code must be exactly 6 digits.');
+      }
+    });
+  </script>
+</body>
+
+</html>

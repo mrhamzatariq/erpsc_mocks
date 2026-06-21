@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduGov ERP - Form Components Showcase</title>
+<style>
+:root{
+--brand:#534AB7;--brand2:#6B63D4;--bg:#F4F3F1;--surface:#fff;--text:#1A1917;
+--muted:#6F6D67;--border:#d8d8d8;--radius:10px;
+}
+body{font-family:Arial,sans-serif;background:var(--bg);margin:0;color:var(--text)}
+.header{background:white;padding:20px;border-bottom:1px solid var(--border)}
+.container{max-width:1400px;margin:auto;padding:24px}
+.card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+label{display:block;font-size:12px;margin-bottom:6px;color:var(--muted)}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;box-sizing:border-box}
+button{background:var(--brand);color:white;border:none;padding:10px 16px;border-radius:8px;cursor:pointer}
+.search-box{margin-bottom:5px}
+.tagbox{display:flex;flex-wrap:wrap;gap:6px;border:1px solid var(--border);padding:8px;border-radius:8px}
+.tag{background:#EEEDFE;padding:4px 8px;border-radius:999px}
+.dropzone{border:2px dashed var(--brand2);padding:30px;text-align:center;border-radius:10px}
+.toolbar{display:flex;gap:10px}
+.toggle{width:50px;height:26px;background:#ccc;border-radius:30px;position:relative;cursor:pointer}
+.toggle:before{content:'';position:absolute;width:22px;height:22px;background:white;border-radius:50%;top:2px;left:2px}
+.toggle.active{background:var(--brand2)}
+.toggle.active:before{left:26px}
+.editor{min-height:120px;border:1px solid var(--border);padding:10px;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="header"><h1>Form Components Showcase</h1><p>EduGov ERP Reference Page</p></div>
+<div class="container">
+
+<div class="card"><h2>Basic Inputs</h2>
+<div class="grid">
+<div><label>Text</label><input placeholder="Enter text"></div>
+<div><label>Email</label><input type="email" placeholder="name@email.com"></div>
+<div><label>CNIC</label><input placeholder="35202-1234567-1"></div>
+<div><label>Mobile</label><input placeholder="0300-1234567"></div>
+<div><label>Password</label><input type="password"></div>
+<div><label>Disabled</label><input disabled value="Disabled"></div>
+</div></div>
+
+<div class="card"><h2>Searchable Dropdown</h2>
+<input class="search-box" id="searchCollege" placeholder="Search college...">
+<select id="collegeSelect" size="6">
+<option>Government College University Lahore</option>
+<option>Government Graduate College Kasur</option>
+<option>Government College Sahiwal</option>
+<option>Government College Faisalabad</option>
+<option>Government College Multan</option>
+</select>
+</div>
+
+<div class="card"><h2>Multi Select Tags</h2>
+<div class="tagbox">
+<span class="tag">BS Computer Science</span>
+<span class="tag">BS IT</span>
+<span class="tag">BBA</span>
+</div>
+</div>
+
+<div class="card"><h2>Date Controls</h2>
+<div class="grid">
+<div><label>Date</label><input type="date"></div>
+<div><label>Month</label><input type="month"></div>
+<div><label>Year</label><input type="number" value="2026"></div>
+</div>
+</div>
+
+<div class="card"><h2>Numeric Controls</h2>
+<div class="grid">
+<div><label>Currency</label><input id="currency" placeholder="PKR"></div>
+<div><label>Percentage</label><input type="number" min="0" max="100"></div>
+<div><label>Decimal</label><input type="number" step="0.01"></div>
+</div>
+</div>
+
+<div class="card"><h2>Selection Controls</h2>
+<input type="checkbox"> Active User<br><br>
+<input type="radio" name="g"> Male
+<input type="radio" name="g"> Female
+<br><br>
+<div id="toggle" class="toggle"></div>
+</div>
+
+<div class="card"><h2>File Upload</h2>
+<div class="dropzone">Drag & Drop Files Here</div>
+<input type="file" multiple>
+</div>
+
+<div class="card"><h2>Textarea & Rich Editor</h2>
+<textarea rows="4"></textarea><br><br>
+<div class="editor" contenteditable="true">Type rich text here...</div>
+</div>
+
+<div class="card"><h2>ERP Lookups</h2>
+<div class="grid">
+<div><input placeholder="Search Student"></div>
+<div><input placeholder="Search Faculty"></div>
+<div><input placeholder="Search College"></div>
+<div><input placeholder="Search Program"></div>
+</div>
+</div>
+
+<div class="card">
+<div class="toolbar">
+<button>Save</button>
+<button type="button">Save Draft</button>
+<button type="button">Cancel</button>
+</div>
+</div>
+
+</div>
+
+<script>
+document.getElementById('searchCollege').addEventListener('keyup',function(){
+ let f=this.value.toLowerCase();
+ [...document.querySelectorAll('#collegeSelect option')].forEach(o=>{
+   o.style.display=o.text.toLowerCase().includes(f)?'block':'none';
+ });
+});
+document.getElementById('toggle').onclick=function(){this.classList.toggle('active');};
+document.getElementById('currency').addEventListener('input',function(){
+ let n=this.value.replace(/[^0-9]/g,'');
+ if(n) this.value=Number(n).toLocaleString();
+});
+</script>
+</body>
+</html>
