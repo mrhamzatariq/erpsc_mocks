@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Complaints & Grievances — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar { display:flex; gap:0; border-bottom:1px solid var(--border-light); margin-bottom:var(--space-5); overflow-x:auto; }
+  .tab-item { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:all .15s; }
+  .tab-item.active { color:var(--brand-600); border-bottom-color:var(--brand-600); }
+  .tab-item:hover:not(.active) { color:var(--text-primary); background:var(--bg-secondary); }
+
+  .ticket-row { display:flex; align-items:center; gap:12px; padding:11px 12px; border-bottom:1px solid var(--border-light); font-size:13px; cursor:pointer; transition:background .12s; }
+  .ticket-row:hover { background:var(--bg-secondary); }
+  .ticket-row.selected { background:var(--brand-50); }
+  .ticket-row:last-child { border-bottom:none; }
+  .sev-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .sev-critical { background:var(--color-danger-text); }
+  .sev-high { background:var(--color-warning-text); }
+  .sev-medium { background:var(--color-info-text); }
+  .sev-low { background:var(--text-muted); }
+  .sla-tag { font-size:11px; font-weight:600; padding:2px 8px; border-radius:var(--radius-full); }
+  .sla-breach { background:var(--color-danger-bg); color:var(--color-danger-text); }
+  .sla-ok { background:var(--color-success-bg); color:var(--color-success-text); }
+  .sla-warn { background:var(--color-warning-bg); color:var(--color-warning-text); }
+
+  .ticket-card-mini { display:flex; align-items:flex-start; gap:12px; padding-bottom:14px; margin-bottom:14px; border-bottom:1px solid var(--border-light); }
+  .cfg-icon { width:34px; height:34px; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+  .detail-row { display:flex; padding:7px 0; border-bottom:1px solid var(--border-light); font-size:13px; gap:8px; }
+  .detail-row:last-child { border-bottom:none; }
+  .detail-key { color:var(--text-muted); width:120px; flex-shrink:0; }
+  .stub-note { font-size:12px; color:var(--text-muted); background:var(--bg-secondary); border:1px dashed var(--border-medium); border-radius:var(--radius-md); padding:10px 14px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">College Administration</div>
+      <div class="role-sub">GC Lahore</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="02-principal-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">Communication</div>
+      <a class="nav-item" href="22-communication-centre.html"><span class="nav-icon">📬</span><span>Communication Centre</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">📢</span><span>Announcements</span></a>
+      <a class="nav-item active" href="#"><span class="nav-icon">⚠️</span><span>Complaints & Grievances</span><span class="nav-badge warn">14</span></a>
+
+      <div class="sidebar-section-label">Operations</div>
+      <a class="nav-item" href="05-admissions-grid.html"><span class="nav-icon">🎓</span><span>Admissions</span></a>
+      <a class="nav-item" href="11-fee-management.html"><span class="nav-icon">💳</span><span>Finance</span></a>
+      <a class="nav-item" href="33-transport-management.html"><span class="nav-icon">🚌</span><span>Transport</span></a>
+      <a class="nav-item" href="26-hostel-management.html"><span class="nav-icon">🏠</span><span>Hostel</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">RA</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Rabia Anjum</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">Admin Officer, GC Lahore</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Communication</span><span>›</span>
+        <span class="crumb-active">Complaints & Grievances</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search by complainant, ticket no., category…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">RA</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Complaints & Grievances</h1>
+          <p>GC Lahore · Track, resolve and escalate complaints from students, parents and faculty</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">⬇ Export</button>
+          <button class="btn btn-primary">+ Log new complaint</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="grid grid-4 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Open complaints</div>
+          <div class="metric-value" style="color:var(--color-warning-text)">14</div>
+          <div class="metric-delta" style="color:var(--color-danger-text)">3 breaching SLA</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Resolved this month</div>
+          <div class="metric-value" style="color:var(--color-success-text)">47</div>
+          <div class="metric-delta delta-up">▲ 89% within SLA</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Escalated to DDC</div>
+          <div class="metric-value">5</div>
+          <div class="metric-delta delta-neutral">Unresolved beyond SLA</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Avg. resolution time</div>
+          <div class="metric-value">3.4 <span style="font-size:13px;font-weight:500;color:var(--text-muted)">days</span></div>
+          <div class="metric-delta delta-up">▲ Faster than last quarter</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active" data-tab="open" onclick="switchCTab('open', this)">Open Complaints</div>
+        <div class="tab-item" data-tab="resolved" onclick="switchCTab('resolved', this)">Resolved</div>
+        <div class="tab-item" data-tab="escalated" onclick="switchCTab('escalated', this)">Escalated</div>
+        <div class="tab-item" data-tab="categories" onclick="switchCTab('categories', this)">Categories & SLA</div>
+      </div>
+
+      <!-- ===================== OPEN COMPLAINTS ===================== -->
+      <div class="tab-panel" id="ctab-open">
+        <div class="grid" style="grid-template-columns:1fr 360px;gap:16px">
+
+          <div class="card" style="padding:0;overflow:hidden">
+            <div class="grid-toolbar">
+              <div class="toolbar-search">
+                <span>🔍</span>
+                <input type="text" placeholder="Search complaints…"/>
+              </div>
+              <span class="filter-chip">Category: All <span class="remove">×</span></span>
+              <span class="filter-chip">Severity: All <span class="remove">×</span></span>
+              <div class="ml-auto" style="display:flex;gap:6px">
+                <button class="btn btn-secondary btn-sm">Columns ▾</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="ticket-row selected" onclick="selectTicket(this,'t1')">
+                <span class="sev-dot sev-critical"></span>
+                <div style="flex:1">
+                  <div style="font-weight:600">CMP-2026-0412 · Harassment complaint</div>
+                  <div class="text-muted text-sm">Filed by Parent — Class XI, Section B</div>
+                </div>
+                <span class="badge badge-danger">Critical</span>
+                <span class="sla-tag sla-breach">SLA breached</span>
+              </div>
+              <div class="ticket-row" onclick="selectTicket(this,'t2')">
+                <span class="sev-dot sev-high"></span>
+                <div style="flex:1">
+                  <div style="font-weight:600">CMP-2026-0409 · Faculty conduct</div>
+                  <div class="text-muted text-sm">Filed by Student — BS Computer Science, 4th Sem</div>
+                </div>
+                <span class="badge badge-warning">High</span>
+                <span class="sla-tag sla-warn">1 day left</span>
+              </div>
+              <div class="ticket-row" onclick="selectTicket(this,'t3')">
+                <span class="sev-dot sev-medium"></span>
+                <div style="flex:1">
+                  <div style="font-weight:600">CMP-2026-0405 · Fee dispute</div>
+                  <div class="text-muted text-sm">Filed by Parent — ADP Commerce, 2nd Year</div>
+                </div>
+                <span class="badge badge-info">Medium</span>
+                <span class="sla-tag sla-ok">4 days left</span>
+              </div>
+              <div class="ticket-row" onclick="selectTicket(this,'t4')">
+                <span class="sev-dot sev-high"></span>
+                <div style="flex:1">
+                  <div style="font-weight:600">CMP-2026-0401 · Hostel facilities</div>
+                  <div class="text-muted text-sm">Filed by Student — Hostel Block C, Room 214</div>
+                </div>
+                <span class="badge badge-warning">High</span>
+                <span class="sla-tag sla-warn">2 days left</span>
+              </div>
+              <div class="ticket-row" onclick="selectTicket(this,'t5')">
+                <span class="sev-dot sev-low"></span>
+                <div style="flex:1">
+                  <div style="font-weight:600">CMP-2026-0398 · Transport route delay</div>
+                  <div class="text-muted text-sm">Filed by Parent — Route 7, Wahdat Road</div>
+                </div>
+                <span class="badge badge-neutral">Low</span>
+                <span class="sla-tag sla-ok">6 days left</span>
+              </div>
+              <div class="ticket-row" onclick="selectTicket(this,'t6')">
+                <span class="sev-dot sev-medium"></span>
+                <div style="flex:1">
+                  <div style="font-weight:600">CMP-2026-0393 · Library access issue</div>
+                  <div class="text-muted text-sm">Filed by Faculty — Department of Mathematics</div>
+                </div>
+                <span class="badge badge-info">Medium</span>
+                <span class="sla-tag sla-ok">3 days left</span>
+              </div>
+            </div>
+
+            <div class="pagination">
+              <span class="text-muted text-sm">Showing 1–6 of 14 open complaints</span>
+              <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+                <button class="page-btn">←</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">→</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detail: ticket + timeline -->
+          <div class="card">
+            <div class="ticket-card-mini">
+              <div class="cfg-icon" id="ticketIcon" style="background:var(--color-danger-bg)">⚠️</div>
+              <div>
+                <div style="font-weight:600;font-size:14px" id="ticketTitle">CMP-2026-0412 · Harassment complaint</div>
+                <div class="text-muted text-sm" id="ticketFiler">Filed by Parent — Class XI, Section B</div>
+              </div>
+            </div>
+
+            <div class="detail-row"><span class="detail-key">Category</span><span id="ticketCat" style="font-weight:500">Faculty Conduct</span></div>
+            <div class="detail-row"><span class="detail-key">Severity</span><span id="ticketSev"><span class="badge badge-danger">Critical</span></span></div>
+            <div class="detail-row"><span class="detail-key">Filed on</span><span id="ticketDate">15 Jun 2026, 9:02 AM</span></div>
+            <div class="detail-row"><span class="detail-key">SLA</span><span id="ticketSla" style="color:var(--color-danger-text);font-weight:500">Breached — 2 days overdue</span></div>
+            <div class="detail-row"><span class="detail-key">Description</span><span id="ticketDesc">Parent alleges inappropriate remarks by a faculty member during a parent-teacher meeting. Requests confidential investigation.</span></div>
+
+            <div class="divider"></div>
+            <div class="card-title mb-3">Escalation timeline</div>
+            <div class="timeline" id="ticketTimeline">
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot done">✓</div><div class="tl-line done"></div></div>
+                <div class="tl-content">
+                  <div class="tl-title">Complaint filed</div>
+                  <div class="tl-meta">Parent portal · 15 Jun 2026, 9:02 AM</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot done">✓</div><div class="tl-line done"></div></div>
+                <div class="tl-content">
+                  <div class="tl-title">Acknowledged by College Admin</div>
+                  <div class="tl-meta">Rabia Anjum, GC Lahore · 15 Jun 2026, 11:30 AM</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot active">→</div><div class="tl-line pending"></div></div>
+                <div class="tl-content">
+                  <div class="tl-title">Auto-escalated to DDC <span class="badge badge-danger" style="margin-left:8px">SLA breached</span></div>
+                  <div class="tl-meta">DDC, District Lahore · Escalated 18 Jun 2026, 9:02 AM (72-hr SLA exceeded)</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot pending">4</div></div>
+                <div class="tl-content">
+                  <div class="tl-title" style="color:var(--text-muted)">DEC inquiry & resolution</div>
+                  <div class="tl-meta">Directorate of Colleges, Lahore Division</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="flex gap-2">
+              <button class="btn btn-success" style="flex:1">✓ Mark resolved</button>
+              <button class="btn btn-secondary" style="flex:1">↑ Escalate now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== RESOLVED ===================== -->
+      <div class="tab-panel" id="ctab-resolved" style="display:none">
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="grid-toolbar">
+            <div class="toolbar-search"><span>🔍</span><input type="text" placeholder="Search resolved complaints…"/></div>
+            <div class="ml-auto" style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-sm">⬇ Export</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Ticket No.</th><th>Category</th><th>Filed by</th><th>Resolved on</th><th>Resolution time</th><th>SLA</th></tr></thead>
+              <tbody>
+                <tr><td class="font-mono">CMP-2026-0391</td><td>Fee Dispute</td><td>Parent</td><td>14 Jun 2026</td><td>2 days</td><td><span class="badge badge-success">Within SLA</span></td></tr>
+                <tr><td class="font-mono">CMP-2026-0387</td><td>Transport</td><td>Parent</td><td>11 Jun 2026</td><td>5 days</td><td><span class="badge badge-success">Within SLA</span></td></tr>
+                <tr><td class="font-mono">CMP-2026-0382</td><td>Facilities</td><td>Student</td><td>9 Jun 2026</td><td>1 day</td><td><span class="badge badge-success">Within SLA</span></td></tr>
+                <tr><td class="font-mono">CMP-2026-0376</td><td>Faculty Conduct</td><td>Student</td><td>5 Jun 2026</td><td>9 days</td><td><span class="badge badge-danger">Breached</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span class="text-muted text-sm">Showing 1–4 of 47 resolved</span>
+            <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+              <button class="page-btn">←</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">→</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== ESCALATED ===================== -->
+      <div class="tab-panel" id="ctab-escalated" style="display:none">
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Ticket No.</th><th>Category</th><th>Escalated to</th><th>Days overdue</th><th>Current status</th></tr></thead>
+              <tbody>
+                <tr><td class="font-mono">CMP-2026-0412</td><td>Faculty Conduct</td><td>DDC, District Lahore</td><td style="color:var(--color-danger-text)">2 days</td><td><span class="badge badge-danger">Under DDC review</span></td></tr>
+                <tr><td class="font-mono">CMP-2026-0388</td><td>Hostel Facilities</td><td>DDC, District Lahore</td><td style="color:var(--color-danger-text)">5 days</td><td><span class="badge badge-warning">Awaiting DEC inquiry</span></td></tr>
+                <tr><td class="font-mono">CMP-2026-0371</td><td>Harassment</td><td>DEC, Lahore Division</td><td style="color:var(--color-danger-text)">11 days</td><td><span class="badge badge-danger">Formal inquiry ongoing</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="stub-note" style="margin:14px">Complaints auto-escalate one tier whenever they remain unresolved past the category's SLA — see Categories & SLA tab.</p>
+        </div>
+      </div>
+
+      <!-- ===================== CATEGORIES & SLA ===================== -->
+      <div class="tab-panel" id="ctab-categories" style="display:none">
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Category</th><th>Default severity</th><th>SLA (College Admin)</th><th>Auto-escalates to</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td style="font-weight:500">Harassment / Misconduct</td><td><span class="badge badge-danger">Critical</span></td><td>72 hours</td><td>DDC → DEC</td><td><span class="badge badge-success">Active</span></td></tr>
+                <tr><td style="font-weight:500">Faculty Conduct</td><td><span class="badge badge-warning">High</span></td><td>5 days</td><td>DDC</td><td><span class="badge badge-success">Active</span></td></tr>
+                <tr><td style="font-weight:500">Hostel Facilities</td><td><span class="badge badge-warning">High</span></td><td>5 days</td><td>DDC</td><td><span class="badge badge-success">Active</span></td></tr>
+                <tr><td style="font-weight:500">Fee Dispute</td><td><span class="badge badge-info">Medium</span></td><td>7 days</td><td>DDC</td><td><span class="badge badge-success">Active</span></td></tr>
+                <tr><td style="font-weight:500">Library / Lab Access</td><td><span class="badge badge-info">Medium</span></td><td>7 days</td><td>—</td><td><span class="badge badge-success">Active</span></td></tr>
+                <tr><td style="font-weight:500">Transport Delay</td><td><span class="badge badge-neutral">Low</span></td><td>10 days</td><td>—</td><td><span class="badge badge-success">Active</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="stub-note" style="margin:14px">SLA clocks and escalation chains are configured here once and apply automatically to every complaint filed under that category.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  function switchCTab(name, el) {
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+    el.classList.add('active');
+    document.getElementById('ctab-' + name).style.display = 'block';
+  }
+
+  const ticketData = {
+    t1: { icon:'⚠️', iconBg:'var(--color-danger-bg)', title:'CMP-2026-0412 · Harassment complaint', filer:'Filed by Parent — Class XI, Section B', cat:'Faculty Conduct', sevHtml:'<span class="badge badge-danger">Critical</span>', date:'15 Jun 2026, 9:02 AM', slaHtml:'Breached — 2 days overdue', slaColor:'var(--color-danger-text)', desc:'Parent alleges inappropriate remarks by a faculty member during a parent-teacher meeting. Requests confidential investigation.' },
+    t2: { icon:'👨‍🏫', iconBg:'var(--color-warning-bg)', title:'CMP-2026-0409 · Faculty conduct', filer:'Filed by Student — BS Computer Science, 4th Sem', cat:'Faculty Conduct', sevHtml:'<span class="badge badge-warning">High</span>', date:'17 Jun 2026, 2:15 PM', slaHtml:'1 day remaining', slaColor:'var(--color-warning-text)', desc:'Student reports repeated unfair grading and requests review of mid-term assessment by a second examiner.' },
+    t3: { icon:'💳', iconBg:'var(--color-info-bg)', title:'CMP-2026-0405 · Fee dispute', filer:'Filed by Parent — ADP Commerce, 2nd Year', cat:'Fee Dispute', sevHtml:'<span class="badge badge-info">Medium</span>', date:'16 Jun 2026, 10:48 AM', slaHtml:'4 days remaining', slaColor:'var(--color-success-text)', desc:'Parent disputes a late-payment surcharge, citing a fee challan system error during the original payment window.' },
+    t4: { icon:'🏠', iconBg:'var(--color-warning-bg)', title:'CMP-2026-0401 · Hostel facilities', filer:'Filed by Student — Hostel Block C, Room 214', cat:'Hostel Facilities', sevHtml:'<span class="badge badge-warning">High</span>', date:'15 Jun 2026, 6:20 PM', slaHtml:'2 days remaining', slaColor:'var(--color-warning-text)', desc:'Persistent water supply issue in Block C, third report this month. Requests urgent maintenance.' },
+    t5: { icon:'🚌', iconBg:'var(--bg-tertiary)', title:'CMP-2026-0398 · Transport route delay', filer:'Filed by Parent — Route 7, Wahdat Road', cat:'Transport Delay', sevHtml:'<span class="badge badge-neutral">Low</span>', date:'14 Jun 2026, 8:05 AM', slaHtml:'6 days remaining', slaColor:'var(--color-success-text)', desc:'Route 7 bus has been arriving 20+ minutes late for the past week, causing students to miss the first period.' },
+    t6: { icon:'📚', iconBg:'var(--color-info-bg)', title:'CMP-2026-0393 · Library access issue', filer:'Filed by Faculty — Department of Mathematics', cat:'Library / Lab Access', sevHtml:'<span class="badge badge-info">Medium</span>', date:'13 Jun 2026, 1:30 PM', slaHtml:'3 days remaining', slaColor:'var(--color-success-text)', desc:'Faculty member unable to access reserved reference section for the past two visits due to a key-card system fault.' }
+  };
+
+  function selectTicket(row, key) {
+    document.querySelectorAll('#ctab-open .ticket-row').forEach(r => r.classList.remove('selected'));
+    row.classList.add('selected');
+    const d = ticketData[key];
+    if (!d) return;
+    document.getElementById('ticketIcon').textContent = d.icon;
+    document.getElementById('ticketIcon').style.background = d.iconBg;
+    document.getElementById('ticketTitle').textContent = d.title;
+    document.getElementById('ticketFiler').textContent = d.filer;
+    document.getElementById('ticketCat').textContent = d.cat;
+    document.getElementById('ticketSev').innerHTML = d.sevHtml;
+    document.getElementById('ticketDate').textContent = d.date;
+    document.getElementById('ticketSla').textContent = d.slaHtml;
+    document.getElementById('ticketSla').style.color = d.slaColor;
+    document.getElementById('ticketDesc').textContent = d.desc;
+  }
+</script>
+
+</body>
+</html>
