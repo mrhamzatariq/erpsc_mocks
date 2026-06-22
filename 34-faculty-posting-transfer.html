@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Faculty Posting & Transfer — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar { display:flex; gap:0; border-bottom:1px solid var(--border-light); margin-bottom:var(--space-5); overflow-x:auto; }
+  .tab-item { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:all .15s; }
+  .tab-item.active { color:var(--brand-600); border-bottom-color:var(--brand-600); }
+  .tab-item:hover:not(.active) { color:var(--text-primary); background:var(--bg-secondary); }
+
+  .req-row { display:flex; align-items:center; gap:12px; padding:11px 12px; border-bottom:1px solid var(--border-light); font-size:13px; cursor:pointer; transition:background .12s; }
+  .req-row:hover { background:var(--bg-secondary); }
+  .req-row.selected { background:var(--brand-50); }
+  .req-row:last-child { border-bottom:none; }
+  .move-path { display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-secondary); }
+  .move-path .col { font-weight:500; color:var(--text-primary); }
+  .move-arrow { color:var(--text-muted); }
+
+  .faculty-card-mini { display:flex; align-items:center; gap:12px; padding-bottom:14px; margin-bottom:14px; border-bottom:1px solid var(--border-light); }
+  .detail-row { display:flex; padding:7px 0; border-bottom:1px solid var(--border-light); font-size:13px; gap:8px; }
+  .detail-row:last-child { border-bottom:none; }
+  .detail-key { color:var(--text-muted); width:150px; flex-shrink:0; }
+  .vacancy-bar-row { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border-light); font-size:13px; }
+  .vacancy-bar-row:last-child { border-bottom:none; }
+  .vacancy-bar { flex:1; height:6px; border-radius:var(--radius-full); background:var(--bg-tertiary); overflow:hidden; }
+  .vacancy-bar-fill { height:100%; border-radius:var(--radius-full); background:var(--color-warning-text); }
+  .stub-note { font-size:12px; color:var(--text-muted); background:var(--bg-secondary); border:1px dashed var(--border-medium); border-radius:var(--radius-md); padding:10px 14px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">DDC</div>
+      <div class="role-sub">District Admin — Lahore</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="20-dpi-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">Faculty</div>
+      <a class="nav-item" href="24-faculty-profile.html"><span class="nav-icon">👨‍🏫</span><span>Faculty Profiles</span></a>
+      <a class="nav-item active" href="#"><span class="nav-icon">🔁</span><span>Posting & Transfer</span><span class="nav-badge warn">38</span></a>
+      <a class="nav-item" href="07-approval-workflow.html"><span class="nav-icon">📝</span><span>Approval Workflow</span></a>
+
+      <div class="sidebar-section-label">System</div>
+      <a class="nav-item" href="31-system-configuration.html"><span class="nav-icon">⚙️</span><span>System Configuration</span></a>
+      <a class="nav-item" href="10-reports-analytics.html"><span class="nav-icon">📊</span><span>Reports</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">AR</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Asma Riaz</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">DDC, District Lahore</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Faculty</span><span>›</span>
+        <span class="crumb-active">Posting & Transfer</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search by faculty name, CNIC, college…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">AR</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Faculty Posting & Transfer</h1>
+          <p>District Lahore · Review transfer requests, issue posting orders, and track vacant sanctioned posts</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">⬇ Export</button>
+          <button class="btn btn-primary">+ Initiate posting order</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="grid grid-4 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Pending requests</div>
+          <div class="metric-value" style="color:var(--color-warning-text)">38</div>
+          <div class="metric-delta" style="color:var(--color-warning-text)">Awaiting your review</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Approved this month</div>
+          <div class="metric-value" style="color:var(--color-success-text)">112</div>
+          <div class="metric-delta delta-up">▲ 14% vs last month</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Vacant sanctioned posts</div>
+          <div class="metric-value">3,260</div>
+          <div class="metric-delta delta-neutral">District-wide</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Avg. processing time</div>
+          <div class="metric-value">6.2 <span style="font-size:13px;font-weight:500;color:var(--text-muted)">days</span></div>
+          <div class="metric-delta delta-up">▲ Faster than last quarter</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active" data-tab="requests" onclick="switchFTab('requests', this)">Transfer Requests</div>
+        <div class="tab-item" data-tab="orders" onclick="switchFTab('orders', this)">Posting Orders</div>
+        <div class="tab-item" data-tab="vacant" onclick="switchFTab('vacant', this)">Vacant Posts</div>
+        <div class="tab-item" data-tab="seniority" onclick="switchFTab('seniority', this)">Seniority List</div>
+      </div>
+
+      <!-- ===================== TRANSFER REQUESTS ===================== -->
+      <div class="tab-panel" id="ftab-requests">
+        <div class="grid" style="grid-template-columns:1fr 360px;gap:16px">
+
+          <!-- Request list -->
+          <div class="card" style="padding:0;overflow:hidden">
+            <div class="grid-toolbar">
+              <div class="toolbar-search">
+                <span>🔍</span>
+                <input type="text" placeholder="Search requests…"/>
+              </div>
+              <span class="filter-chip">Status: Pending <span class="remove">×</span></span>
+              <span class="filter-chip">Designation: All <span class="remove">×</span></span>
+              <div class="ml-auto" style="display:flex;gap:6px">
+                <button class="btn btn-secondary btn-sm">Columns ▾</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="req-row selected" onclick="selectReq(this,'sadia')">
+                <div class="avatar sm">SN</div>
+                <div style="flex:1">
+                  <div style="font-weight:600">Sadia Naz</div>
+                  <div class="move-path">
+                    <span class="col">GC Township, Lahore</span><span class="move-arrow">→</span><span class="col">GC Wahdat Road, Lahore</span>
+                  </div>
+                </div>
+                <span class="badge badge-info">Assistant Professor</span>
+                <span class="badge badge-warning">Pending</span>
+              </div>
+              <div class="req-row" onclick="selectReq(this,'kamran')">
+                <div class="avatar sm">KM</div>
+                <div style="flex:1">
+                  <div style="font-weight:600">Kamran Mehmood</div>
+                  <div class="move-path">
+                    <span class="col">GC Shahdara</span><span class="move-arrow">→</span><span class="col">GC Model Town</span>
+                  </div>
+                </div>
+                <span class="badge badge-info">Lecturer</span>
+                <span class="badge badge-warning">Pending</span>
+              </div>
+              <div class="req-row" onclick="selectReq(this,'farah')">
+                <div class="avatar sm">FB</div>
+                <div style="flex:1">
+                  <div style="font-weight:600">Farah Batool</div>
+                  <div class="move-path">
+                    <span class="col">GC Wahdat Road</span><span class="move-arrow">→</span><span class="col">GC Garhi Shahu</span>
+                  </div>
+                </div>
+                <span class="badge badge-info">Associate Professor</span>
+                <span class="badge badge-success">Approved</span>
+              </div>
+              <div class="req-row" onclick="selectReq(this,'imran')">
+                <div class="avatar sm">IS</div>
+                <div style="flex:1">
+                  <div style="font-weight:600">Imran Sheikh</div>
+                  <div class="move-path">
+                    <span class="col">GC Township</span><span class="move-arrow">→</span><span class="col">GC Garhi Shahu</span>
+                  </div>
+                </div>
+                <span class="badge badge-info">Lecturer</span>
+                <span class="badge badge-danger">Rejected</span>
+              </div>
+              <div class="req-row" onclick="selectReq(this,'nadia')">
+                <div class="avatar sm">NA</div>
+                <div style="flex:1">
+                  <div style="font-weight:600">Nadia Aslam</div>
+                  <div class="move-path">
+                    <span class="col">GC Model Town</span><span class="move-arrow">→</span><span class="col">GC Wahdat Road</span>
+                  </div>
+                </div>
+                <span class="badge badge-info">Professor</span>
+                <span class="badge badge-warning">Pending</span>
+              </div>
+              <div class="req-row" onclick="selectReq(this,'usman')">
+                <div class="avatar sm">UT</div>
+                <div style="flex:1">
+                  <div style="font-weight:600">Usman Tariq</div>
+                  <div class="move-path">
+                    <span class="col">GC Garhi Shahu</span><span class="move-arrow">→</span><span class="col">GC Shahdara</span>
+                  </div>
+                </div>
+                <span class="badge badge-info">Assistant Professor</span>
+                <span class="badge badge-warning">Pending</span>
+              </div>
+            </div>
+
+            <div class="pagination">
+              <span class="text-muted text-sm">Showing 1–6 of 38 requests</span>
+              <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+                <button class="page-btn">←</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">→</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detail: faculty + approval timeline -->
+          <div class="card">
+            <div class="faculty-card-mini">
+              <div class="avatar lg" id="reqAvatar">SN</div>
+              <div>
+                <div style="font-weight:600;font-size:14px" id="reqName">Sadia Naz</div>
+                <div class="text-muted text-sm" id="reqDesig">Assistant Professor · Department of Mathematics</div>
+                <div class="text-muted text-sm font-mono">FAC-GCT-0412</div>
+              </div>
+            </div>
+
+            <div class="detail-row"><span class="detail-key">Current posting</span><span id="reqFrom" style="font-weight:500">GC Township, Lahore</span></div>
+            <div class="detail-row"><span class="detail-key">Requested posting</span><span id="reqTo" style="font-weight:500">GC Wahdat Road, Lahore</span></div>
+            <div class="detail-row"><span class="detail-key">Reason</span><span id="reqReason">Spouse relocation — supporting documents attached</span></div>
+            <div class="detail-row"><span class="detail-key">Years at current post</span><span id="reqYears">4 years, 2 months</span></div>
+
+            <div class="divider"></div>
+            <div class="card-title mb-3">Approval timeline</div>
+            <div class="timeline" id="reqTimeline">
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot done">✓</div><div class="tl-line done"></div></div>
+                <div class="tl-content">
+                  <div class="tl-title">Request submitted</div>
+                  <div class="tl-meta">Sadia Naz · 3 Jun 2026, 10:14 AM</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot done">✓</div><div class="tl-line done"></div></div>
+                <div class="tl-content">
+                  <div class="tl-title">Principal endorsement — GC Township</div>
+                  <div class="tl-meta">Principal, GC Township · 5 Jun 2026, 3:40 PM</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot active">→</div><div class="tl-line pending"></div></div>
+                <div class="tl-content">
+                  <div class="tl-title">DDC review <span class="badge badge-warning" style="margin-left:8px">In progress</span></div>
+                  <div class="tl-meta">DDC, District Lahore · Assigned to you · Awaiting 2 days</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot pending">4</div><div class="tl-line pending"></div></div>
+                <div class="tl-content">
+                  <div class="tl-title" style="color:var(--text-muted)">Directorate (DEC) approval</div>
+                  <div class="tl-meta">Directorate of Colleges, Lahore Division</div>
+                </div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-left"><div class="tl-dot pending">5</div></div>
+                <div class="tl-content">
+                  <div class="tl-title" style="color:var(--text-muted)">DPI Centre — posting order issued</div>
+                  <div class="tl-meta">DPI Centre Office</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+            <div class="flex gap-2">
+              <button class="btn btn-success" style="flex:1">✓ Approve & forward</button>
+              <button class="btn btn-danger" style="flex:1">✕ Reject</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== POSTING ORDERS ===================== -->
+      <div class="tab-panel" id="ftab-orders" style="display:none">
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="grid-toolbar">
+            <div class="toolbar-search"><span>🔍</span><input type="text" placeholder="Search posting orders…"/></div>
+            <div class="ml-auto" style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-sm">⬇ Export</button>
+              <button class="btn btn-primary btn-sm">+ New posting order</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Order No.</th><th>Faculty</th><th>Designation</th><th>From</th><th>To</th><th>Issued</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td class="font-mono">PO-2026-3381</td><td>Farah Batool</td><td>Associate Professor</td><td>GC Wahdat Road</td><td>GC Garhi Shahu</td><td>14 Jun 2026</td><td><span class="badge badge-success">Issued</span></td></tr>
+                <tr><td class="font-mono">PO-2026-3380</td><td>Bilal Aslam</td><td>Lecturer</td><td>GC Model Town</td><td>GC Shahdara</td><td>12 Jun 2026</td><td><span class="badge badge-success">Issued</span></td></tr>
+                <tr><td class="font-mono">PO-2026-3379</td><td>Tahira Yasmin</td><td>Professor</td><td>GC Garhi Shahu</td><td>GC Township</td><td>10 Jun 2026</td><td><span class="badge badge-success">Issued</span></td></tr>
+                <tr><td class="font-mono">PO-2026-3378</td><td>Imran Sheikh</td><td>Lecturer</td><td>GC Township</td><td>GC Garhi Shahu</td><td>8 Jun 2026</td><td><span class="badge badge-danger">Rejected</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span class="text-muted text-sm">Showing 1–4 of 112 orders</span>
+            <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+              <button class="page-btn">←</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">→</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== VACANT POSTS ===================== -->
+      <div class="tab-panel" id="ftab-vacant" style="display:none">
+        <div class="grid grid-2" style="gap:16px">
+          <div class="card">
+            <div class="card-title mb-3">Vacant posts by designation — District Lahore</div>
+            <div class="vacancy-bar-row"><span style="width:140px">Assistant Professor</span><div class="vacancy-bar"><div class="vacancy-bar-fill" style="width:62%"></div></div><span class="font-mono text-sm">412</span></div>
+            <div class="vacancy-bar-row"><span style="width:140px">Lecturer</span><div class="vacancy-bar"><div class="vacancy-bar-fill" style="width:48%"></div></div><span class="font-mono text-sm">298</span></div>
+            <div class="vacancy-bar-row"><span style="width:140px">Associate Professor</span><div class="vacancy-bar"><div class="vacancy-bar-fill" style="width:31%"></div></div><span class="font-mono text-sm">96</span></div>
+            <div class="vacancy-bar-row"><span style="width:140px">Professor</span><div class="vacancy-bar"><div class="vacancy-bar-fill" style="width:18%"></div></div><span class="font-mono text-sm">34</span></div>
+            <div class="vacancy-bar-row"><span style="width:140px">Librarian</span><div class="vacancy-bar"><div class="vacancy-bar-fill" style="width:9%"></div></div><span class="font-mono text-sm">12</span></div>
+          </div>
+          <div class="card">
+            <div class="card-title mb-3">Vacant posts by department</div>
+            <div class="vacancy-bar-row"><span style="width:140px">Mathematics</span><div class="vacancy-bar"><div class="vacancy-bar-fill" style="width:54%"></div></div><span class="font-mono text-sm">154</span></div>
+            <div class="vacancy-bar-row"><span style="width:140px">English</span><div class="vacancy-bar"><div class="vacancy-bar-fill" style="width:41%"></div></div><span class="font-mono text-sm">118</span></div>
+            <div class="vacancy-bar-row"><span style="width:140px">Physics</span><div class="vacancy-bar"><div class="vacancy-bar-fill" style="width:36%"></div></div><span class="font-mono text-sm">104</span></div>
+            <div class="vacancy-bar-row"><span style="width:140px">Computer Science / IT</span><div class="vacancy-bar"><div class="vacancy-bar-fill" style="width:33%"></div></div><span class="font-mono text-sm">96</span></div>
+            <div class="vacancy-bar-row"><span style="width:140px">Chemistry</span><div class="vacancy-bar"><div class="vacancy-bar-fill" style="width:29%"></div></div><span class="font-mono text-sm">84</span></div>
+            <p class="stub-note mt-3">Figures roll up from the sanctioned / filled / vacant counts maintained per department in System Configuration.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== SENIORITY LIST ===================== -->
+      <div class="tab-panel" id="ftab-seniority" style="display:none">
+        <div class="card">
+          <p class="stub-note">Seniority list (designation-wise, province-wide ranking used for promotion & posting precedence) continues in a follow-up screen.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  function switchFTab(name, el) {
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+    el.classList.add('active');
+    document.getElementById('ftab-' + name).style.display = 'block';
+  }
+
+  const reqData = {
+    sadia: { initials:'SN', name:'Sadia Naz', desig:'Assistant Professor · Department of Mathematics', from:'GC Township, Lahore', to:'GC Wahdat Road, Lahore', reason:'Spouse relocation — supporting documents attached', years:'4 years, 2 months' },
+    kamran:{ initials:'KM', name:'Kamran Mehmood', desig:'Lecturer · Department of Computer Science / IT', from:'GC Shahdara', to:'GC Model Town', reason:'Medical grounds — attached medical board certificate', years:'2 years, 7 months' },
+    farah: { initials:'FB', name:'Farah Batool', desig:'Associate Professor · Department of English', from:'GC Wahdat Road', to:'GC Garhi Shahu', reason:'Mutual transfer with Bilal Aslam', years:'6 years, 1 month' },
+    imran: { initials:'IS', name:'Imran Sheikh', desig:'Lecturer · Department of Physics', from:'GC Township', to:'GC Garhi Shahu', reason:'Personal preference — rejected, insufficient grounds', years:'1 year, 9 months' },
+    nadia: { initials:'NA', name:'Nadia Aslam', desig:'Professor · Department of Chemistry', from:'GC Model Town', to:'GC Wahdat Road', reason:'Seniority-based request on vacancy announcement', years:'9 years, 4 months' },
+    usman: { initials:'UT', name:'Usman Tariq', desig:'Assistant Professor · Department of Urdu', from:'GC Garhi Shahu', to:'GC Shahdara', reason:'Hardship — daily commute distance exceeds 40km', years:'3 years, 3 months' }
+  };
+
+  function selectReq(row, key) {
+    document.querySelectorAll('#ftab-requests .req-row').forEach(r => r.classList.remove('selected'));
+    row.classList.add('selected');
+    const d = reqData[key];
+    if (!d) return;
+    document.getElementById('reqAvatar').textContent = d.initials;
+    document.getElementById('reqName').textContent = d.name;
+    document.getElementById('reqDesig').textContent = d.desig;
+    document.getElementById('reqFrom').textContent = d.from;
+    document.getElementById('reqTo').textContent = d.to;
+    document.getElementById('reqReason').textContent = d.reason;
+    document.getElementById('reqYears').textContent = d.years;
+  }
+</script>
+
+</body>
+</html>

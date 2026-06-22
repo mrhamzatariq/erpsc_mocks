@@ -9,60 +9,7 @@
     <!-- Design System -->
     <link rel="stylesheet" href="design-system.css">
 
-    <!-- Select2 CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
-
     <style>
-        /* Select2 theme overrides to match design system */
-        .select2-container--default .select2-selection--single {
-            height: 36px;
-            border: 1px solid var(--border-medium);
-            border-radius: var(--radius-md);
-            background: var(--bg-surface);
-            display: flex;
-            align-items: center;
-            font-size: 13px;
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            color: var(--text-primary);
-            line-height: 34px;
-            padding-left: 11px;
-            font-size: 13px;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 34px;
-        }
-
-        .select2-container--default .select2-results__option--highlighted[aria-selected] {
-            background-color: var(--brand-500);
-        }
-
-        .select2-container--focus .select2-selection--single,
-        .select2-container--default.select2-container--open .select2-selection--single {
-            border-color: var(--brand-500);
-            box-shadow: 0 0 0 3px rgba(107, 99, 212, 0.12);
-            outline: none;
-        }
-
-        .select2-dropdown {
-            border: 1px solid var(--border-medium);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md);
-            font-size: 13px;
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-
-        .select2-search--dropdown .select2-search__field {
-            border: 1px solid var(--border-medium);
-            border-radius: var(--radius-sm);
-            padding: 6px 10px;
-            font-size: 13px;
-            font-family: inherit;
-        }
-
         /* Page layout */
         body {
             padding: var(--space-6);
@@ -330,7 +277,7 @@
 
                 <div class="form-group">
                     <label class="form-label">Academic Session</label>
-                    <input type="text" id="academicSession" class="form-input" value="2026-25" disabled>
+                    <input type="text" id="academicSession" class="form-input" value="2025-26" disabled>
                 </div>
 
             </div>
@@ -2292,7 +2239,6 @@
                 <div class="form-group">
                     <label class="form-label">Department</label>
                     <select id="department" class="form-select">
-                        <option>Agriculture</option>
                         <option>Arabic</option>
                         <option>Biology</option>
                         <option>Botany</option>
@@ -2400,18 +2346,8 @@
 
     </div>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
-
+    <!-- Scripts (zero-dependency — native selects support type-ahead search) -->
     <script>
-        $(document).ready(function () {
-            $('#programName').select2({ placeholder: "Select Program", width: '100%' });
-            $('#major').select2({ placeholder: "Select Major", width: '100%' });
-            $('#subject').select2({ placeholder: "Select Subject", width: '100%' });
-            $('#department').select2({ placeholder: "Select Department", width: '100%' });
-        });
-
         let selectedProgram = "";
         let subjectCount = 0;
 
@@ -2492,9 +2428,6 @@
             </div>
         `;
             container.appendChild(row);
-            if (window.jQuery) {
-                $(row).find("select").select2({ width: "100%" });
-            }
         }
 
         document.addEventListener("DOMContentLoaded", function () {

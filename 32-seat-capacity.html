@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seat Capacity — EduGov ERP</title>
+  <link rel="stylesheet" href="design-system.css" />
+  <style>
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border-light);
+      margin-bottom: var(--space-5)
+    }
+
+    .tab-item {
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap
+    }
+
+    .tab-item.active {
+      color: var(--brand-600);
+      border-bottom-color: var(--brand-600)
+    }
+
+    .seat-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 13px
+    }
+
+    .seat-row:hover {
+      background: var(--bg-secondary)
+    }
+
+    .seat-row:last-child {
+      border-bottom: none
+    }
+
+    .seat-inline-input {
+      width: 70px;
+      padding: 5px 8px;
+      font-size: 13px;
+      text-align: center;
+      border: 1px solid var(--border-medium);
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface);
+      outline: none
+    }
+
+    .seat-inline-input:focus {
+      border-color: var(--brand-500);
+      box-shadow: 0 0 0 2px rgba(107, 99, 212, .1)
+    }
+
+    .occ-mini {
+      height: 5px;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      background: var(--bg-tertiary);
+      width: 80px
+    }
+
+    .occ-mini-fill {
+      height: 100%;
+      border-radius: var(--radius-full)
+    }
+
+    .district-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 13px
+    }
+
+    .district-row:last-child {
+      border-bottom: none
+    }
+
+    .summary-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      padding: 12px 14px
+    }
+
+    .summary-card .sc-val {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 2px
+    }
+
+    .summary-card .sc-lbl {
+      font-size: 11px;
+      color: var(--text-muted)
+    }
+
+    .request-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 13px
+    }
+
+    .request-row:last-child {
+      border-bottom: none
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-mark">E</div>
+        <div>
+          <div class="sidebar-logo-text">EduGov ERP</div>
+          <div class="sidebar-logo-sub">Punjab HED</div>
+        </div>
+      </div>
+      <div class="sidebar-role-badge">
+        <div class="role-name">HED Super Admin</div>
+        <div class="role-sub">Provincial Administration</div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Overview</div>
+        <a class="nav-item" href="01-hed-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+        <div class="sidebar-section-label">Academics</div>
+        <a class="nav-item" href="17-academic-structure.html"><span class="nav-icon">📚</span><span>Academic
+            Structure</span></a>
+        <a class="nav-item active" href="#"><span class="nav-icon">💺</span><span>Seat Capacity</span></a>
+        <a class="nav-item" href="27-academic-calendar.html"><span class="nav-icon">📅</span><span>Academic
+            Calendar</span></a>
+        <a class="nav-item" href="05-admissions-grid.html"><span class="nav-icon">🎓</span><span>Admissions</span></a>
+        <div class="sidebar-section-label">System</div>
+        <a class="nav-item" href="10-reports-analytics.html"><span class="nav-icon">📊</span><span>Reports</span></a>
+        <a class="nav-item" href="18-user-management.html"><span class="nav-icon">🔐</span><span>User
+            Management</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-user">
+          <div class="avatar sm">SA</div>
+          <div class="user-info">
+            <div style="font-size:12px;font-weight:500;color:#fff;">Super Admin</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.45)">admin@hed.punjab.gov.pk</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-area">
+      <header class="topbar">
+        <div class="breadcrumb">
+          <span>Academics</span><span>›</span>
+          <span class="crumb-active">Seat Capacity</span>
+        </div>
+        <div class="topbar-search" style="margin-left:16px">
+          <span>🔍</span>
+          <span>Search colleges, programs…</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+          <div class="avatar sm">SA</div>
+        </div>
+      </header>
+
+      <main class="page-body">
+
+        <div class="page-header">
+          <div class="page-header-left">
+            <h1>Seat Capacity Management</h1>
+            <p>Province-wide seat allocation, program intake limits, and open merit capacity</p>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn-secondary">⬇ Export</button>
+            <button class="btn btn-secondary">📋 Pending requests</button>
+            <button class="btn btn-primary">+ Update capacity</button>
+          </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="grid grid-5 mb-6" style="gap:12px">
+          <div class="metric-card">
+            <div class="metric-label">Total seats (province)</div>
+            <div class="metric-value">4,49,200</div>
+            <div class="metric-delta delta-neutral">All programs</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Seats filled</div>
+            <div class="metric-value" style="color:var(--color-success-text)">3,18,450</div>
+            <div class="metric-delta delta-up">▲ 70.9% occupancy</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Seats vacant</div>
+            <div class="metric-value">1,30,750</div>
+            <div class="metric-delta delta-neutral">29.1% available</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Increase requests</div>
+            <div class="metric-value" style="color:var(--color-warning-text)">47</div>
+            <div class="metric-delta" style="color:var(--color-warning-text)">Pending HED review</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Over-capacity colleges</div>
+            <div class="metric-value" style="color:var(--color-danger-text)">12</div>
+            <div class="metric-delta" style="color:var(--color-danger-text)">Exceeding limit</div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tab-bar">
+          <div class="tab-item active">By program</div>
+          <div class="tab-item">By college</div>
+          <div class="tab-item">By district</div>
+          <div class="tab-item">Increase requests</div>
+          <div class="tab-item">Capacity history</div>
+        </div>
+
+        <!-- Main grid -->
+        <div class="grid" style="grid-template-columns:1.6fr 1fr;gap:16px">
+
+          <!-- Seat capacity table by program -->
+          <div class="card" style="padding:0;overflow:hidden">
+            <div
+              style="padding:14px 16px;border-bottom:1px solid var(--border-light);display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div class="card-title">Seat capacity by program</div>
+                <div class="card-subtitle">Province-wide · AY 2024–25 · Inline editable</div>
+              </div>
+              <div style="display:flex;gap:6px">
+                <button class="btn btn-ghost btn-sm">Filter ▾</button>
+                <button class="btn btn-primary btn-sm">Save changes</button>
+              </div>
+            </div>
+
+            <!-- Table header -->
+            <div
+              style="display:grid;grid-template-columns:1.4fr 80px 80px 80px 80px 100px 80px;gap:8px;padding:8px 12px;background:var(--bg-secondary);font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border-light)">
+              <span>Program</span>
+              <span style="text-align:center">Colleges</span>
+              <span style="text-align:center">Capacity/col</span>
+              <span style="text-align:center">Total seats</span>
+              <span style="text-align:center">Filled</span>
+              <span style="text-align:center">Occupancy</span>
+              <span style="text-align:center">Action</span>
+            </div>
+
+            <div class="seat-row">
+              <div style="flex:1.4">
+                <div style="font-weight:600">FA / F.Sc (All streams)</div>
+                <div style="font-size:11px;color:var(--text-muted)">Intermediate · Annual</div>
+              </div>
+              <div style="width:80px;text-align:center">1,404</div>
+              <div style="width:80px;text-align:center"><input class="seat-inline-input" type="number" value="240" />
+              </div>
+              <div style="width:80px;text-align:center;font-weight:600">3,36,960</div>
+              <div style="width:80px;text-align:center;color:var(--color-success-text);font-weight:600">2,44,120</div>
+              <div style="width:100px;text-align:center">
+                <div style="font-size:12px;font-weight:600;color:var(--color-success-text)">72.4%</div>
+                <div class="occ-mini" style="margin:3px auto 0">
+                  <div class="occ-mini-fill" style="width:72%;background:var(--color-success-text)"></div>
+                </div>
+              </div>
+              <div style="width:80px;text-align:center"><button class="btn btn-ghost btn-sm"
+                  style="font-size:11px">Edit</button></div>
+            </div>
+
+            <div class="seat-row">
+              <div style="flex:1.4">
+                <div style="font-weight:600">BS Computer Science</div>
+                <div style="font-size:11px;color:var(--text-muted)">Bachelor · 4-year · Semester</div>
+              </div>
+              <div style="width:80px;text-align:center">247</div>
+              <div style="width:80px;text-align:center"><input class="seat-inline-input" type="number" value="60" />
+              </div>
+              <div style="width:80px;text-align:center;font-weight:600">14,820</div>
+              <div style="width:80px;text-align:center;color:var(--color-success-text);font-weight:600">13,140</div>
+              <div style="width:100px;text-align:center">
+                <div style="font-size:12px;font-weight:600;color:var(--color-success-text)">88.7%</div>
+                <div class="occ-mini" style="margin:3px auto 0">
+                  <div class="occ-mini-fill" style="width:89%;background:var(--color-success-text)"></div>
+                </div>
+              </div>
+              <div style="width:80px;text-align:center"><button class="btn btn-ghost btn-sm"
+                  style="font-size:11px">Edit</button></div>
+            </div>
+
+            <div class="seat-row">
+              <div style="flex:1.4">
+                <div style="font-weight:600">B.Sc (Hons) Physics</div>
+                <div style="font-size:11px;color:var(--text-muted)">Bachelor · 4-year · Semester</div>
+              </div>
+              <div style="width:80px;text-align:center">198</div>
+              <div style="width:80px;text-align:center"><input class="seat-inline-input" type="number" value="50" />
+              </div>
+              <div style="width:80px;text-align:center;font-weight:600">9,900</div>
+              <div style="width:80px;text-align:center;color:var(--color-success-text);font-weight:600">8,316</div>
+              <div style="width:100px;text-align:center">
+                <div style="font-size:12px;font-weight:600;color:var(--color-success-text)">84.0%</div>
+                <div class="occ-mini" style="margin:3px auto 0">
+                  <div class="occ-mini-fill" style="width:84%;background:var(--color-success-text)"></div>
+                </div>
+              </div>
+              <div style="width:80px;text-align:center"><button class="btn btn-ghost btn-sm"
+                  style="font-size:11px">Edit</button></div>
+            </div>
+
+            <div class="seat-row">
+              <div style="flex:1.4">
+                <div style="font-weight:600">B.Com (Hons)</div>
+                <div style="font-size:11px;color:var(--text-muted)">Bachelor · 4-year · Semester</div>
+              </div>
+              <div style="width:80px;text-align:center">312</div>
+              <div style="width:80px;text-align:center"><input class="seat-inline-input" type="number" value="80" />
+              </div>
+              <div style="width:80px;text-align:center;font-weight:600">24,960</div>
+              <div style="width:80px;text-align:center;color:var(--color-warning-text);font-weight:600">17,472</div>
+              <div style="width:100px;text-align:center">
+                <div style="font-size:12px;font-weight:600;color:var(--color-warning-text)">70.0%</div>
+                <div class="occ-mini" style="margin:3px auto 0">
+                  <div class="occ-mini-fill" style="width:70%;background:var(--color-warning-text)"></div>
+                </div>
+              </div>
+              <div style="width:80px;text-align:center"><button class="btn btn-ghost btn-sm"
+                  style="font-size:11px">Edit</button></div>
+            </div>
+
+            <div class="seat-row">
+              <div style="flex:1.4">
+                <div style="font-weight:600">M.A / M.Sc (various)</div>
+                <div style="font-size:11px;color:var(--text-muted)">Masters · 2-year · Annual</div>
+              </div>
+              <div style="width:80px;text-align:center">284</div>
+              <div style="width:80px;text-align:center"><input class="seat-inline-input" type="number" value="40" />
+              </div>
+              <div style="width:80px;text-align:center;font-weight:600">11,360</div>
+              <div style="width:80px;text-align:center;color:var(--color-danger-text);font-weight:600">5,452</div>
+              <div style="width:100px;text-align:center">
+                <div style="font-size:12px;font-weight:600;color:var(--color-danger-text)">48.0%</div>
+                <div class="occ-mini" style="margin:3px auto 0">
+                  <div class="occ-mini-fill" style="width:48%;background:var(--color-danger-text)"></div>
+                </div>
+              </div>
+              <div style="width:80px;text-align:center"><button class="btn btn-ghost btn-sm"
+                  style="font-size:11px">Edit</button></div>
+            </div>
+
+            <div class="seat-row">
+              <div style="flex:1.4">
+                <div style="font-weight:600">B.Ed (Primary)</div>
+                <div style="font-size:11px;color:var(--text-muted)">Bachelor · 2-year · Semester</div>
+              </div>
+              <div style="width:80px;text-align:center">88</div>
+              <div style="width:80px;text-align:center"><input class="seat-inline-input" type="number" value="50" />
+              </div>
+              <div style="width:80px;text-align:center;font-weight:600">4,400</div>
+              <div style="width:80px;text-align:center;color:var(--color-warning-text);font-weight:600">2,640</div>
+              <div style="width:100px;text-align:center">
+                <div style="font-size:12px;font-weight:600;color:var(--color-warning-text)">60.0%</div>
+                <div class="occ-mini" style="margin:3px auto 0">
+                  <div class="occ-mini-fill" style="width:60%;background:var(--color-warning-text)"></div>
+                </div>
+              </div>
+              <div style="width:80px;text-align:center"><button class="btn btn-ghost btn-sm"
+                  style="font-size:11px">Edit</button></div>
+            </div>
+
+            <div class="pagination">
+              <span class="text-muted text-sm">Showing 1–6 of 84 programs</span>
+              <div style="display:flex;gap:6px;margin-left:auto">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">→</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: summary + requests -->
+          <div style="display:flex;flex-direction:column;gap:14px">
+
+            <!-- Summary -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Province summary</div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+                <div class="summary-card">
+                  <div class="sc-val">4,49,200</div>
+                  <div class="sc-lbl">Total seats</div>
+                </div>
+                <div class="summary-card">
+                  <div class="sc-val" style="color:var(--color-success-text)">3,18,450</div>
+                  <div class="sc-lbl">Filled seats</div>
+                </div>
+                <div class="summary-card">
+                  <div class="sc-val" style="color:var(--color-info-text)">1,30,750</div>
+                  <div class="sc-lbl">Vacant seats</div>
+                </div>
+                <div class="summary-card">
+                  <div class="sc-val" style="color:var(--color-danger-text)">12</div>
+                  <div class="sc-lbl">Over capacity</div>
+                </div>
+              </div>
+              <div>
+                <div class="flex-between mb-1"><span style="font-size:12px">Province fill rate</span><span
+                    style="font-size:12px;font-weight:600;color:var(--color-warning-text)">70.9%</span></div>
+                <div class="progress-bar" style="height:8px">
+                  <div class="progress-fill warning" style="width:70.9%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- District breakdown -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">By division</div>
+              </div>
+              <div>
+                <div class="district-row">
+                  <div style="flex:1">
+                    <div style="font-weight:500">Lahore</div>
+                    <div style="font-size:11px;color:var(--text-muted)">87 colleges</div>
+                  </div>
+                  <div style="text-align:right;font-size:12px">
+                    <div style="font-weight:600">94%</div>
+                    <div style="color:var(--text-muted)">74,400 seats</div>
+                  </div>
+                  <span class="badge badge-success" style="font-size:10px">High</span>
+                </div>
+                <div class="district-row">
+                  <div style="flex:1">
+                    <div style="font-weight:500">Rawalpindi</div>
+                    <div style="font-size:11px;color:var(--text-muted)">62 colleges</div>
+                  </div>
+                  <div style="text-align:right;font-size:12px">
+                    <div style="font-weight:600">81%</div>
+                    <div style="color:var(--text-muted)">52,400 seats</div>
+                  </div>
+                  <span class="badge badge-success" style="font-size:10px">Good</span>
+                </div>
+                <div class="district-row">
+                  <div style="flex:1">
+                    <div style="font-weight:500">Faisalabad</div>
+                    <div style="font-size:11px;color:var(--text-muted)">74 colleges</div>
+                  </div>
+                  <div style="text-align:right;font-size:12px">
+                    <div style="font-weight:600">76%</div>
+                    <div style="color:var(--text-muted)">62,400 seats</div>
+                  </div>
+                  <span class="badge badge-warning" style="font-size:10px">Avg</span>
+                </div>
+                <div class="district-row">
+                  <div style="flex:1">
+                    <div style="font-weight:500">Multan</div>
+                    <div style="font-size:11px;color:var(--text-muted)">58 colleges</div>
+                  </div>
+                  <div style="text-align:right;font-size:12px">
+                    <div style="font-weight:600">64%</div>
+                    <div style="color:var(--text-muted)">48,800 seats</div>
+                  </div>
+                  <span class="badge badge-warning" style="font-size:10px">Low</span>
+                </div>
+                <div class="district-row">
+                  <div style="flex:1">
+                    <div style="font-weight:500">DG Khan</div>
+                    <div style="font-size:11px;color:var(--text-muted)">41 colleges</div>
+                  </div>
+                  <div style="text-align:right;font-size:12px">
+                    <div style="font-weight:600">51%</div>
+                    <div style="color:var(--text-muted)">34,600 seats</div>
+                  </div>
+                  <span class="badge badge-danger" style="font-size:10px">Critical</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pending increase requests -->
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Capacity increase requests</div>
+                <span class="badge badge-warning">47</span>
+              </div>
+              <div>
+                <div class="request-row">
+                  <div style="flex:1">
+                    <div style="font-weight:500;font-size:13px">GC Faisalabad — BS CS</div>
+                    <div style="font-size:11px;color:var(--text-muted)">Requesting: 60 → 80 seats</div>
+                  </div>
+                  <button class="btn btn-sm btn-success" style="font-size:11px">Approve</button>
+                  <button class="btn btn-sm btn-danger" style="font-size:11px">Reject</button>
+                </div>
+                <div class="request-row">
+                  <div style="flex:1">
+                    <div style="font-weight:500;font-size:13px">GC Gujranwala — FA</div>
+                    <div style="font-size:11px;color:var(--text-muted)">Requesting: 240 → 300 seats</div>
+                  </div>
+                  <button class="btn btn-sm btn-success" style="font-size:11px">Approve</button>
+                  <button class="btn btn-sm btn-danger" style="font-size:11px">Reject</button>
+                </div>
+                <div class="request-row">
+                  <div style="flex:1">
+                    <div style="font-weight:500;font-size:13px">GC Multan — B.Com</div>
+                    <div style="font-size:11px;color:var(--text-muted)">Requesting: 80 → 120 seats</div>
+                  </div>
+                  <button class="btn btn-sm btn-success" style="font-size:11px">Approve</button>
+                  <button class="btn btn-sm btn-danger" style="font-size:11px">Reject</button>
+                </div>
+              </div>
+              <button class="btn btn-secondary" style="width:100%;margin-top:10px;font-size:12px">View all 47 requests
+                →</button>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+</body>
+
+</html>

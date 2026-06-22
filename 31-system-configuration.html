@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>System Configuration — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar { display:flex; gap:0; border-bottom:1px solid var(--border-light); margin-bottom:var(--space-5); overflow-x:auto; }
+  .tab-item { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:all .15s; }
+  .tab-item.active { color:var(--brand-600); border-bottom-color:var(--brand-600); }
+  .tab-item:hover:not(.active) { color:var(--text-primary); background:var(--bg-secondary); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  .cfg-row { display:flex; align-items:center; gap:12px; padding:10px 12px; border-bottom:1px solid var(--border-light); font-size:13px; cursor:pointer; }
+  .cfg-row:hover td, .cfg-row:hover { background:var(--bg-secondary); }
+  .cfg-row.selected { background:var(--brand-50); }
+  .cfg-row:last-child { border-bottom:none; }
+  .cfg-icon { width:34px; height:34px; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+
+  .subject-chip { display:inline-flex; align-items:center; gap:5px; background:var(--color-info-bg); color:var(--color-info-text); border:1px solid var(--color-info-border); border-radius:var(--radius-full); padding:3px 10px; font-size:12px; margin:3px 3px 0 0; }
+  .desig-chip { display:inline-flex; align-items:center; gap:5px; background:var(--brand-50); color:var(--brand-600); border:1px solid var(--brand-200); border-radius:var(--radius-full); padding:3px 10px; font-size:12px; margin:3px 3px 0 0; }
+  .detail-section { margin-bottom:18px; }
+  .detail-section-label { font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; }
+  .detail-row { display:flex; padding:7px 0; border-bottom:1px solid var(--border-light); font-size:13px; gap:8px; }
+  .detail-row:last-child { border-bottom:none; }
+  .detail-key { color:var(--text-muted); width:130px; flex-shrink:0; }
+  .stat-strip { display:flex; gap:14px; padding:12px; background:var(--bg-secondary); border-radius:var(--radius-md); margin-bottom:16px; }
+  .stat-strip .stat { flex:1; text-align:center; }
+  .stat-strip .stat-num { font-size:17px; font-weight:600; }
+  .stat-strip .stat-label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.04em; margin-top:2px; }
+  .cat-pill { font-size:10px; font-weight:600; padding:2px 7px; border-radius:var(--radius-full); text-transform:uppercase; letter-spacing:.03em; }
+  .geo-tree-node { padding:10px 12px; border-radius:var(--radius-md); border:1px solid var(--border-light); margin-bottom:6px; display:flex; align-items:center; gap:10px; cursor:pointer; transition:all .15s; }
+  .geo-tree-node:hover { border-color:var(--brand-200); background:var(--brand-50); }
+  .geo-tree-child { margin-left:24px; }
+  .stub-note { font-size:12px; color:var(--text-muted); background:var(--bg-secondary); border:1px dashed var(--border-medium); border-radius:var(--radius-md); padding:10px 14px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">HED Super Admin</div>
+      <div class="role-sub">Provincial Administration</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="01-hed-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">Academics</div>
+      <a class="nav-item" href="17-academic-structure.html"><span class="nav-icon">📚</span><span>Academic Structure</span></a>
+      <a class="nav-item" href="05-admissions-grid.html"><span class="nav-icon">🎓</span><span>Admissions</span></a>
+
+      <div class="sidebar-section-label">System</div>
+      <a class="nav-item" href="18-user-management.html"><span class="nav-icon">🔐</span><span>User Management</span></a>
+      <a class="nav-item active" href="#"><span class="nav-icon">⚙️</span><span>System Configuration</span></a>
+      <a class="nav-item" href="19-audit-log.html"><span class="nav-icon">🕵️</span><span>Audit Log</span></a>
+      <a class="nav-item" href="10-reports-analytics.html"><span class="nav-icon">📊</span><span>Reports</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">SA</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Super Admin</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">admin@hed.punjab.gov.pk</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>System</span><span>›</span>
+        <span class="crumb-active">System Configuration</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search divisions, departments, designations, subjects…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">SA</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>System Configuration</h1>
+          <p>Master reference data and dropdown options used across the platform — geography, institute types, departments, designations and subjects</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">⬇ Export master data</button>
+          <button class="btn btn-secondary">⬆ Bulk import (CSV)</button>
+          <button class="btn btn-primary">+ Add entry</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="grid grid-5 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Divisions</div>
+          <div class="metric-value">9</div>
+          <div class="metric-delta delta-neutral">36 districts</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Tehsils mapped</div>
+          <div class="metric-value">154</div>
+          <div class="metric-delta delta-neutral">Province-wide</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Departments</div>
+          <div class="metric-value">38</div>
+          <div class="metric-delta delta-neutral">Across all colleges</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Designations</div>
+          <div class="metric-value">84</div>
+          <div class="metric-delta delta-neutral">Teaching + non-teaching</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Subjects</div>
+          <div class="metric-value">1,847</div>
+          <div class="metric-delta delta-neutral">Active catalogue</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active" data-tab="departments" onclick="switchCfgTab('departments', this)">Departments</div>
+        <div class="tab-item" data-tab="designations" onclick="switchCfgTab('designations', this)">Designations</div>
+        <div class="tab-item" data-tab="subjects" onclick="switchCfgTab('subjects', this)">Subjects Catalogue</div>
+        <div class="tab-item" data-tab="geography" onclick="switchCfgTab('geography', this)">Divisions, Districts & Tehsils</div>
+        <div class="tab-item" data-tab="types" onclick="switchCfgTab('types', this)">Institute Types & Program Levels</div>
+        <div class="tab-item" data-tab="mapping" onclick="switchCfgTab('mapping', this)">Dropdown Mapping Rules</div>
+      </div>
+
+      <!-- ===================== DEPARTMENTS TAB ===================== -->
+      <div class="tab-panel active" id="panel-departments">
+        <div class="grid" style="grid-template-columns:1fr 340px;gap:16px">
+
+          <!-- Department table -->
+          <div class="card" style="padding:0;overflow:hidden">
+            <div class="grid-toolbar">
+              <div class="toolbar-search">
+                <span>🔍</span>
+                <input type="text" placeholder="Search departments…"/>
+              </div>
+              <button class="btn btn-secondary btn-sm">Status ▾</button>
+              <div class="ml-auto" style="display:flex;gap:6px">
+                <button class="btn btn-secondary btn-sm">⬇ Export</button>
+                <button class="btn btn-primary btn-sm">+ Add department</button>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Department</th>
+                    <th>Code</th>
+                    <th>Colleges offering</th>
+                    <th>Subjects mapped</th>
+                    <th>Status</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cfg-row selected" onclick="selectDept(this,'Mathematics')">
+                    <td style="font-weight:500">Mathematics</td>
+                    <td class="font-mono text-muted">MATH</td>
+                    <td>1,084</td>
+                    <td>62</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'Computer Science / Information Technology')">
+                    <td style="font-weight:500">Computer Science / Information Technology</td>
+                    <td class="font-mono text-muted">CSIT</td>
+                    <td>418</td>
+                    <td>74</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'Physics')">
+                    <td style="font-weight:500">Physics</td>
+                    <td class="font-mono text-muted">PHY</td>
+                    <td>962</td>
+                    <td>41</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'Chemistry')">
+                    <td style="font-weight:500">Chemistry</td>
+                    <td class="font-mono text-muted">CHEM</td>
+                    <td>948</td>
+                    <td>38</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'Biology')">
+                    <td style="font-weight:500">Biology</td>
+                    <td class="font-mono text-muted">BIO</td>
+                    <td>891</td>
+                    <td>33</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'English')">
+                    <td style="font-weight:500">English</td>
+                    <td class="font-mono text-muted">ENG</td>
+                    <td>1,247</td>
+                    <td>29</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'Urdu')">
+                    <td style="font-weight:500">Urdu</td>
+                    <td class="font-mono text-muted">URD</td>
+                    <td>1,247</td>
+                    <td>24</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'Economics')">
+                    <td style="font-weight:500">Economics</td>
+                    <td class="font-mono text-muted">ECO</td>
+                    <td>702</td>
+                    <td>27</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'Commerce')">
+                    <td style="font-weight:500">Commerce</td>
+                    <td class="font-mono text-muted">COM</td>
+                    <td>211</td>
+                    <td>31</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'Pakistan Studies')">
+                    <td style="font-weight:500">Pakistan Studies</td>
+                    <td class="font-mono text-muted">PKST</td>
+                    <td>1,247</td>
+                    <td>9</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'Library Science')">
+                    <td style="font-weight:500">Library Science</td>
+                    <td class="font-mono text-muted">LIBS</td>
+                    <td>184</td>
+                    <td>11</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'Health and Physical Education')">
+                    <td style="font-weight:500">Health and Physical Education</td>
+                    <td class="font-mono text-muted">HPE</td>
+                    <td>329</td>
+                    <td>14</td>
+                    <td><span class="badge badge-warning">Under review</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'Saraiki')">
+                    <td style="font-weight:500">Saraiki</td>
+                    <td class="font-mono text-muted">SRK</td>
+                    <td>96</td>
+                    <td>6</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                  <tr class="cfg-row" onclick="selectDept(this,'Statistics')">
+                    <td style="font-weight:500">Statistics</td>
+                    <td class="font-mono text-muted">STAT</td>
+                    <td>388</td>
+                    <td>22</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <span class="text-muted text-sm">Showing 1–14 of 38 departments</span>
+              <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+                <button class="page-btn">←</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">→</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Department detail -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title" id="deptDetailTitle">Mathematics</div>
+                <div class="card-subtitle">Department · Code MATH</div>
+              </div>
+              <span class="badge badge-success">Active</span>
+            </div>
+
+            <div class="stat-strip">
+              <div class="stat"><div class="stat-num">1,240</div><div class="stat-label">Sanctioned posts</div></div>
+              <div class="stat"><div class="stat-num" style="color:var(--color-success-text)">1,086</div><div class="stat-label">Filled</div></div>
+              <div class="stat"><div class="stat-num" style="color:var(--color-warning-text)">154</div><div class="stat-label">Vacant</div></div>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-section-label">Linked teaching designations</div>
+              <span class="desig-chip">Lecturer</span>
+              <span class="desig-chip">Assistant Professor</span>
+              <span class="desig-chip">Associate Professor</span>
+              <span class="desig-chip">Professor</span>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-section-label">Sample mapped subjects (62 total)</div>
+              <span class="subject-chip">Calculus and Analytical Geometry</span>
+              <span class="subject-chip">Linear Algebra</span>
+              <span class="subject-chip">Differential Equations</span>
+              <span class="subject-chip">Real Analysis</span>
+              <span class="subject-chip">Numerical Analysis</span>
+              <span class="subject-chip">Vector and Tensor Analysis</span>
+              <span class="subject-chip">+ 56 more →</span>
+            </div>
+
+            <div class="divider"></div>
+            <button class="btn btn-secondary" style="width:100%">📋 Manage subject mapping</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== DESIGNATIONS TAB ===================== -->
+      <div class="tab-panel" id="panel-designations">
+        <div class="grid" style="grid-template-columns:1fr 320px;gap:16px">
+          <div class="card" style="padding:0;overflow:hidden">
+            <div class="grid-toolbar">
+              <div class="toolbar-search">
+                <span>🔍</span>
+                <input type="text" placeholder="Search designations…"/>
+              </div>
+              <span class="filter-chip">Category: All <span class="remove">×</span></span>
+              <div class="ml-auto" style="display:flex;gap:6px">
+                <button class="btn btn-secondary btn-sm">⬇ Export</button>
+                <button class="btn btn-primary btn-sm">+ Add designation</button>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Designation</th>
+                    <th>Category</th>
+                    <th>Cadre</th>
+                    <th>Sanctioned</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cfg-row"><td style="font-weight:500">Principal</td><td><span class="cat-pill badge-info">General College</span></td><td>Gazetted</td><td>1,247</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Vice Principal</td><td><span class="cat-pill badge-info">General College</span></td><td>Gazetted</td><td>980</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Professor</td><td><span class="cat-pill badge-info">General College</span></td><td>Gazetted</td><td>612</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Associate Professor</td><td><span class="cat-pill badge-info">General College</span></td><td>Gazetted</td><td>2,140</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Assistant Professor</td><td><span class="cat-pill badge-info">General College</span></td><td>Gazetted</td><td>9,820</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Lecturer</td><td><span class="cat-pill badge-info">General College</span></td><td>Gazetted</td><td>4,310</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Librarian</td><td><span class="cat-pill badge-info">General College</span></td><td>Gazetted</td><td>1,180</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Chief Instructor</td><td><span class="cat-pill" style="background:var(--color-warning-bg);color:var(--color-warning-text)">Commerce College</span></td><td>Gazetted</td><td>96</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Senior Instructor</td><td><span class="cat-pill" style="background:var(--color-warning-bg);color:var(--color-warning-text)">Commerce College</span></td><td>Gazetted</td><td>211</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Instructor</td><td><span class="cat-pill" style="background:var(--color-warning-bg);color:var(--color-warning-text)">Commerce College</span></td><td>Gazetted</td><td>448</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Director Public Instruction</td><td><span class="cat-pill" style="background:var(--brand-50);color:var(--brand-600)">Admin Unit</span></td><td>Gazetted</td><td>1</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Deputy Director Colleges</td><td><span class="cat-pill" style="background:var(--brand-50);color:var(--brand-600)">Admin Unit</span></td><td>Gazetted</td><td>14</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Assistant Director</td><td><span class="cat-pill" style="background:var(--brand-50);color:var(--brand-600)">Admin Unit</span></td><td>Gazetted</td><td>52</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Section Officer</td><td><span class="cat-pill" style="background:var(--brand-50);color:var(--brand-600)">Admin Unit</span></td><td>Gazetted</td><td>38</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Superintendent</td><td><span class="cat-pill badge-neutral">Non-Teaching</span></td><td>Non-Gazetted</td><td>1,402</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Senior Clerk</td><td><span class="cat-pill badge-neutral">Non-Teaching</span></td><td>Non-Gazetted</td><td>2,890</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Lab Assistant</td><td><span class="cat-pill badge-neutral">Non-Teaching</span></td><td>Non-Gazetted</td><td>3,640</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                  <tr class="cfg-row"><td style="font-weight:500">Library Attendant</td><td><span class="cat-pill badge-neutral">Non-Teaching</span></td><td>Non-Gazetted</td><td>1,247</td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <span class="text-muted text-sm">Showing 1–18 of 84 designations</span>
+              <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+                <button class="page-btn">←</button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <button class="page-btn">4</button>
+                <button class="page-btn">5</button>
+                <button class="page-btn">→</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title mb-3">Designations by category</div>
+            <div class="flex-between mb-3" style="font-size:13px">
+              <span class="flex-center gap-2"><span style="width:9px;height:9px;border-radius:50%;background:var(--color-info-text);display:inline-block"></span>General College</span>
+              <span class="font-mono text-muted">26</span>
+            </div>
+            <div class="progress-bar mb-3"><div class="progress-fill info" style="width:31%"></div></div>
+            <div class="flex-between mb-3" style="font-size:13px">
+              <span class="flex-center gap-2"><span style="width:9px;height:9px;border-radius:50%;background:var(--color-warning-text);display:inline-block"></span>Commerce College</span>
+              <span class="font-mono text-muted">12</span>
+            </div>
+            <div class="progress-bar mb-3"><div class="progress-fill warning" style="width:14%"></div></div>
+            <div class="flex-between mb-3" style="font-size:13px">
+              <span class="flex-center gap-2"><span style="width:9px;height:9px;border-radius:50%;background:var(--brand-600);display:inline-block"></span>Admin Unit</span>
+              <span class="font-mono text-muted">26</span>
+            </div>
+            <div class="progress-bar mb-3"><div class="progress-fill brand" style="width:31%"></div></div>
+            <div class="flex-between mb-3" style="font-size:13px">
+              <span class="flex-center gap-2"><span style="width:9px;height:9px;border-radius:50%;background:var(--text-muted);display:inline-block"></span>Non-Teaching / Support</span>
+              <span class="font-mono text-muted">40</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:48%;background:var(--text-muted)"></div></div>
+
+            <div class="divider"></div>
+            <p class="text-sm text-muted">Category determines which pay scale, recruiting authority and institute types a designation can be assigned against during posting & transfer.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== SUBJECTS TAB ===================== -->
+      <div class="tab-panel" id="panel-subjects">
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="grid-toolbar">
+            <div class="toolbar-search">
+              <span>🔍</span>
+              <input type="text" placeholder="Search 1,847 subjects…"/>
+            </div>
+            <span class="filter-chip">Department: All <span class="remove">×</span></span>
+            <span class="filter-chip">Status: Active <span class="remove">×</span></span>
+            <div class="ml-auto" style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-sm">⬇ Export</button>
+              <button class="btn btn-primary btn-sm">+ Add subject</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Department</th>
+                  <th>Programs using it</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="cfg-row"><td style="font-weight:500">Calculus and Analytical Geometry</td><td>Mathematics</td><td>14</td><td><span class="badge badge-info">Compulsory</span></td><td><span class="badge badge-success">Active</span></td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                <tr class="cfg-row"><td style="font-weight:500">Object Oriented Programming</td><td>Computer Science / IT</td><td>22</td><td><span class="badge badge-info">Compulsory</span></td><td><span class="badge badge-success">Active</span></td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                <tr class="cfg-row"><td style="font-weight:500">Organic Chemistry</td><td>Chemistry</td><td>18</td><td><span class="badge badge-info">Compulsory</span></td><td><span class="badge badge-success">Active</span></td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                <tr class="cfg-row"><td style="font-weight:500">Functional English</td><td>English</td><td>61</td><td><span class="badge badge-info">Compulsory</span></td><td><span class="badge badge-success">Active</span></td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                <tr class="cfg-row"><td style="font-weight:500">Pakistan Studies</td><td>Pakistan Studies</td><td>74</td><td><span class="badge badge-info">Compulsory</span></td><td><span class="badge badge-success">Active</span></td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                <tr class="cfg-row"><td style="font-weight:500">Microeconomics</td><td>Economics</td><td>16</td><td><span class="badge badge-neutral">Elective</span></td><td><span class="badge badge-success">Active</span></td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                <tr class="cfg-row"><td style="font-weight:500">Data Structures and Algorithms</td><td>Computer Science / IT</td><td>11</td><td><span class="badge badge-info">Compulsory</span></td><td><span class="badge badge-success">Active</span></td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                <tr class="cfg-row"><td style="font-weight:500">Quantum Mechanics</td><td>Physics</td><td>5</td><td><span class="badge badge-neutral">Elective</span></td><td><span class="badge badge-success">Active</span></td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                <tr class="cfg-row"><td style="font-weight:500">Animal Diversity</td><td>Zoology</td><td>7</td><td><span class="badge badge-info">Compulsory</span></td><td><span class="badge badge-success">Active</span></td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+                <tr class="cfg-row"><td style="font-weight:500">Auditing</td><td>Commerce</td><td>9</td><td><span class="badge badge-neutral">Elective</span></td><td><span class="badge badge-warning">Pending review</span></td><td><div class="row-actions"><button class="row-action-btn">Edit</button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span class="text-muted text-sm">Showing 1–10 of 1,847 subjects</span>
+            <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+              <span class="text-muted text-sm">Rows per page</span>
+              <select class="form-select" style="width:70px;font-size:12px;padding:4px 6px">
+                <option>10</option><option>25</option><option>50</option>
+              </select>
+              <button class="page-btn">←</button>
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+              <span class="text-muted text-sm">…</span>
+              <button class="page-btn">185</button>
+              <button class="page-btn">→</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== GEOGRAPHY TAB ===================== -->
+      <div class="tab-panel" id="panel-geography">
+        <div class="grid" style="grid-template-columns:300px 1fr;gap:16px">
+          <div class="card" style="padding:14px">
+            <div class="section-label mb-3">Divisions</div>
+            <div class="geo-tree-node" style="background:var(--brand-50);border-color:var(--brand-200)">
+              <span>🏛️</span><div><div style="font-weight:600;font-size:13px">Lahore</div><div class="text-muted" style="font-size:11px">4 districts</div></div>
+            </div>
+            <div class="geo-tree-node"><span>🏛️</span><div><div style="font-weight:600;font-size:13px">Gujranwala</div><div class="text-muted" style="font-size:11px">6 districts</div></div></div>
+            <div class="geo-tree-node"><span>🏛️</span><div><div style="font-weight:600;font-size:13px">Rawalpindi</div><div class="text-muted" style="font-size:11px">5 districts</div></div></div>
+            <div class="geo-tree-node"><span>🏛️</span><div><div style="font-weight:600;font-size:13px">Faisalabad</div><div class="text-muted" style="font-size:11px">4 districts</div></div></div>
+            <div class="geo-tree-node"><span>🏛️</span><div><div style="font-weight:600;font-size:13px">Multan</div><div class="text-muted" style="font-size:11px">6 districts</div></div></div>
+            <div class="geo-tree-node"><span>🏛️</span><div><div style="font-weight:600;font-size:13px">Bahawalpur</div><div class="text-muted" style="font-size:11px">3 districts</div></div></div>
+            <div class="geo-tree-node"><span>🏛️</span><div><div style="font-weight:600;font-size:13px">Dera Ghazi Khan</div><div class="text-muted" style="font-size:11px">4 districts</div></div></div>
+            <div class="geo-tree-node"><span>🏛️</span><div><div style="font-weight:600;font-size:13px">Sahiwal</div><div class="text-muted" style="font-size:11px">3 districts</div></div></div>
+            <div class="geo-tree-node"><span>🏛️</span><div><div style="font-weight:600;font-size:13px">Sargodha</div><div class="text-muted" style="font-size:11px">5 districts</div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Lahore Division</div>
+                <div class="card-subtitle">4 districts · 27 tehsils</div>
+              </div>
+              <button class="btn btn-secondary btn-sm">+ Add district</button>
+            </div>
+            <div class="geo-tree-child">
+              <div class="geo-tree-node"><span>📍</span><div style="font-weight:500;font-size:13px">Lahore</div><span class="badge badge-info ml-auto">7 tehsils</span></div>
+              <div class="geo-tree-node"><span>📍</span><div style="font-weight:500;font-size:13px">Kasur</div><span class="badge badge-info ml-auto">5 tehsils</span></div>
+              <div class="geo-tree-node"><span>📍</span><div style="font-weight:500;font-size:13px">Sheikhupura</div><span class="badge badge-info ml-auto">4 tehsils</span></div>
+              <div class="geo-tree-node"><span>📍</span><div style="font-weight:500;font-size:13px">Nankana Sahib</div><span class="badge badge-info ml-auto">3 tehsils</span></div>
+            </div>
+            <div class="divider"></div>
+            <p class="stub-note">Full Division → District → Tehsil hierarchy editor with bulk-mapping to colleges continues in a follow-up screen.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== INSTITUTE TYPES TAB ===================== -->
+      <div class="tab-panel" id="panel-types">
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-title mb-2">Institute Types</div>
+            <div class="detail-row"><span>General College</span><span class="badge badge-success ml-auto">842 colleges</span></div>
+            <div class="detail-row"><span>Commerce College</span><span class="badge badge-success ml-auto">96 colleges</span></div>
+            <div class="detail-row"><span>Professional College</span><span class="badge badge-success ml-auto">58 colleges</span></div>
+            <div class="detail-row"><span>Autonomous College</span><span class="badge badge-success ml-auto">22 colleges</span></div>
+            <div class="detail-row"><span>University</span><span class="badge badge-neutral ml-auto">11</span></div>
+            <div class="detail-row"><span>Admin Unit</span><span class="badge badge-neutral ml-auto">218 offices</span></div>
+            <button class="btn btn-secondary btn-sm mt-3" style="width:100%">+ Add institute type</button>
+          </div>
+          <div class="card">
+            <div class="card-title mb-2">Program Levels</div>
+            <div class="detail-row"><span>Intermediate (FA / F.Sc / I.Com)</span><span class="badge badge-info ml-auto">1,404 cols</span></div>
+            <div class="detail-row"><span>Associate Degree (ADP)</span><span class="badge badge-info ml-auto">312 cols</span></div>
+            <div class="detail-row"><span>Bachelor (BS / B.Com / B.Ed)</span><span class="badge badge-info ml-auto">684 cols</span></div>
+            <div class="detail-row"><span>Masters (M.A / M.Sc)</span><span class="badge badge-info ml-auto">198 cols</span></div>
+            <button class="btn btn-secondary btn-sm mt-3" style="width:100%">+ Add program level</button>
+          </div>
+          <div class="card">
+            <div class="card-title mb-2">Other dropdown sets</div>
+            <div class="detail-row"><span>Gender / Co-Education</span><span class="text-muted ml-auto">3 options</span></div>
+            <div class="detail-row"><span>Shift</span><span class="text-muted ml-auto">2 options</span></div>
+            <div class="detail-row"><span>Session type</span><span class="text-muted ml-auto">2 options</span></div>
+            <div class="detail-row"><span>Hard area / Periphery</span><span class="text-muted ml-auto">4 options</span></div>
+            <p class="stub-note mt-3">These short, low-change lists are managed inline within their forms rather than as separate master tables.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== MAPPING RULES TAB ===================== -->
+      <div class="tab-panel" id="panel-mapping">
+        <div class="card">
+          <div class="card-title mb-3">Dropdown mapping rules</div>
+          <table>
+            <thead><tr><th>Rule</th><th>Constrains</th><th>Based on</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:500">District options follow selected Division</td><td>Add Institute → District</td><td>Division</td><td><span class="badge badge-success">Active</span></td></tr>
+              <tr><td style="font-weight:500">Tehsil options follow selected District</td><td>Add Institute → Tehsil</td><td>District</td><td><span class="badge badge-success">Active</span></td></tr>
+              <tr><td style="font-weight:500">Subject options follow selected Department</td><td>Add Program → Subject</td><td>Department</td><td><span class="badge badge-warning">Draft</span></td></tr>
+              <tr><td style="font-weight:500">Designation options follow Institute Type</td><td>Faculty Posting → Designation</td><td>Institute Type</td><td><span class="badge badge-warning">Draft</span></td></tr>
+              <tr><td style="font-weight:500">Major / Title options follow Program Level</td><td>Add Program → Major</td><td>Program Level</td><td><span class="badge badge-neutral">Not started</span></td></tr>
+            </tbody>
+          </table>
+          <p class="stub-note mt-4">Mapping rules ensure dependent dropdowns (e.g. District → Tehsil, Department → Subject) never show invalid combinations. Each rule can be edited as a simple parent → child relationship below.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  function switchCfgTab(name, el) {
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('panel-' + name).classList.add('active');
+  }
+
+  const deptData = {
+    'Mathematics': { code: 'MATH', subjects: 62, sample: ['Calculus and Analytical Geometry','Linear Algebra','Differential Equations','Real Analysis','Numerical Analysis','Vector and Tensor Analysis'] },
+    'Computer Science / Information Technology': { code: 'CSIT', subjects: 74, sample: ['Object Oriented Programming','Data Structures and Algorithms','Database Systems','Computer Networks','Operating Systems','Artificial Intelligence'] },
+    'Physics': { code: 'PHY', subjects: 41, sample: ['Mechanics','Electromagnetism','Quantum Mechanics','Thermodynamics','Solid State Physics','Optics'] },
+    'Chemistry': { code: 'CHEM', subjects: 38, sample: ['Organic Chemistry','Inorganic Chemistry','Physical Chemistry','Analytical Chemistry','Environmental Chemistry'] },
+    'Biology': { code: 'BIO', subjects: 33, sample: ['Cell Biology','Genetics','Botany','Zoology','Microbiology'] },
+    'English': { code: 'ENG', subjects: 29, sample: ['Functional English','English Literature','20th Century Fiction and Prose','Communication Skills'] },
+    'Urdu': { code: 'URD', subjects: 24, sample: ['Urdu Adab','Urdu Nazam','Urdu Afsaana Aur Drama','Functional Urdu'] },
+    'Economics': { code: 'ECO', subjects: 27, sample: ['Microeconomics','Macroeconomics','Development Economics','Econometrics'] },
+    'Commerce': { code: 'COM', subjects: 31, sample: ['Accounting','Auditing','Banking','Business Law','Taxation'] },
+    'Pakistan Studies': { code: 'PKST', subjects: 9, sample: ['Pakistan Studies','History of Pakistan','Geography of Pakistan'] },
+    'Library Science': { code: 'LIBS', subjects: 11, sample: ['Library and Information Management','Library Sciences','Information Science'] },
+    'Health and Physical Education': { code: 'HPE', subjects: 14, sample: ['Physical Education','Sports Sciences','Exercise Physiology'] },
+    'Saraiki': { code: 'SRK', subjects: 6, sample: ['Saraiki','Saraiki Literature'] },
+    'Statistics': { code: 'STAT', subjects: 22, sample: ['Probability and Statistics','Statistical Inference','Sampling Techniques'] }
+  };
+
+  function selectDept(row, name) {
+    document.querySelectorAll('#panel-departments .cfg-row').forEach(r => r.classList.remove('selected'));
+    row.classList.add('selected');
+    const d = deptData[name];
+    if (!d) return;
+    document.getElementById('deptDetailTitle').textContent = name;
+    const wraps = document.querySelectorAll('#panel-departments .detail-section');
+    const subjWrap = wraps[1];
+    subjWrap.querySelector('.detail-section-label').textContent = 'Sample mapped subjects (' + d.subjects + ' total)';
+    const chips = d.sample.map(s => '<span class="subject-chip">' + s + '</span>').join('');
+    subjWrap.innerHTML = '<div class="detail-section-label">Sample mapped subjects (' + d.subjects + ' total)</div>' + chips + '<span class="subject-chip">+ ' + (d.subjects - d.sample.length) + ' more →</span>';
+  }
+</script>
+
+</body>
+</html>
