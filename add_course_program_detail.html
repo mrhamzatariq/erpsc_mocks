@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Program Subjects</title>
+
+    <link rel="stylesheet" href="design-system.css">
+
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            padding: 24px;
+            background: var(--bg-page);
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .program-info {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .subject-entry-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 16px;
+            align-items: end;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .subject-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .subject-table th {
+            background: var(--bg-secondary);
+            font-size: 12px;
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .subject-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .page-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .subject-count {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-container">
+
+        <!-- Header -->
+
+        <div class="page-header">
+
+            <div>
+                <div class="breadcrumb">
+                    Programs > BS Computer Science > Subjects
+                </div>
+
+                <h1>Program Subjects</h1>
+
+                <p class="text-muted">
+                    Manage subjects assigned to this program
+                </p>
+            </div>
+
+            <div>
+                <a href="Program_Listing_College_Login.html" <button class="btn btn-secondary">
+                    Back to Programs
+                    </button></a>
+            </div>
+
+        </div>
+
+        <!-- Program Information -->
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+                <div>
+                    <div class="card-title">
+                        Program Information
+                    </div>
+                </div>
+            </div>
+
+            <div class="program-info">
+
+                <div>
+                    <div class="text-muted text-sm">Level</div>
+                    <div>BS</div>
+                </div>
+
+                <div>
+                    <div class="text-muted text-sm">Program Name</div>
+                    <div>BS</div>
+                </div>
+
+                <div>
+                    <div class="text-muted text-sm">Major / Title</div>
+                    <div>Computer Science</div>
+                </div>
+
+                <div>
+                    <div class="text-muted text-sm">Academic Session</div>
+                    <div>2025-26</div>
+                </div>
+
+                <div>
+                    <div class="text-muted text-sm">Shift</div>
+                    <div>Morning | 1st Shift</div>
+                </div>
+
+                <div>
+                    <div class="text-muted text-sm">Duration</div>
+                    <div>4 Years</div>
+                </div>
+
+                <div>
+                    <div class="text-muted text-sm">Session Type</div>
+                    <div>Semester</div>
+                </div>
+
+                <div>
+                    <div class="text-muted text-sm">Affiliation</div>
+                    <div>University of the Punjab</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Add Subject -->
+
+        <div class="card mb-4">
+
+            <div class="card-header">
+                <div>
+                    <div class="card-title">
+                        Add Subject
+                    </div>
+                </div>
+            </div>
+
+            <div class="subject-entry-grid">
+
+                <!-- Subject -->
+
+                <div class="form-group">
+                    <label class="form-label">
+                        Subject
+                    </label>
+
+                    <select id="subjectDropdown" class="form-select select2">
+
+                        <option value="">
+                            Select Subject
+                        </option>
+
+                        <option>English</option>
+                        <option>Urdu</option>
+                        <option>Islamic Studies</option>
+                        <option>Programming Fundamentals</option>
+                        <option>Calculus</option>
+                        <option>Physics</option>
+                        <option>Database Systems</option>
+                        <option>Data Structures</option>
+                        <option>Artificial Intelligence</option>
+
+                    </select>
+
+                </div>
+
+                <!-- Class -->
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Class
+                    </label>
+
+                    <select class="form-select">
+
+                        <option>
+                            Semester 1
+                        </option>
+
+                        <option>
+                            Semester 2
+                        </option>
+
+                        <option>
+                            Semester 3
+                        </option>
+
+                        <option>
+                            Semester 4
+                        </option>
+
+                        <option>
+                            Semester 5
+                        </option>
+
+                        <option>
+                            Semester 6
+                        </option>
+
+                        <option>
+                            Semester 7
+                        </option>
+
+                        <option>
+                            Semester 8
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- Subject Type -->
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Subject Type
+                    </label>
+
+                    <select class="form-select">
+
+                        <option>
+                            Compulsory
+                        </option>
+
+                        <option>
+                            Elective
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- Button -->
+
+                <button class="btn btn-primary">
+                    + Add Subject
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Subject Listing -->
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <div>
+                    <div class="card-title">
+                        Assigned Subjects
+                    </div>
+
+                    <div class="subject-count">
+                        Total Subjects: 12
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="subject-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Subject</th>
+                            <th>Class</th>
+                            <th>Subject Type</th>
+                            <th width="120">Action</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>Programming Fundamentals</td>
+                            <td>Semester 1</td>
+                            <td>Compulsory</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm">
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Calculus</td>
+                            <td>Semester 1</td>
+                            <td>Compulsory</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm">
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Database Systems</td>
+                            <td>Semester 3</td>
+                            <td>Compulsory</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm">
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Artificial Intelligence</td>
+                            <td>Semester 7</td>
+                            <td>Elective</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm">
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- Footer Actions -->
+
+        <div class="page-actions">
+
+            <button class="btn btn-secondary">
+                Back to Programs
+            </button>
+
+            <button class="btn btn-primary">
+                Save Subjects
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('.select2').select2({
+                width: '100%',
+                placeholder: 'Search Subject'
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

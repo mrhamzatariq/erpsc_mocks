@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Program - Final</title>
+
+    <link rel="stylesheet" href="design-system.css">
+
+    <!-- Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        body {
+            padding: 24px;
+            background: var(--bg-page);
+        }
+
+        .form-container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .section-header-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--brand-50);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .subject-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        #groupSection,
+        #affiliationDocuments {
+            display: none;
+        }
+
+        .select2-container--default .select2-selection--single {
+            height: 38px;
+            border: 1px solid rgba(0, 0, 0, .12);
+            border-radius: 8px;
+        }
+
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            line-height: 38px;
+        }
+
+        .select2-container .select2-selection--single .select2-selection__arrow {
+            height: 38px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-container">
+
+        <div class="card">
+
+            <div class="section-header">
+                <div class="section-header-icon">🎓</div>
+                <div>
+                    <h2>Program Details</h2>
+                    <p>Define academic program information</p>
+                </div>
+            </div>
+
+            <div class="grid grid-4 mb-4">
+
+                <div class="form-group">
+                    <label class="form-label">Level *</label>
+                    <select id="level" class="form-select" onchange="toggleProgramOptions()">
+                        <option value="">Select Level</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="ADP">ADP</option>
+                        <option value="BS">BS</option>
+                        <option value="Masters">Masters</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Program Name *</label>
+                    <select id="programName" class="form-select" onchange="toggleProgramOptions()">
+                        <option value="">Select Program</option>
+                        <option value="humanities">Humanities</option>
+                        <option value="general-science">General Science</option>
+                        <option value="pre-engineering">Pre-Engineering</option>
+                        <option value="pre-medical">Pre-Medical</option>
+                        <option value="commerce">Commerce</option>
+                        <option value="adp">ADP</option>
+                        <option value="bs">BS</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Affiliation *</label>
+                    <select id="affiliation" class="form-select">
+                        <option value="">Select Affiliation</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Major / Title</label>
+                    <select id="majorTitle" class="form-select">
+                        <option>Select Major / Title</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="grid grid-4">
+
+                <div class="form-group">
+                    <label class="form-label">Shift</label>
+                    <select class="form-select">
+                        <option>Morning</option>
+                        <option>Evening</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Duration</label>
+                    <select class="form-select">
+                        <option>2 Years</option>
+                        <option>4 Years</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Session Type</label>
+                    <select class="form-select">
+                        <option>Annual</option>
+                        <option>Semester</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Academic Session</label>
+                    <input class="form-input" value="2025-26" disabled>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card mt-4" id="affiliationDocuments">
+            <div class="section-header">
+                <div class="section-header-icon">📄</div>
+                <div>
+                    <h2>Affiliation Documents</h2>
+                    <p>Required for University Programs</p>
+                </div>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label class="form-label">Upload Affiliation Certificate</label>
+                    <input type="file" class="form-input" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Upload NOC</label>
+                    <input type="file" class="form-input" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4" id="groupSection">
+            <div class="section-header">
+                <div class="section-header-icon">📚</div>
+                <div>
+                    <h2>Group Subjects</h2>
+                    <p>Add subject combination</p>
+                </div>
+            </div>
+
+            <div id="groupSubjectsContainer"></div>
+
+            <button type="button" class="btn btn-secondary btn-sm" onclick="addSubjectRow()">
+                + Add Subject
+            </button>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn btn-secondary">Cancel</button>
+            <a href="Program_Listing_College_Login.html" class="btn btn-secondary">Back</a>
+            <button class="btn btn-primary">Save Program</button>
+            <button class="btn btn-primary">Save & Add Next</button>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        const boards = [
+            "BISE Lahore", "BISE Gujranwala", "BISE Faisalabad", "BISE Multan", "BISE Rawalpindi"
+        ];
+
+        const universities = [
+            "University of the Punjab",
+            "Government College University Lahore",
+            "University of Education",
+            "University of Sargodha",
+            "Bahauddin Zakariya University"
+        ];
+
+        function refreshSelect2() {
+            $('#affiliation').select2({
+                width: '100%',
+                placeholder: 'Search Affiliation'
+            });
+        }
+
+        function toggleProgramOptions() {
+
+            const level = document.getElementById('level').value;
+            const program = document.getElementById('programName').value;
+            const affiliation = document.getElementById('affiliation');
+            const major = document.getElementById('majorTitle');
+
+            affiliation.innerHTML = '<option value="">Select Affiliation</option>';
+            major.innerHTML = '<option value="">Select Major / Title</option>';
+
+            if (level === 'Intermediate') {
+                boards.forEach(x => affiliation.innerHTML += `<option>${x}</option>`);
+                document.getElementById('affiliationDocuments').style.display = 'none';
+            } else {
+                universities.forEach(x => affiliation.innerHTML += `<option>${x}</option>`);
+                document.getElementById('affiliationDocuments').style.display = 'block';
+            }
+
+            const majorMap = {
+                'humanities': ['Arts', 'History', 'Political Science', 'Economics'],
+                'general-science': ['Physics', 'Chemistry', 'Biology', 'Computer Science'],
+                'pre-engineering': ['Pre-Engineering'],
+                'pre-medical': ['Pre-Medical'],
+                'commerce': ['Commerce'],
+                'adp': ['Arts', 'Commerce', 'Economics', 'Computer Science'],
+                'bs': ['Computer Science', 'IT', 'Software Engineering', 'AI']
+            };
+
+            if (majorMap[program]) {
+                majorMap[program].forEach(x => major.innerHTML += `<option>${x}</option>`);
+            }
+
+            document.getElementById('groupSection').style.display =
+                ['humanities', 'general-science', 'adp'].includes(program)
+                    ? 'block' : 'none';
+
+            $('#affiliation').select2('destroy');
+            refreshSelect2();
+        }
+
+        function addSubjectRow() {
+
+            const row = document.createElement('div');
+            row.className = 'subject-row';
+
+            row.innerHTML = `
+<div class="form-group">
+<label class="form-label">Subject</label>
+<select class="form-select">
+<option>Select Subject</option>
+<option>English</option>
+<option>Urdu</option>
+<option>Islamic Studies</option>
+<option>Physics</option>
+<option>Chemistry</option>
+<option>Biology</option>
+<option>Computer Science</option>
+<option>Economics</option>
+</select>
+</div>
+
+<div>
+<button type="button" class="btn btn-danger btn-sm"
+onclick="this.closest('.subject-row').remove()">
+Remove
+</button>
+</div>`;
+
+            document.getElementById('groupSubjectsContainer').appendChild(row);
+        }
+
+        $(document).ready(function () {
+            refreshSelect2();
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programs Management</title>
+    <link rel="stylesheet" href="design-system.css">
+    <style>
+        body {
+            padding: 24px;
+            background: var(--bg-page);
+            font-family: Inter, sans-serif
+        }
+
+        .page-container {
+            max-width: 1400px;
+            margin: auto
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 20px
+        }
+
+        .table-responsive {
+            overflow: auto
+        }
+
+        .program-table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        .program-table th,
+        .program-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-light);
+            text-align: left
+        }
+
+        .program-table th {
+            background: var(--bg-secondary);
+            font-size: 12px
+        }
+
+        .program-id {
+            font-family: monospace;
+            color: var(--brand-600);
+            font-weight: 600
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 6px
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+
+        <div class="page-header">
+            <div>
+                <h1>Programs Management</h1>
+                <p>Manage all academic programs offered by the college</p>
+            </div>
+            <div>
+                <button class="btn btn-secondary">Export Excel</button>
+                <a href="Add_Program_Final.html">
+                    <button class="btn btn-primary">+ Add Program</button>
+                </a>
+            </div>
+        </div>
+
+        <div class="metric-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Programs</div>
+                <div class="metric-value">24</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Intermediate</div>
+                <div class="metric-value">8</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">ADP</div>
+                <div class="metric-value">4</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">BS</div>
+                <div class="metric-value">10</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Masters</div>
+                <div class="metric-value">2</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Filters</div>
+            </div>
+
+            <div class="filters-grid">
+                <div class="form-group"><label class="form-label">Level</label><select class="form-select">
+                        <option>All</option>
+                    </select></div>
+                <div class="form-group"><label class="form-label">Program Name</label><select class="form-select">
+                        <option>All</option>
+                    </select></div>
+                <div class="form-group"><label class="form-label">Major / Title</label><select class="form-select">
+                        <option>All</option>
+                    </select></div>
+                <div class="form-group"><label class="form-label">Academic Session</label><select class="form-select">
+                        <option>2025-26</option>
+                    </select></div>
+                <div class="form-group"><label class="form-label">Shift</label><select class="form-select">
+                        <option>All</option>
+                    </select></div>
+                <div class="form-group"><label class="form-label">Duration</label><select class="form-select">
+                        <option>All</option>
+                    </select></div>
+                <div class="form-group"><label class="form-label">Session Type</label><select class="form-select">
+                        <option>All</option>
+                    </select></div>
+            </div>
+
+            <div style="margin-top:16px">
+                <button class="btn btn-primary">Apply Filters</button>
+                <button class="btn btn-secondary">Reset</button>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Programs Listing</div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="program-table">
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Program Name</th>
+                            <th>Major / Title</th>
+                            <th>Academic Session</th>
+                            <th>Affiliation</th>
+                            <th>Certificate</th>
+                            <th>NOC</th>
+                            <th>Shift</th>
+                            <th>Duration</th>
+                            <th>Session Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>BS</td>
+                            <td>BS</td>
+                            <td>Computer Science</td>
+                            <td>2025-26</td>
+                            <td>University of the Punjab</td>
+                            <td><span class="badge badge-success">Uploaded</span></td>
+                            <td><span class="badge badge-success">Uploaded</span></td>
+                            <td>Morning | 1st Shift</td>
+                            <td>4 Years</td>
+                            <td>Semester</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-danger btn-sm">In-Active</button>
+                                    <a href="add_course_program_detail.html" class="btn btn-secondary btn-sm">Add /
+                                        View Subjects</a>
+                                    <button></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Intermediate</td>
+                            <td>Humanities</td>
+                            <td>Arts</td>
+                            <td>2025-26</td>
+                            <td>BISE Lahore</td>
+                            <td><span class="badge badge-neutral">N/A</span></td>
+                            <td><span class="badge badge-success">N/A</span></td>
+                            <td>Morning | 1st Shift</td>
+                            <td>2 Years</td>
+                            <td>Annual</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-danger btn-sm">In-Active</button>
+                                    <a href="add_course_program_detail.html" class="btn btn-secondary btn-sm">Add /
+                                        View Subjects</a>
+                                    <button></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <div>Showing 1-10 of 24 records</div>
+                <div>
+                    <button class="btn btn-secondary btn-sm">Previous</button>
+                    <button class="btn btn-secondary btn-sm">Next</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
