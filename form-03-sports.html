@@ -1,803 +1,352 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Sports Facilities — EduGov ERP</title>
-    <link rel="stylesheet" href="design-system.css" />
-    <style>
-        .wizard-steps {
-            display: flex;
-            align-items: center;
-            gap: 0;
-        }
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Sports Facilities — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+.wizard-steps { display:flex; align-items:center; gap:0; }
+.ws-item { display:flex; align-items:center; flex:1; }
+.ws-connector { flex:1; height:2px; background:var(--border-light); margin:0 4px; }
+.ws-connector.done { background:var(--color-success-border); }
+.ws-node { display:flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer; }
+.ws-circle { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+.ws-circle.done   { background:var(--color-success-bg); color:var(--color-success-text); border:2px solid var(--color-success-border); }
+.ws-circle.active { background:var(--brand-600); color:#fff; border:2px solid var(--brand-700); }
+.ws-circle.pending{ background:var(--bg-tertiary); color:var(--text-muted); border:2px solid var(--border-light); }
+.ws-label { font-size:11px; font-weight:500; white-space:nowrap; text-align:center; }
+.ws-label.done   { color:var(--color-success-text); }
+.ws-label.active { color:var(--brand-600); font-weight:600; }
+.ws-label.pending{ color:var(--text-muted); }
 
-        .ws-item {
-            display: flex;
-            align-items: center;
-            flex: 1;
-        }
+/* ── Sports card grid ── */
+.sports-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4); }
+.sport-card {
+  background:var(--bg-surface);
+  border:1px solid var(--border-light);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  transition:border-color .15s, box-shadow .15s;
+}
+.sport-card:focus-within { border-color:var(--brand-500); box-shadow:0 0 0 3px rgba(107,99,212,.10); }
 
-        .ws-connector {
-            flex: 1;
-            height: 2px;
-            background: var(--border-light);
-            margin: 0 4px;
-        }
+.sport-card-header {
+  padding:var(--space-4);
+  display:flex; align-items:center; gap:var(--space-3);
+  border-bottom:1px solid var(--border-light);
+  background:var(--bg-secondary);
+}
+.sport-emoji { font-size:28px; width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius:var(--radius-md); }
+.sport-name  { font-size:15px; font-weight:600; flex:1; }
+.sport-status { font-size:11px; font-weight:500; padding:3px 9px; border-radius:var(--radius-full); }
+.sport-status.complete { background:var(--color-success-bg); color:var(--color-success-text); border:1px solid var(--color-success-border); }
+.sport-status.partial  { background:var(--color-warning-bg); color:var(--color-warning-text); border:1px solid var(--color-warning-border); }
+.sport-status.empty    { background:var(--bg-tertiary); color:var(--text-muted); border:1px solid var(--border-light); }
 
-        .ws-connector.done {
-            background: var(--color-success-border);
-        }
+.sport-card-body { padding:var(--space-4); }
 
-        .ws-node {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-        }
+/* ── Yes/No toggle button ── */
+.yn-row { display:flex; align-items:center; justify-content:space-between; padding:var(--space-2) 0; border-bottom:1px solid var(--border-light); }
+.yn-row:last-child { border-bottom:none; }
+.yn-field-label { font-size:13px; color:var(--text-primary); font-weight:500; }
+.yn-btns { display:flex; gap:6px; }
+.yn-btn {
+  padding:4px 12px; border-radius:var(--radius-full);
+  border:1.5px solid var(--border-medium);
+  font-size:11px; font-weight:600; cursor:pointer;
+  background:var(--bg-surface); color:var(--text-muted);
+  transition:all .15s;
+}
+.yn-btn.yes-sel { border-color:var(--color-success-border); background:var(--color-success-bg); color:var(--color-success-text); }
+.yn-btn.no-sel  { border-color:var(--color-danger-border);  background:var(--color-danger-bg);  color:var(--color-danger-text); }
+.yn-btn:hover   { border-color:var(--border-strong); color:var(--text-primary); }
 
-        .ws-circle {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
+/* Number inline */
+.yn-num-group { display:flex; align-items:center; gap:8px; }
+.yn-num { width:64px; padding:4px 8px; border:1.5px solid var(--border-medium); border-radius:var(--radius-md); font-size:13px; text-align:center; outline:none; }
+.yn-num:focus { border-color:var(--brand-500); }
+.yn-num-label { font-size:11px; color:var(--text-muted); }
 
-        .ws-circle.done {
-            background: var(--color-success-bg);
-            color: var(--color-success-text);
-            border: 2px solid var(--color-success-border);
-        }
+/* Summary row */
+.sports-summary {
+  background:var(--bg-secondary);
+  border:1px solid var(--border-light);
+  border-radius:var(--radius-md);
+  padding:var(--space-4);
+  display:grid; grid-template-columns:repeat(6,1fr);
+  gap:var(--space-3);
+  margin-bottom:var(--space-5);
+}
+.ss-item { text-align:center; }
+.ss-sport { font-size:20px; margin-bottom:4px; }
+.ss-name  { font-size:10px; color:var(--text-muted); font-weight:500; text-transform:uppercase; letter-spacing:.04em; }
+.ss-dot   { width:8px; height:8px; border-radius:50%; margin:4px auto 0; }
+.ss-dot.y { background:var(--color-success-text); }
+.ss-dot.n { background:var(--color-danger-text); }
+.ss-dot.e { background:var(--border-medium); }
 
-        .ws-circle.active {
-            background: var(--brand-600);
-            color: #fff;
-            border: 2px solid var(--brand-700);
-        }
-
-        .ws-circle.pending {
-            background: var(--bg-tertiary);
-            color: var(--text-muted);
-            border: 2px solid var(--border-light);
-        }
-
-        .ws-label {
-            font-size: 11px;
-            font-weight: 500;
-            white-space: nowrap;
-            text-align: center;
-        }
-
-        .ws-label.done {
-            color: var(--color-success-text);
-        }
-
-        .ws-label.active {
-            color: var(--brand-600);
-            font-weight: 600;
-        }
-
-        .ws-label.pending {
-            color: var(--text-muted);
-        }
-
-        /* ── Sports card grid ── */
-        .sports-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-4);
-        }
-
-        .sport-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            transition: border-color .15s, box-shadow .15s;
-        }
-
-        .sport-card:focus-within {
-            border-color: var(--brand-500);
-            box-shadow: 0 0 0 3px rgba(107, 99, 212, .10);
-        }
-
-        .sport-card-header {
-            padding: var(--space-4);
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            border-bottom: 1px solid var(--border-light);
-            background: var(--bg-secondary);
-        }
-
-        .sport-emoji {
-            font-size: 28px;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-md);
-        }
-
-        .sport-name {
-            font-size: 15px;
-            font-weight: 600;
-            flex: 1;
-        }
-
-        .sport-status {
-            font-size: 11px;
-            font-weight: 500;
-            padding: 3px 9px;
-            border-radius: var(--radius-full);
-        }
-
-        .sport-status.complete {
-            background: var(--color-success-bg);
-            color: var(--color-success-text);
-            border: 1px solid var(--color-success-border);
-        }
-
-        .sport-status.partial {
-            background: var(--color-warning-bg);
-            color: var(--color-warning-text);
-            border: 1px solid var(--color-warning-border);
-        }
-
-        .sport-status.empty {
-            background: var(--bg-tertiary);
-            color: var(--text-muted);
-            border: 1px solid var(--border-light);
-        }
-
-        .sport-card-body {
-            padding: var(--space-4);
-        }
-
-        /* ── Yes/No toggle button ── */
-        .yn-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: var(--space-2) 0;
-            border-bottom: 1px solid var(--border-light);
-        }
-
-        .yn-row:last-child {
-            border-bottom: none;
-        }
-
-        .yn-field-label {
-            font-size: 13px;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .yn-btns {
-            display: flex;
-            gap: 6px;
-        }
-
-        .yn-btn {
-            padding: 4px 12px;
-            border-radius: var(--radius-full);
-            border: 1.5px solid var(--border-medium);
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            background: var(--bg-surface);
-            color: var(--text-muted);
-            transition: all .15s;
-        }
-
-        .yn-btn.yes-sel {
-            border-color: var(--color-success-border);
-            background: var(--color-success-bg);
-            color: var(--color-success-text);
-        }
-
-        .yn-btn.no-sel {
-            border-color: var(--color-danger-border);
-            background: var(--color-danger-bg);
-            color: var(--color-danger-text);
-        }
-
-        .yn-btn:hover {
-            border-color: var(--border-strong);
-            color: var(--text-primary);
-        }
-
-        /* Number inline */
-        .yn-num-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .yn-num {
-            width: 64px;
-            padding: 4px 8px;
-            border: 1.5px solid var(--border-medium);
-            border-radius: var(--radius-md);
-            font-size: 13px;
-            text-align: center;
-            outline: none;
-        }
-
-        .yn-num:focus {
-            border-color: var(--brand-500);
-        }
-
-        .yn-num-label {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        /* Summary row */
-        .sports-summary {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-md);
-            padding: var(--space-4);
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: var(--space-3);
-            margin-bottom: var(--space-5);
-        }
-
-        .ss-item {
-            text-align: center;
-        }
-
-        .ss-sport {
-            font-size: 20px;
-            margin-bottom: 4px;
-        }
-
-        .ss-name {
-            font-size: 10px;
-            color: var(--text-muted);
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-        }
-
-        .ss-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin: 4px auto 0;
-        }
-
-        .ss-dot.y {
-            background: var(--color-success-text);
-        }
-
-        .ss-dot.n {
-            background: var(--color-danger-text);
-        }
-
-        .ss-dot.e {
-            background: var(--border-medium);
-        }
-
-        /* Save bar */
-        .save-bar {
-            position: sticky;
-            bottom: 0;
-            background: var(--bg-surface);
-            border-top: 1px solid var(--border-light);
-            padding: var(--space-4) var(--space-6);
-            display: flex;
-            align-items: center;
-            gap: var(--space-3);
-            box-shadow: 0 -4px 16px rgba(0, 0, 0, .06);
-            z-index: 10;
-        }
-
-        .autosave-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--color-success-text);
-        }
-    </style>
+/* Save bar */
+.save-bar {
+  position:sticky; bottom:0;
+  background:var(--bg-surface);
+  border-top:1px solid var(--border-light);
+  padding:var(--space-4) var(--space-6);
+  display:flex; align-items:center; gap:var(--space-3);
+  box-shadow:0 -4px 16px rgba(0,0,0,.06);
+  z-index:10;
+}
+.autosave-dot { width:7px; height:7px; border-radius:50%; background:var(--color-success-text); }
+</style>
 </head>
-
 <body>
-    <div class="app-shell">
+<div class="app-shell">
 
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
-            <div class="sidebar-logo">
-                <div class="sidebar-logo-mark">E</div>
-                <div>
-                    <div class="sidebar-logo-text">EduGov ERP</div>
-                    <div class="sidebar-logo-sub">Punjab HED</div>
-                </div>
-            </div>
-            <div class="sidebar-role-badge">
-                <div class="role-name">College Administration</div>
-                <div class="role-sub">GC Faisalabad</div>
-            </div>
-            <nav class="sidebar-nav">
-                <div class="sidebar-section-label">Overview</div>
-                <a class="nav-item" href="09-college-admin-dashboard.html"><span
-                        class="nav-icon">⊞</span><span>Dashboard</span></a>
-                <div class="sidebar-section-label">College Setup</div>
-                <a class="nav-item" href="form-01-college-profile.html"><span class="nav-icon">🏛️</span><span>College
-                        Profile</span></a>
-                <a class="nav-item" href="form-02-infrastructure.html"><span
-                        class="nav-icon">🏗️</span><span>Infrastructure</span></a>
-                <a class="nav-item active" href="form-03-sports.html"><span
-                        class="nav-icon">⚽</span><span>Sports</span></a>
-                <a class="nav-item" href="form-04-security-facilities.html"><span
-                        class="nav-icon">🔒</span><span>Security &amp; Facilities</span></a>
-                <a class="nav-item" href="form-05-monitoring.html"><span
-                        class="nav-icon">📋</span><span>Monitoring</span><span class="nav-badge">110</span></a>
-                <div class="sidebar-section-label">Admissions</div>
-                <a class="nav-item" href="#"><span class="nav-icon">🎓</span><span>Applications</span><span
-                        class="nav-badge">47</span></a>
-                <div class="sidebar-section-label">Students</div>
-                <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>Student List</span></a>
-                <div class="sidebar-section-label">Finance</div>
-                <a class="nav-item" href="#"><span class="nav-icon">💳</span><span>Fee Collection</span></a>
-            </nav>
-            <div class="sidebar-bottom">
-                <div class="sidebar-user">
-                    <div class="avatar sm">MK</div>
-                    <div class="user-info">
-                        <div style="font-size:12px;font-weight:500;color:#fff;">Muhammad Kamran</div>
-                        <div style="font-size:10px;color:rgba(255,255,255,.45)">Admin Officer</div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- MAIN -->
-        <div class="main-area">
-            <header class="topbar">
-                <div class="breadcrumb">
-                    <a href="09-college-admin-dashboard.html">GC Faisalabad</a><span>›</span>
-                    <a href="form-01-college-profile.html">College Setup</a><span>›</span>
-                    <span class="crumb-active">Sports Facilities</span>
-                </div>
-                <div class="topbar-actions">
-                    <button class="btn btn-secondary btn-sm">📤 Export</button>
-                </div>
-            </header>
-
-            <main class="page-body">
-                <div class="page-header">
-                    <div class="page-header-left">
-                        <h1>Sports &amp; Playgrounds</h1>
-                        <p>Step 3 of 5 · 6 sports · 36 fields · Playground availability, functionality and equipment</p>
-                    </div>
-                    <div class="page-header-actions">
-                        <span class="badge badge-warning">2 / 6 complete</span>
-                        <button class="btn btn-primary">Save &amp; Continue →</button>
-                    </div>
-                </div>
-
-                <!-- Wizard -->
-                <div class="card" style="padding:var(--space-4) var(--space-5);margin-bottom:var(--space-4)">
-                    <div class="wizard-steps">
-                        <div class="ws-item">
-                            <div class="ws-node">
-                                <div class="ws-circle done">✓</div>
-                                <div class="ws-label done">College Profile</div>
-                            </div>
-                        </div>
-                        <div class="ws-connector done"></div>
-                        <div class="ws-item">
-                            <div class="ws-node">
-                                <div class="ws-circle done">✓</div>
-                                <div class="ws-label done">Infrastructure</div>
-                            </div>
-                        </div>
-                        <div class="ws-connector done"></div>
-                        <div class="ws-item">
-                            <div class="ws-node">
-                                <div class="ws-circle active">3</div>
-                                <div class="ws-label active">Sports</div>
-                            </div>
-                        </div>
-                        <div class="ws-connector"></div>
-                        <div class="ws-item">
-                            <div class="ws-node">
-                                <div class="ws-circle pending">4</div>
-                                <div class="ws-label pending">Security &amp; Facilities</div>
-                            </div>
-                        </div>
-                        <div class="ws-connector"></div>
-                        <div class="ws-item">
-                            <div class="ws-node">
-                                <div class="ws-circle pending">5</div>
-                                <div class="ws-label pending">Monitoring</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sports overview summary bar -->
-                <div class="sports-summary">
-                    <div class="ss-item">
-                        <div class="ss-sport">🏏</div>
-                        <div class="ss-name">Cricket</div>
-                        <div class="ss-dot y"></div>
-                    </div>
-                    <div class="ss-item">
-                        <div class="ss-sport">⚽</div>
-                        <div class="ss-name">Football</div>
-                        <div class="ss-dot y"></div>
-                    </div>
-                    <div class="ss-item">
-                        <div class="ss-sport">🏑</div>
-                        <div class="ss-name">Hockey</div>
-                        <div class="ss-dot e"></div>
-                    </div>
-                    <div class="ss-item">
-                        <div class="ss-sport">🏀</div>
-                        <div class="ss-name">Basketball</div>
-                        <div class="ss-dot e"></div>
-                    </div>
-                    <div class="ss-item">
-                        <div class="ss-sport">🏸</div>
-                        <div class="ss-name">Badminton</div>
-                        <div class="ss-dot e"></div>
-                    </div>
-                    <div class="ss-item">
-                        <div class="ss-sport">🎾</div>
-                        <div class="ss-name">Squash</div>
-                        <div class="ss-dot n"></div>
-                    </div>
-                </div>
-
-                <div class="alert alert-info" style="margin-bottom:var(--space-5)">
-                    <span>ℹ️</span>
-                    <div>For each sport, fill: <strong>Available · Functional · Levelled · Equipment Available ·
-                            Pavilion</strong> (Yes/No each) and <strong>Units count</strong>.</div>
-                </div>
-
-                <div class="sports-grid">
-
-                    <!-- ── CRICKET ── -->
-                    <div class="sport-card">
-                        <div class="sport-card-header">
-                            <div class="sport-emoji" style="background:#EAF3DE">🏏</div>
-                            <div class="sport-name">Cricket</div>
-                            <span class="sport-status complete">Complete</span>
-                        </div>
-                        <div class="sport-card-body">
-                            <div class="yn-row">
-                                <span class="yn-field-label">Available?</span>
-                                <div class="yn-btns">
-                                    <label><input type="radio" name="cricket_available" value="Yes"
-                                            style="display:none" /><span class="yn-btn yes-sel"
-                                            onclick="setYN(this,'yes')">Yes</span></label>
-                                    <label><input type="radio" name="cricket_available" value="No"
-                                            style="display:none" /><span class="yn-btn"
-                                            onclick="setYN(this,'no')">No</span></label>
-                                </div>
-                            </div>
-                            <div class="yn-row">
-                                <span class="yn-field-label">Functional?</span>
-                                <div class="yn-btns">
-                                    <label><input type="radio" name="cricket_functional" value="Yes"
-                                            style="display:none" /><span class="yn-btn yes-sel"
-                                            onclick="setYN(this,'yes')">Yes</span></label>
-                                    <label><input type="radio" name="cricket_functional" value="No"
-                                            style="display:none" /><span class="yn-btn"
-                                            onclick="setYN(this,'no')">No</span></label>
-                                </div>
-                            </div>
-                            <div class="yn-row">
-                                <span class="yn-field-label">Levelled?</span>
-                                <div class="yn-btns">
-                                    <label><input type="radio" name="cricket_levelled" value="Yes"
-                                            style="display:none" /><span class="yn-btn yes-sel"
-                                            onclick="setYN(this,'yes')">Yes</span></label>
-                                    <label><input type="radio" name="cricket_levelled" value="No"
-                                            style="display:none" /><span class="yn-btn"
-                                            onclick="setYN(this,'no')">No</span></label>
-                                </div>
-                            </div>
-                            <div class="yn-row">
-                                <span class="yn-field-label">Equipment Available?</span>
-                                <div class="yn-btns">
-                                    <label><input type="radio" name="cricket_equipment_available" value="Yes"
-                                            style="display:none" /><span class="yn-btn yes-sel"
-                                            onclick="setYN(this,'yes')">Yes</span></label>
-                                    <label><input type="radio" name="cricket_equipment_available" value="No"
-                                            style="display:none" /><span class="yn-btn"
-                                            onclick="setYN(this,'no')">No</span></label>
-                                </div>
-                            </div>
-                            <div class="yn-row">
-                                <span class="yn-field-label">Pavilion?</span>
-                                <div class="yn-btns">
-                                    <label><input type="radio" name="cricket_pavilion" value="Yes"
-                                            style="display:none" /><span class="yn-btn"
-                                            onclick="setYN(this,'yes')">Yes</span></label>
-                                    <label><input type="radio" name="cricket_pavilion" value="No"
-                                            style="display:none" /><span class="yn-btn no-sel"
-                                            onclick="setYN(this,'no')">No</span></label>
-                                </div>
-                            </div>
-                            <div class="yn-row" style="border-bottom:none">
-                                <span class="yn-field-label">Units / Grounds</span>
-                                <div class="yn-num-group">
-                                    <input class="yn-num" type="number" min="0" value="1" name="cricket_units" />
-                                    <span class="yn-num-label">grounds</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ── FOOTBALL ── -->
-                    <div class="sport-card">
-                        <div class="sport-card-header">
-                            <div class="sport-emoji" style="background:#E6F1FB">⚽</div>
-                            <div class="sport-name">Football</div>
-                            <span class="sport-status complete">Complete</span>
-                        </div>
-                        <div class="sport-card-body">
-                            <div class="yn-row"><span class="yn-field-label">Available?</span>
-                                <div class="yn-btns"><label><input type="radio" name="football_available" value="Yes"
-                                            style="display:none" /><span
-                                            class="yn-btn yes-sel">Yes</span></label><label><input type="radio"
-                                            name="football_available" value="No" style="display:none" /><span
-                                            class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Functional?</span>
-                                <div class="yn-btns"><label><input type="radio" name="football_functional" value="Yes"
-                                            style="display:none" /><span
-                                            class="yn-btn yes-sel">Yes</span></label><label><input type="radio"
-                                            name="football_functional" value="No" style="display:none" /><span
-                                            class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Levelled?</span>
-                                <div class="yn-btns"><label><input type="radio" name="football_levelled" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="football_levelled" value="No"
-                                            style="display:none" /><span class="yn-btn no-sel">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Equipment Available?</span>
-                                <div class="yn-btns"><label><input type="radio" name="football_equipment_available"
-                                            value="Yes" style="display:none" /><span
-                                            class="yn-btn yes-sel">Yes</span></label><label><input type="radio"
-                                            name="football_equipment_available" value="No" style="display:none" /><span
-                                            class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Pavilion?</span>
-                                <div class="yn-btns"><label><input type="radio" name="football_pavilion" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="football_pavilion" value="No"
-                                            style="display:none" /><span class="yn-btn no-sel">No</span></label></div>
-                            </div>
-                            <div class="yn-row" style="border-bottom:none"><span class="yn-field-label">Units /
-                                    Grounds</span>
-                                <div class="yn-num-group"><input class="yn-num" type="number" min="0" value="1"
-                                        name="football_units" /><span class="yn-num-label">grounds</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ── HOCKEY ── -->
-                    <div class="sport-card">
-                        <div class="sport-card-header">
-                            <div class="sport-emoji" style="background:#FAEEDA">🏑</div>
-                            <div class="sport-name">Hockey</div>
-                            <span class="sport-status empty">Not filled</span>
-                        </div>
-                        <div class="sport-card-body">
-                            <div class="yn-row"><span class="yn-field-label">Available?</span>
-                                <div class="yn-btns"><label><input type="radio" name="hockey_available" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="hockey_available" value="No" style="display:none" /><span
-                                            class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Functional?</span>
-                                <div class="yn-btns"><label><input type="radio" name="hockey_functional" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="hockey_functional" value="No"
-                                            style="display:none" /><span class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Levelled?</span>
-                                <div class="yn-btns"><label><input type="radio" name="hockey_levelled" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="hockey_levelled" value="No" style="display:none" /><span
-                                            class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Equipment Available?</span>
-                                <div class="yn-btns"><label><input type="radio" name="hockey_equipment_available"
-                                            value="Yes" style="display:none" /><span
-                                            class="yn-btn">Yes</span></label><label><input type="radio"
-                                            name="hockey_equipment_available" value="No" style="display:none" /><span
-                                            class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Pavilion?</span>
-                                <div class="yn-btns"><label><input type="radio" name="hockey_pavilion" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="hockey_pavilion" value="No" style="display:none" /><span
-                                            class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row" style="border-bottom:none"><span class="yn-field-label">Units /
-                                    Grounds</span>
-                                <div class="yn-num-group"><input class="yn-num" type="number" min="0" placeholder="0"
-                                        name="hockey_units" /><span class="yn-num-label">grounds</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ── BASKETBALL ── -->
-                    <div class="sport-card">
-                        <div class="sport-card-header">
-                            <div class="sport-emoji" style="background:#EEEDFE">🏀</div>
-                            <div class="sport-name">Basketball</div>
-                            <span class="sport-status empty">Not filled</span>
-                        </div>
-                        <div class="sport-card-body">
-                            <div class="yn-row"><span class="yn-field-label">Available?</span>
-                                <div class="yn-btns"><label><input type="radio" name="basketball_available" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="basketball_available" value="No"
-                                            style="display:none" /><span class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Functional?</span>
-                                <div class="yn-btns"><label><input type="radio" name="basketball_functional" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="basketball_functional" value="No"
-                                            style="display:none" /><span class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Levelled?</span>
-                                <div class="yn-btns"><label><input type="radio" name="basketball_levelled" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="basketball_levelled" value="No"
-                                            style="display:none" /><span class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Equipment Available?</span>
-                                <div class="yn-btns"><label><input type="radio" name="basketball_equipment_available"
-                                            value="Yes" style="display:none" /><span
-                                            class="yn-btn">Yes</span></label><label><input type="radio"
-                                            name="basketball_equipment_available" value="No"
-                                            style="display:none" /><span class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Pavilion?</span>
-                                <div class="yn-btns"><label><input type="radio" name="basketball_pavilion" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="basketball_pavilion" value="No"
-                                            style="display:none" /><span class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row" style="border-bottom:none"><span class="yn-field-label">Units /
-                                    Courts</span>
-                                <div class="yn-num-group"><input class="yn-num" type="number" min="0" placeholder="0"
-                                        name="basketball_units" /><span class="yn-num-label">courts</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ── BADMINTON ── -->
-                    <div class="sport-card">
-                        <div class="sport-card-header">
-                            <div class="sport-emoji" style="background:#EAF3DE">🏸</div>
-                            <div class="sport-name">Badminton</div>
-                            <span class="sport-status empty">Not filled</span>
-                        </div>
-                        <div class="sport-card-body">
-                            <div class="yn-row"><span class="yn-field-label">Available?</span>
-                                <div class="yn-btns"><label><input type="radio" name="badminton_available" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="badminton_available" value="No"
-                                            style="display:none" /><span class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Functional?</span>
-                                <div class="yn-btns"><label><input type="radio" name="badminton_functional" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="badminton_functional" value="No"
-                                            style="display:none" /><span class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Levelled?</span>
-                                <div class="yn-btns"><label><input type="radio" name="badminton_levelled" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="badminton_levelled" value="No"
-                                            style="display:none" /><span class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Equipment Available?</span>
-                                <div class="yn-btns"><label><input type="radio" name="badminton_equipment_available"
-                                            value="Yes" style="display:none" /><span
-                                            class="yn-btn">Yes</span></label><label><input type="radio"
-                                            name="badminton_equipment_available" value="No" style="display:none" /><span
-                                            class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Pavilion?</span>
-                                <div class="yn-btns"><label><input type="radio" name="badminton_pavilion" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="badminton_pavilion" value="No"
-                                            style="display:none" /><span class="yn-btn">No</span></label></div>
-                            </div>
-                            <div class="yn-row" style="border-bottom:none"><span class="yn-field-label">Units /
-                                    Courts</span>
-                                <div class="yn-num-group"><input class="yn-num" type="number" min="0" placeholder="0"
-                                        name="badminton_units" /><span class="yn-num-label">courts</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- ── SQUASH ── -->
-                    <div class="sport-card">
-                        <div class="sport-card-header">
-                            <div class="sport-emoji" style="background:#FCEBEB">🎾</div>
-                            <div class="sport-name">Squash</div>
-                            <span class="sport-status partial">Not Available</span>
-                        </div>
-                        <div class="sport-card-body">
-                            <div class="yn-row"><span class="yn-field-label">Available?</span>
-                                <div class="yn-btns"><label><input type="radio" name="squash_available" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="squash_available" value="No" style="display:none" /><span
-                                            class="yn-btn no-sel">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Functional?</span>
-                                <div class="yn-btns"><label><input type="radio" name="squash_functional" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="squash_functional" value="No"
-                                            style="display:none" /><span class="yn-btn no-sel">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Levelled?</span>
-                                <div class="yn-btns"><label><input type="radio" name="squash_levelled" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="squash_levelled" value="No" style="display:none" /><span
-                                            class="yn-btn no-sel">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Equipment Available?</span>
-                                <div class="yn-btns"><label><input type="radio" name="squash_equipment_available"
-                                            value="Yes" style="display:none" /><span
-                                            class="yn-btn">Yes</span></label><label><input type="radio"
-                                            name="squash_equipment_available" value="No" style="display:none" /><span
-                                            class="yn-btn no-sel">No</span></label></div>
-                            </div>
-                            <div class="yn-row"><span class="yn-field-label">Pavilion?</span>
-                                <div class="yn-btns"><label><input type="radio" name="squash_pavilion" value="Yes"
-                                            style="display:none" /><span class="yn-btn">Yes</span></label><label><input
-                                            type="radio" name="squash_pavilion" value="No" style="display:none" /><span
-                                            class="yn-btn no-sel">No</span></label></div>
-                            </div>
-                            <div class="yn-row" style="border-bottom:none"><span class="yn-field-label">Units /
-                                    Courts</span>
-                                <div class="yn-num-group"><input class="yn-num" type="number" min="0" value="0"
-                                        name="squash_units" /><span class="yn-num-label">courts</span></div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div><!-- end sports-grid -->
-
-                <!-- Save Bar -->
-                <div class="save-bar">
-                    <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)">
-                        <div class="autosave-dot"></div>
-                        Auto-saved · 2 / 6 sports complete · 12 / 36 fields filled
-                    </div>
-                    <div style="margin-left:auto;display:flex;gap:var(--space-2)">
-                        <a href="form-02-infrastructure.html" class="btn btn-secondary">← Infrastructure</a>
-                        <button class="btn btn-ghost">Save Draft</button>
-                        <a href="form-04-security-facilities.html" class="btn btn-primary">Save &amp; Continue to
-                            Security →</a>
-                    </div>
-                </div>
-
-            </main>
-        </div>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-mark">E</div>
+    <div><div class="sidebar-logo-text">EduGov ERP</div><div class="sidebar-logo-sub">Punjab HED</div></div>
+  </div>
+  <div class="sidebar-role-badge">
+    <div class="role-name">College Administration</div>
+    <div class="role-sub">GC Faisalabad</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-section-label">Overview</div>
+    <a class="nav-item" href="09-college-admin-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+    <div class="sidebar-section-label">College Setup</div>
+    <a class="nav-item" href="form-01-college-profile.html"><span class="nav-icon">🏛️</span><span>College Profile</span></a>
+    <a class="nav-item" href="form-02-infrastructure.html"><span class="nav-icon">🏗️</span><span>Infrastructure</span></a>
+    <a class="nav-item active" href="form-03-sports.html"><span class="nav-icon">⚽</span><span>Sports</span></a>
+    <a class="nav-item" href="form-04-security-facilities.html"><span class="nav-icon">🔒</span><span>Security &amp; Facilities</span></a>
+    <a class="nav-item" href="form-05-monitoring.html"><span class="nav-icon">📋</span><span>Monitoring</span><span class="nav-badge">110</span></a>
+    <div class="sidebar-section-label">Admissions</div>
+    <a class="nav-item" href="#"><span class="nav-icon">🎓</span><span>Applications</span><span class="nav-badge">47</span></a>
+    <div class="sidebar-section-label">Students</div>
+    <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>Student List</span></a>
+    <div class="sidebar-section-label">Finance</div>
+    <a class="nav-item" href="#"><span class="nav-icon">💳</span><span>Fee Collection</span></a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-user">
+      <div class="avatar sm">MK</div>
+      <div class="user-info"><div style="font-size:12px;font-weight:500;color:#fff;">Muhammad Kamran</div><div style="font-size:10px;color:rgba(255,255,255,.45)">Admin Officer</div></div>
     </div>
-</body>
+  </div>
+</aside>
 
+<!-- MAIN -->
+<div class="main-area">
+  <header class="topbar">
+    <div class="breadcrumb">
+      <a href="09-college-admin-dashboard.html">GC Faisalabad</a><span>›</span>
+      <a href="form-01-college-profile.html">College Setup</a><span>›</span>
+      <span class="crumb-active">Sports Facilities</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-secondary btn-sm">📤 Export</button>
+    </div>
+  </header>
+
+  <main class="page-body">
+    <div class="page-header">
+      <div class="page-header-left">
+        <h1>Sports &amp; Playgrounds</h1>
+        <p>Step 3 of 5 · 6 sports · 36 fields · Playground availability, functionality and equipment</p>
+      </div>
+      <div class="page-header-actions">
+        <span class="badge badge-warning">2 / 6 complete</span>
+        <button class="btn btn-primary">Save &amp; Continue →</button>
+      </div>
+    </div>
+
+    <!-- Wizard -->
+    <div class="card" style="padding:var(--space-4) var(--space-5);margin-bottom:var(--space-4)">
+      <div class="wizard-steps">
+        <div class="ws-item"><div class="ws-node"><div class="ws-circle done">✓</div><div class="ws-label done">College Profile</div></div></div>
+        <div class="ws-connector done"></div>
+        <div class="ws-item"><div class="ws-node"><div class="ws-circle done">✓</div><div class="ws-label done">Infrastructure</div></div></div>
+        <div class="ws-connector done"></div>
+        <div class="ws-item"><div class="ws-node"><div class="ws-circle active">3</div><div class="ws-label active">Sports</div></div></div>
+        <div class="ws-connector"></div>
+        <div class="ws-item"><div class="ws-node"><div class="ws-circle pending">4</div><div class="ws-label pending">Security &amp; Facilities</div></div></div>
+        <div class="ws-connector"></div>
+        <div class="ws-item"><div class="ws-node"><div class="ws-circle pending">5</div><div class="ws-label pending">Monitoring</div></div></div>
+      </div>
+    </div>
+
+    <!-- Sports overview summary bar -->
+    <div class="sports-summary">
+      <div class="ss-item"><div class="ss-sport">🏏</div><div class="ss-name">Cricket</div><div class="ss-dot y"></div></div>
+      <div class="ss-item"><div class="ss-sport">⚽</div><div class="ss-name">Football</div><div class="ss-dot y"></div></div>
+      <div class="ss-item"><div class="ss-sport">🏑</div><div class="ss-name">Hockey</div><div class="ss-dot e"></div></div>
+      <div class="ss-item"><div class="ss-sport">🏀</div><div class="ss-name">Basketball</div><div class="ss-dot e"></div></div>
+      <div class="ss-item"><div class="ss-sport">🏸</div><div class="ss-name">Badminton</div><div class="ss-dot e"></div></div>
+      <div class="ss-item"><div class="ss-sport">🎾</div><div class="ss-name">Squash</div><div class="ss-dot n"></div></div>
+    </div>
+
+    <div class="alert alert-info" style="margin-bottom:var(--space-5)">
+      <span>ℹ️</span>
+      <div>For each sport, fill: <strong>Available · Functional · Levelled · Equipment Available · Pavilion</strong> (Yes/No each) and <strong>Units count</strong>.</div>
+    </div>
+
+    <div class="sports-grid">
+
+      <!-- ── CRICKET ── -->
+      <div class="sport-card">
+        <div class="sport-card-header">
+          <div class="sport-emoji" style="background:#EAF3DE">🏏</div>
+          <div class="sport-name">Cricket</div>
+          <span class="sport-status complete">Complete</span>
+        </div>
+        <div class="sport-card-body">
+          <div class="yn-row">
+            <span class="yn-field-label">Available?</span>
+            <div class="yn-btns">
+              <label><input type="radio" name="cricket_available" value="Yes" style="display:none"/><span class="yn-btn yes-sel" onclick="setYN(this,'yes')">Yes</span></label>
+              <label><input type="radio" name="cricket_available" value="No" style="display:none"/><span class="yn-btn" onclick="setYN(this,'no')">No</span></label>
+            </div>
+          </div>
+          <div class="yn-row">
+            <span class="yn-field-label">Functional?</span>
+            <div class="yn-btns">
+              <label><input type="radio" name="cricket_functional" value="Yes" style="display:none"/><span class="yn-btn yes-sel" onclick="setYN(this,'yes')">Yes</span></label>
+              <label><input type="radio" name="cricket_functional" value="No" style="display:none"/><span class="yn-btn" onclick="setYN(this,'no')">No</span></label>
+            </div>
+          </div>
+          <div class="yn-row">
+            <span class="yn-field-label">Levelled?</span>
+            <div class="yn-btns">
+              <label><input type="radio" name="cricket_levelled" value="Yes" style="display:none"/><span class="yn-btn yes-sel" onclick="setYN(this,'yes')">Yes</span></label>
+              <label><input type="radio" name="cricket_levelled" value="No" style="display:none"/><span class="yn-btn" onclick="setYN(this,'no')">No</span></label>
+            </div>
+          </div>
+          <div class="yn-row">
+            <span class="yn-field-label">Equipment Available?</span>
+            <div class="yn-btns">
+              <label><input type="radio" name="cricket_equipment_available" value="Yes" style="display:none"/><span class="yn-btn yes-sel" onclick="setYN(this,'yes')">Yes</span></label>
+              <label><input type="radio" name="cricket_equipment_available" value="No" style="display:none"/><span class="yn-btn" onclick="setYN(this,'no')">No</span></label>
+            </div>
+          </div>
+          <div class="yn-row">
+            <span class="yn-field-label">Pavilion?</span>
+            <div class="yn-btns">
+              <label><input type="radio" name="cricket_pavilion" value="Yes" style="display:none"/><span class="yn-btn" onclick="setYN(this,'yes')">Yes</span></label>
+              <label><input type="radio" name="cricket_pavilion" value="No" style="display:none"/><span class="yn-btn no-sel" onclick="setYN(this,'no')">No</span></label>
+            </div>
+          </div>
+          <div class="yn-row" style="border-bottom:none">
+            <span class="yn-field-label">Units / Grounds</span>
+            <div class="yn-num-group">
+              <input class="yn-num" type="number" min="0" value="1" name="cricket_units"/>
+              <span class="yn-num-label">grounds</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── FOOTBALL ── -->
+      <div class="sport-card">
+        <div class="sport-card-header">
+          <div class="sport-emoji" style="background:#E6F1FB">⚽</div>
+          <div class="sport-name">Football</div>
+          <span class="sport-status complete">Complete</span>
+        </div>
+        <div class="sport-card-body">
+          <div class="yn-row"><span class="yn-field-label">Available?</span><div class="yn-btns"><label><input type="radio" name="football_available" value="Yes" style="display:none"/><span class="yn-btn yes-sel">Yes</span></label><label><input type="radio" name="football_available" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Functional?</span><div class="yn-btns"><label><input type="radio" name="football_functional" value="Yes" style="display:none"/><span class="yn-btn yes-sel">Yes</span></label><label><input type="radio" name="football_functional" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Levelled?</span><div class="yn-btns"><label><input type="radio" name="football_levelled" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="football_levelled" value="No" style="display:none"/><span class="yn-btn no-sel">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Equipment Available?</span><div class="yn-btns"><label><input type="radio" name="football_equipment_available" value="Yes" style="display:none"/><span class="yn-btn yes-sel">Yes</span></label><label><input type="radio" name="football_equipment_available" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Pavilion?</span><div class="yn-btns"><label><input type="radio" name="football_pavilion" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="football_pavilion" value="No" style="display:none"/><span class="yn-btn no-sel">No</span></label></div></div>
+          <div class="yn-row" style="border-bottom:none"><span class="yn-field-label">Units / Grounds</span><div class="yn-num-group"><input class="yn-num" type="number" min="0" value="1" name="football_units"/><span class="yn-num-label">grounds</span></div></div>
+        </div>
+      </div>
+
+      <!-- ── HOCKEY ── -->
+      <div class="sport-card">
+        <div class="sport-card-header">
+          <div class="sport-emoji" style="background:#FAEEDA">🏑</div>
+          <div class="sport-name">Hockey</div>
+          <span class="sport-status empty">Not filled</span>
+        </div>
+        <div class="sport-card-body">
+          <div class="yn-row"><span class="yn-field-label">Available?</span><div class="yn-btns"><label><input type="radio" name="hockey_available" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="hockey_available" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Functional?</span><div class="yn-btns"><label><input type="radio" name="hockey_functional" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="hockey_functional" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Levelled?</span><div class="yn-btns"><label><input type="radio" name="hockey_levelled" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="hockey_levelled" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Equipment Available?</span><div class="yn-btns"><label><input type="radio" name="hockey_equipment_available" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="hockey_equipment_available" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Pavilion?</span><div class="yn-btns"><label><input type="radio" name="hockey_pavilion" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="hockey_pavilion" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row" style="border-bottom:none"><span class="yn-field-label">Units / Grounds</span><div class="yn-num-group"><input class="yn-num" type="number" min="0" placeholder="0" name="hockey_units"/><span class="yn-num-label">grounds</span></div></div>
+        </div>
+      </div>
+
+      <!-- ── BASKETBALL ── -->
+      <div class="sport-card">
+        <div class="sport-card-header">
+          <div class="sport-emoji" style="background:#EEEDFE">🏀</div>
+          <div class="sport-name">Basketball</div>
+          <span class="sport-status empty">Not filled</span>
+        </div>
+        <div class="sport-card-body">
+          <div class="yn-row"><span class="yn-field-label">Available?</span><div class="yn-btns"><label><input type="radio" name="basketball_available" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="basketball_available" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Functional?</span><div class="yn-btns"><label><input type="radio" name="basketball_functional" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="basketball_functional" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Levelled?</span><div class="yn-btns"><label><input type="radio" name="basketball_levelled" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="basketball_levelled" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Equipment Available?</span><div class="yn-btns"><label><input type="radio" name="basketball_equipment_available" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="basketball_equipment_available" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Pavilion?</span><div class="yn-btns"><label><input type="radio" name="basketball_pavilion" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="basketball_pavilion" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row" style="border-bottom:none"><span class="yn-field-label">Units / Courts</span><div class="yn-num-group"><input class="yn-num" type="number" min="0" placeholder="0" name="basketball_units"/><span class="yn-num-label">courts</span></div></div>
+        </div>
+      </div>
+
+      <!-- ── BADMINTON ── -->
+      <div class="sport-card">
+        <div class="sport-card-header">
+          <div class="sport-emoji" style="background:#EAF3DE">🏸</div>
+          <div class="sport-name">Badminton</div>
+          <span class="sport-status empty">Not filled</span>
+        </div>
+        <div class="sport-card-body">
+          <div class="yn-row"><span class="yn-field-label">Available?</span><div class="yn-btns"><label><input type="radio" name="badminton_available" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="badminton_available" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Functional?</span><div class="yn-btns"><label><input type="radio" name="badminton_functional" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="badminton_functional" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Levelled?</span><div class="yn-btns"><label><input type="radio" name="badminton_levelled" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="badminton_levelled" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Equipment Available?</span><div class="yn-btns"><label><input type="radio" name="badminton_equipment_available" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="badminton_equipment_available" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Pavilion?</span><div class="yn-btns"><label><input type="radio" name="badminton_pavilion" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="badminton_pavilion" value="No" style="display:none"/><span class="yn-btn">No</span></label></div></div>
+          <div class="yn-row" style="border-bottom:none"><span class="yn-field-label">Units / Courts</span><div class="yn-num-group"><input class="yn-num" type="number" min="0" placeholder="0" name="badminton_units"/><span class="yn-num-label">courts</span></div></div>
+        </div>
+      </div>
+
+      <!-- ── SQUASH ── -->
+      <div class="sport-card">
+        <div class="sport-card-header">
+          <div class="sport-emoji" style="background:#FCEBEB">🎾</div>
+          <div class="sport-name">Squash</div>
+          <span class="sport-status partial">Not Available</span>
+        </div>
+        <div class="sport-card-body">
+          <div class="yn-row"><span class="yn-field-label">Available?</span><div class="yn-btns"><label><input type="radio" name="squash_available" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="squash_available" value="No" style="display:none"/><span class="yn-btn no-sel">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Functional?</span><div class="yn-btns"><label><input type="radio" name="squash_functional" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="squash_functional" value="No" style="display:none"/><span class="yn-btn no-sel">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Levelled?</span><div class="yn-btns"><label><input type="radio" name="squash_levelled" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="squash_levelled" value="No" style="display:none"/><span class="yn-btn no-sel">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Equipment Available?</span><div class="yn-btns"><label><input type="radio" name="squash_equipment_available" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="squash_equipment_available" value="No" style="display:none"/><span class="yn-btn no-sel">No</span></label></div></div>
+          <div class="yn-row"><span class="yn-field-label">Pavilion?</span><div class="yn-btns"><label><input type="radio" name="squash_pavilion" value="Yes" style="display:none"/><span class="yn-btn">Yes</span></label><label><input type="radio" name="squash_pavilion" value="No" style="display:none"/><span class="yn-btn no-sel">No</span></label></div></div>
+          <div class="yn-row" style="border-bottom:none"><span class="yn-field-label">Units / Courts</span><div class="yn-num-group"><input class="yn-num" type="number" min="0" value="0" name="squash_units"/><span class="yn-num-label">courts</span></div></div>
+        </div>
+      </div>
+
+    </div><!-- end sports-grid -->
+
+    <!-- Save Bar -->
+    <div class="save-bar">
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)">
+        <div class="autosave-dot"></div>
+        Auto-saved · 2 / 6 sports complete · 12 / 36 fields filled
+      </div>
+      <div style="margin-left:auto;display:flex;gap:var(--space-2)">
+        <a href="form-02-infrastructure.html" class="btn btn-secondary">← Infrastructure</a>
+        <button class="btn btn-ghost">Save Draft</button>
+        <a href="form-04-security-facilities.html" class="btn btn-primary">Save &amp; Continue to Security →</a>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+</body>
 </html>
