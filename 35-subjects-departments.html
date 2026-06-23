@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subjects & Departments — ERP System for Public Colleges</title>
+  <style>
+    :root {
+      --brand-900:#26215C; --brand-700:#3D368F; --brand-600:#534AB7;
+      --brand-500:#6B63D4; --brand-400:#8B85E0; --brand-100:#ECEAFF; --brand-50:#F4F3FF;
+      --bg-page:#F4F3F1; --bg-surface:#FFFFFF; --bg-secondary:#F8F8F7; --bg-tertiary:#EFEEEC;
+      --border-light:#E5E4E1; --border-medium:#D0CFC9;
+      --text-primary:#1A1A2E; --text-secondary:#4A4A6A; --text-muted:#8A8A9A; --text-inverse:#FFFFFF;
+      --success-bg:#EAF3DE; --success-text:#3B6D11; --success-border:#97C459;
+      --warning-bg:#FAEEDA; --warning-text:#854F0B; --warning-border:#EF9F27;
+      --danger-bg:#FCEBEB;  --danger-text:#A32D2D;  --danger-border:#E24B4A;
+      --info-bg:#E6F1FB;    --info-text:#185FA5;    --info-border:#378ADD;
+      --neutral-bg:#F2F2F0; --neutral-text:#4A4A5A; --neutral-border:#C8C8C0;
+      --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+      --space-5:20px; --space-6:24px; --space-8:32px;
+      --radius-sm:6px; --radius-md:8px; --radius-lg:12px; --radius-xl:16px; --radius-full:9999px;
+      --font-sans:'Inter',system-ui,-apple-system,sans-serif;
+      --font-mono:'JetBrains Mono','Courier New',monospace;
+      --sidebar-w:240px; --topbar-h:56px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--font-sans);background:var(--bg-page);color:var(--text-primary);font-size:14px;}
+    .shell{display:flex;height:100vh;overflow:hidden;}
+
+    /* SIDEBAR */
+    .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--brand-900);color:#fff;
+      display:flex;flex-direction:column;overflow-y:auto;height:100vh;position:fixed;left:0;top:0;z-index:50;}
+    .sb-brand{height:var(--topbar-h);padding:0 var(--space-5);display:flex;align-items:center;
+      gap:var(--space-3);border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+    .sb-brand-icon{width:32px;height:32px;border-radius:var(--radius-md);background:var(--brand-500);display:flex;align-items:center;justify-content:center;font-size:15px;}
+    .sb-brand-name{font-size:12px;font-weight:600;line-height:1.3;}
+    .sb-brand-sub{font-size:10px;opacity:.5;}
+    .sb-role{margin:var(--space-3) var(--space-4);padding:var(--space-2) var(--space-3);
+      background:rgba(255,255,255,.07);border-radius:var(--radius-md);border:1px solid rgba(255,255,255,.10);}
+    .sb-role-lbl{font-size:10px;opacity:.5;text-transform:uppercase;letter-spacing:.06em;}
+    .sb-role-name{font-size:12px;font-weight:600;margin-top:2px;}
+    .sb-role-dept{font-size:11px;opacity:.6;margin-top:1px;}
+    .sb-sec{font-size:10px;text-transform:uppercase;letter-spacing:.08em;opacity:.4;padding:var(--space-4) var(--space-5) var(--space-1);}
+    .nav-item{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-5);
+      font-size:13px;font-weight:500;color:rgba(255,255,255,.65);cursor:pointer;text-decoration:none;transition:background .15s;}
+    .nav-item:hover{background:rgba(255,255,255,.06);color:#fff;}
+    .nav-item.active{background:var(--brand-600);color:#fff;border-right:3px solid var(--brand-400);}
+    .nav-icon{width:16px;text-align:center;font-size:14px;flex-shrink:0;}
+    .nav-badge{margin-left:auto;background:var(--danger-bg);color:var(--danger-text);font-size:10px;font-weight:700;padding:1px 6px;border-radius:var(--radius-full);}
+    .nav-sub{padding-left:calc(var(--space-5) + 28px);font-size:12px;}
+    .sb-footer{margin-top:auto;border-top:1px solid rgba(255,255,255,.08);padding:var(--space-3) var(--space-4);}
+    .sb-user{display:flex;align-items:center;gap:var(--space-3);}
+    .avatar{width:32px;height:32px;border-radius:var(--radius-full);background:var(--brand-500);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+    .sb-user-name{font-size:12px;font-weight:600;}
+    .sb-user-email{font-size:11px;opacity:.5;}
+
+    /* MAIN */
+    .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+    .topbar{height:var(--topbar-h);background:var(--bg-surface);border-bottom:1px solid var(--border-light);
+      display:flex;align-items:center;gap:var(--space-4);padding:0 var(--space-6);flex-shrink:0;}
+    .bc{display:flex;align-items:center;gap:var(--space-2);font-size:13px;}
+    .bc a{color:var(--text-muted);text-decoration:none;}
+    .bc .sep{color:var(--border-medium);}
+    .bc .cur{font-weight:600;}
+    .topbar-spacer{flex:1;}
+    .topbar-search{display:flex;align-items:center;gap:var(--space-2);background:var(--bg-secondary);
+      border:1px solid var(--border-light);border-radius:var(--radius-full);padding:var(--space-1) var(--space-3);font-size:13px;color:var(--text-muted);width:220px;}
+    .icon-btn{width:36px;height:36px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;background:none;border:1px solid var(--border-light);cursor:pointer;font-size:16px;position:relative;}
+    .notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--danger-border);border:2px solid white;}
+
+    .content{flex:1;overflow-y:auto;padding:var(--space-6);}
+    .ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-5);}
+    .ph-left h1{font-size:22px;font-weight:700;}
+    .ph-left p{font-size:13px;color:var(--text-muted);margin-top:4px;}
+    .ph-right{display:flex;gap:var(--space-2);align-items:center;}
+
+    .btn{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);border-radius:var(--radius-md);font-size:13px;font-weight:500;font-family:var(--font-sans);border:1px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;}
+    .btn-primary{background:var(--brand-600);color:#fff;border-color:var(--brand-600);}
+    .btn-primary:hover{background:var(--brand-700);}
+    .btn-secondary{background:var(--bg-surface);color:var(--text-primary);border-color:var(--border-medium);}
+    .btn-secondary:hover{background:var(--bg-secondary);}
+    .btn-ghost{background:none;color:var(--text-secondary);border-color:transparent;}
+    .btn-ghost:hover{background:var(--bg-secondary);}
+    .btn-sm{padding:5px var(--space-3);font-size:12px;}
+    .btn-xs{padding:3px var(--space-2);font-size:11px;}
+
+    /* METRICS */
+    .ms{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--space-3);margin-bottom:var(--space-5);}
+    .mc{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);}
+    .mc-val{font-size:22px;font-weight:700;}
+    .mc-lbl{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
+    .mc-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+    .card{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:var(--space-5);}
+    .card-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-4);padding-bottom:var(--space-4);border-bottom:1px solid var(--border-light);}
+    .card-title{font-size:15px;font-weight:600;}
+    .card-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
+
+    /* TWO-PANEL LAYOUT */
+    .two-panel{display:grid;grid-template-columns:300px 1fr;gap:var(--space-4);align-items:start;}
+
+    /* DEPARTMENT LIST (left panel) */
+    .dept-panel{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);overflow:hidden;position:sticky;top:0;}
+    .dept-panel-hdr{padding:var(--space-4) var(--space-4) var(--space-3);border-bottom:1px solid var(--border-light);}
+    .dept-panel-title{font-size:13px;font-weight:600;}
+    .dept-search{display:flex;align-items:center;gap:var(--space-2);background:var(--bg-secondary);
+      border:1px solid var(--border-light);border-radius:var(--radius-md);padding:6px var(--space-3);margin-top:var(--space-3);}
+    .dept-search input{border:none;outline:none;font-size:12px;font-family:var(--font-sans);width:100%;background:transparent;}
+    .dept-list{max-height:calc(100vh - 280px);overflow-y:auto;}
+    .dept-item{display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--space-4);
+      border-bottom:1px solid var(--border-light);cursor:pointer;transition:background .12s;}
+    .dept-item:last-child{border-bottom:none;}
+    .dept-item:hover{background:var(--bg-secondary);}
+    .dept-item.active{background:var(--brand-50);border-left:3px solid var(--brand-600);}
+    .dept-item-name{font-size:13px;font-weight:500;}
+    .dept-item.active .dept-item-name{color:var(--brand-600);}
+    .dept-item-cnt{font-size:11px;font-family:var(--font-mono);color:var(--text-muted);background:var(--bg-secondary);
+      border-radius:var(--radius-full);padding:1px 7px;border:1px solid var(--border-light);}
+    .dept-item.active .dept-item-cnt{background:var(--brand-100);color:var(--brand-600);border-color:var(--brand-400);}
+    .dept-all{padding:var(--space-3) var(--space-4);border-bottom:2px solid var(--border-medium);cursor:pointer;background:var(--brand-900);}
+    .dept-all-name{font-size:13px;font-weight:600;color:#fff;}
+    .dept-all-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:1px;}
+
+    /* SUBJECTS RIGHT PANEL */
+    .subj-panel{display:flex;flex-direction:column;gap:var(--space-4);}
+
+    /* SUBJECT FILTER BAR */
+    .sfbar{display:flex;align-items:center;gap:var(--space-3);background:var(--bg-surface);
+      border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);margin-bottom:var(--space-4);}
+    .sfbar-search{display:flex;align-items:center;gap:var(--space-2);background:var(--bg-secondary);
+      border:1px solid var(--border-medium);border-radius:var(--radius-md);padding:6px var(--space-3);flex:1;}
+    .sfbar-search input{border:none;outline:none;font-size:13px;font-family:var(--font-sans);width:100%;background:transparent;}
+    .sfbar-spacer{flex:1;}
+    .fsel{font-size:12px;border:1px solid var(--border-light);border-radius:var(--radius-md);padding:5px 10px;background:var(--bg-surface);}
+
+    /* SUBJECT GRID (card-based) */
+    .subj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);}
+    .subj-card{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-md);
+      padding:var(--space-3) var(--space-4);cursor:pointer;transition:border-color .15s,box-shadow .15s;position:relative;}
+    .subj-card:hover{border-color:var(--brand-400);box-shadow:0 2px 8px rgba(83,74,183,.1);}
+    .subj-card-name{font-size:13px;font-weight:500;color:var(--text-primary);line-height:1.3;}
+    .subj-card-dept{font-size:11px;color:var(--text-muted);margin-top:3px;}
+    .subj-card-code{font-size:10px;font-family:var(--font-mono);color:var(--text-muted);margin-top:4px;
+      background:var(--bg-secondary);border-radius:var(--radius-sm);padding:1px 5px;display:inline-block;}
+    .subj-card-menu{position:absolute;top:var(--space-2);right:var(--space-2);
+      width:22px;height:22px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;
+      background:none;border:none;cursor:pointer;font-size:12px;color:var(--text-muted);opacity:0;}
+    .subj-card:hover .subj-card-menu{opacity:1;}
+
+    /* ALPHABET JUMP NAV */
+    .alpha-nav{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:var(--space-3);}
+    .alpha-btn{width:26px;height:26px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;
+      font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border-light);background:var(--bg-surface);
+      color:var(--text-secondary);}
+    .alpha-btn:hover{background:var(--brand-50);border-color:var(--brand-400);color:var(--brand-600);}
+    .alpha-btn.has-data{border-color:var(--brand-400);color:var(--brand-600);}
+
+    /* GROUP SECTION within subject grid */
+    .subj-section{margin-bottom:var(--space-5);}
+    .subj-section-hdr{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-3);
+      padding-bottom:var(--space-2);border-bottom:2px solid var(--border-light);}
+    .subj-section-letter{width:32px;height:32px;border-radius:var(--radius-md);background:var(--brand-900);
+      color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0;}
+    .subj-section-title{font-size:13px;font-weight:600;}
+    .subj-section-cnt{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);}
+
+    /* BADGE */
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--radius-full);font-size:11px;font-weight:600;}
+    .bb{background:var(--brand-100);color:var(--brand-600);}
+    .bn{background:var(--neutral-bg);color:var(--neutral-text);}
+    .bi{background:var(--info-bg);color:var(--info-text);}
+
+    /* PAGINATION */
+    .pag{display:flex;align-items:center;gap:var(--space-2);padding-top:var(--space-4);border-top:1px solid var(--border-light);margin-top:var(--space-4);}
+    .pag-info{font-size:12px;color:var(--text-muted);}
+    .pag-sp{flex:1;}
+    .pgb{width:30px;height:30px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;
+      font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border-light);background:var(--bg-surface);color:var(--text-secondary);}
+    .pgb.act{background:var(--brand-600);color:#fff;border-color:var(--brand-600);}
+    .pgb:hover:not(.act){background:var(--bg-secondary);}
+
+    /* MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:center;justify-content:center;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--bg-surface);border-radius:var(--radius-xl);width:500px;max-width:calc(100vw - 32px);box-shadow:0 24px 64px rgba(0,0,0,.18);}
+    .modal-hdr{padding:var(--space-5);border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;}
+    .modal-title{font-size:16px;font-weight:700;}
+    .modal-close{width:28px;height:28px;border:none;background:var(--bg-secondary);border-radius:var(--radius-md);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+    .modal-body{padding:var(--space-5);}
+    .modal-foot{padding:var(--space-4) var(--space-5);border-top:1px solid var(--border-light);display:flex;gap:var(--space-2);justify-content:flex-end;}
+    .fg{margin-bottom:var(--space-4);}
+    .fl{display:block;font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:5px;}
+    .req{color:var(--danger-text);}
+    .fi{width:100%;padding:var(--space-2) var(--space-3);border:1px solid var(--border-medium);border-radius:var(--radius-md);font-size:13px;font-family:var(--font-sans);}
+    .fs{width:100%;padding:var(--space-2) var(--space-3);border:1px solid var(--border-medium);border-radius:var(--radius-md);font-size:13px;font-family:var(--font-sans);background:var(--bg-surface);}
+    .fi:focus,.fs:focus{outline:none;border-color:var(--brand-500);box-shadow:0 0 0 3px var(--brand-50);}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);}
+    .col-span-2{grid-column:1/-1;}
+    .mb-4{margin-bottom:var(--space-4);}
+    .flex{display:flex;}
+    .gap-2{gap:var(--space-2);}
+    .items-center{align-items:center;}
+    .justify-between{justify-content:space-between;}
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-brand-icon">🏛</div>
+      <div><div class="sb-brand-name">ERP — Public Colleges</div><div class="sb-brand-sub">Punjab Higher Education Dept.</div></div>
+    </div>
+    <div class="sb-role">
+      <div class="sb-role-lbl">Signed in as</div>
+      <div class="sb-role-name">HED Super Admin</div>
+      <div class="sb-role-dept">Provincial Level · Full Access</div>
+    </div>
+    <div class="sb-sec">Overview</div>
+    <a class="nav-item" href="#"><span class="nav-icon">📊</span> Provincial Dashboard</a>
+    <a class="nav-item" href="#"><span class="nav-icon">✅</span> Approvals <span class="nav-badge">7</span></a>
+    <div class="sb-sec">Institutions</div>
+    <a class="nav-item" href="#"><span class="nav-icon">🏫</span> Institutes</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🗺</span> Division Map</a>
+    <div class="sb-sec">Academics</div>
+    <a class="nav-item" href="#"><span class="nav-icon">🎓</span> Programs</a>
+    <a class="nav-item active" href="#"><span class="nav-icon">📚</span> Subjects &amp; Departments</a>
+    <a class="nav-item nav-sub active" href="#">All Subjects</a>
+    <a class="nav-item nav-sub" href="#">Departments (38)</a>
+    <a class="nav-item nav-sub" href="#">Add Subject</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📅</span> Academic Sessions</a>
+    <div class="sb-sec">Human Resources</div>
+    <a class="nav-item" href="#"><span class="nav-icon">👥</span> Staff &amp; Faculty</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🏷</span> Designations</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📬</span> Posts &amp; Sanctioned</a>
+    <div class="sb-sec">Operations</div>
+    <a class="nav-item" href="#"><span class="nav-icon">🎫</span> Admissions</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📝</span> Examinations</a>
+    <a class="nav-item" href="#"><span class="nav-icon">💰</span> Finance</a>
+    <div class="sb-sec">System</div>
+    <a class="nav-item" href="#"><span class="nav-icon">🔧</span> Configuration</a>
+    <a class="nav-item" href="#"><span class="nav-icon">👤</span> User Management</a>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="avatar">SA</div>
+        <div><div class="sb-user-name">Super Admin</div><div class="sb-user-email">admin@hed.punjab.gov.pk</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="bc">
+        <a href="#">Home</a><span class="sep">›</span>
+        <a href="#">Academics</a><span class="sep">›</span>
+        <span class="cur">Subjects &amp; Departments</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">🔍 <span>Search subjects, departments…</span></div>
+      <div style="font-size:12px;color:var(--text-muted);">AY 2025–26</div>
+      <button class="icon-btn">🔔<span class="notif-dot"></span></button>
+      <button class="icon-btn">📋</button>
+    </div>
+
+    <div class="content">
+
+      <!-- PAGE HEADER -->
+      <div class="ph">
+        <div class="ph-left">
+          <h1>Subjects &amp; Departments</h1>
+          <p>38 HEP Departments · 1,535 mapped core subjects — Punjab Higher Education Department master database</p>
+        </div>
+        <div class="ph-right">
+          <button class="btn btn-ghost btn-sm">⬇ Export</button>
+          <button class="btn btn-secondary btn-sm">+ Add Department</button>
+          <button class="btn btn-primary btn-sm" onclick="openModal()">+ Add Subject</button>
+        </div>
+      </div>
+
+      <!-- METRICS -->
+      <div class="ms">
+        <div class="mc">
+          <div class="mc-val">1,535</div>
+          <div class="mc-lbl">Total Subjects</div>
+          <div class="mc-sub">Core subject master list</div>
+        </div>
+        <div class="mc">
+          <div class="mc-val" style="color:var(--brand-600);">38</div>
+          <div class="mc-lbl">Departments (HEP)</div>
+          <div class="mc-sub">Academic departments</div>
+        </div>
+        <div class="mc">
+          <div class="mc-val" style="color:var(--success-text);">1,420</div>
+          <div class="mc-lbl">Mapped to Programs</div>
+          <div class="mc-sub">Linked to ≥1 program</div>
+        </div>
+        <div class="mc">
+          <div class="mc-val" style="color:var(--warning-text);">115</div>
+          <div class="mc-lbl">Unmapped</div>
+          <div class="mc-sub">Not yet linked</div>
+        </div>
+        <div class="mc">
+          <div class="mc-val" style="color:var(--info-text);">800</div>
+          <div class="mc-lbl">Colleges Using</div>
+          <div class="mc-sub">At least one subject</div>
+        </div>
+      </div>
+
+      <!-- TWO PANEL LAYOUT -->
+      <div class="two-panel">
+
+        <!-- LEFT: DEPARTMENT LIST -->
+        <div class="dept-panel">
+          <div class="dept-panel-hdr">
+            <div class="dept-panel-title">38 Departments (HEP)</div>
+            <div class="dept-search">
+              🔍 <input type="text" placeholder="Filter departments…" oninput="filterDepts(this.value)">
+            </div>
+          </div>
+
+          <div class="dept-all" onclick="selectDept('all', this)">
+            <div class="dept-all-name">All Departments</div>
+            <div class="dept-all-sub">1,535 subjects across all 38 depts</div>
+          </div>
+
+          <div class="dept-list" id="deptList">
+            <!-- Each item: name + subject count -->
+            <div class="dept-item active" onclick="selectDept('Arabic', this)">
+              <div>
+                <div class="dept-item-name">Arabic</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Classical / Modern / Literature</div>
+              </div>
+              <span class="dept-item-cnt">24</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Biology', this)">
+              <div>
+                <div class="dept-item-name">Biology</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Cell / Genetics / Ecology</div>
+              </div>
+              <span class="dept-item-cnt">62</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Botany', this)">
+              <div>
+                <div class="dept-item-name">Botany</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Plant Biology / Taxonomy</div>
+              </div>
+              <span class="dept-item-cnt">18</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Chemistry', this)">
+              <div>
+                <div class="dept-item-name">Chemistry</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Organic / Inorganic / Physical</div>
+              </div>
+              <span class="dept-item-cnt">45</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Civics', this)">
+              <div>
+                <div class="dept-item-name">Civics</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Political Science / Law</div>
+              </div>
+              <span class="dept-item-cnt">12</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Commerce', this)">
+              <div>
+                <div class="dept-item-name">Commerce</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Accounting / Finance / Trade</div>
+              </div>
+              <span class="dept-item-cnt">78</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Economics', this)">
+              <div>
+                <div class="dept-item-name">Economics</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Macro / Micro / Econometrics</div>
+              </div>
+              <span class="dept-item-cnt">55</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Education', this)">
+              <div>
+                <div class="dept-item-name">Education</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Pedagogy / Curriculum / Testing</div>
+              </div>
+              <span class="dept-item-cnt">34</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('English', this)">
+              <div>
+                <div class="dept-item-name">English</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Literature / Linguistics / Writing</div>
+              </div>
+              <span class="dept-item-cnt">88</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('English Shorthand', this)">
+              <div>
+                <div class="dept-item-name">English Shorthand</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Stenography / Typing</div>
+              </div>
+              <span class="dept-item-cnt">6</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Fine Arts', this)">
+              <div>
+                <div class="dept-item-name">Fine Arts</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Painting / Sculpture / Ceramics</div>
+              </div>
+              <span class="dept-item-cnt">22</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Geography', this)">
+              <div>
+                <div class="dept-item-name">Geography</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Physical / Human / Regional</div>
+              </div>
+              <span class="dept-item-cnt">28</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Geology', this)">
+              <div>
+                <div class="dept-item-name">Geology</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Mineralogy / Stratigraphy</div>
+              </div>
+              <span class="dept-item-cnt">14</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Health and Physical Education', this)">
+              <div>
+                <div class="dept-item-name">Health &amp; Physical Educ.</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Sports Science / Kinesiology</div>
+              </div>
+              <span class="dept-item-cnt">30</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('History', this)">
+              <div>
+                <div class="dept-item-name">History</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Pakistan / Islamic / World</div>
+              </div>
+              <span class="dept-item-cnt">38</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Home Economics', this)">
+              <div>
+                <div class="dept-item-name">Home Economics</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Nutrition / Family / Clothing</div>
+              </div>
+              <span class="dept-item-cnt">20</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Islamiat', this)">
+              <div>
+                <div class="dept-item-name">Islamiat</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Quran / Hadith / Fiqh</div>
+              </div>
+              <span class="dept-item-cnt">16</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Journalism', this)">
+              <div>
+                <div class="dept-item-name">Journalism</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Reporting / Sub-Editing / Media</div>
+              </div>
+              <span class="dept-item-cnt">18</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Library Science', this)">
+              <div>
+                <div class="dept-item-name">Library Science</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Cataloguing / Archiving</div>
+              </div>
+              <span class="dept-item-cnt">10</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Mass Communication', this)">
+              <div>
+                <div class="dept-item-name">Mass Communication</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Broadcasting / PR / Advertising</div>
+              </div>
+              <span class="dept-item-cnt">26</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Mathematics', this)">
+              <div>
+                <div class="dept-item-name">Mathematics</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Calculus / Algebra / Topology</div>
+              </div>
+              <span class="dept-item-cnt">52</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Music', this)">
+              <div>
+                <div class="dept-item-name">Music</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Theory / Instruments / Composition</div>
+              </div>
+              <span class="dept-item-cnt">8</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Pakistan Studies', this)">
+              <div>
+                <div class="dept-item-name">Pakistan Studies</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">History / Geography / Civics</div>
+              </div>
+              <span class="dept-item-cnt">14</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Persian', this)">
+              <div>
+                <div class="dept-item-name">Persian</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Language / Literature / Poetry</div>
+              </div>
+              <span class="dept-item-cnt">12</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Philosophy', this)">
+              <div>
+                <div class="dept-item-name">Philosophy</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Logic / Ethics / Metaphysics</div>
+              </div>
+              <span class="dept-item-cnt">18</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Physics', this)">
+              <div>
+                <div class="dept-item-name">Physics</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Mechanics / Quantum / Optics</div>
+              </div>
+              <span class="dept-item-cnt">48</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Physiology', this)">
+              <div>
+                <div class="dept-item-name">Physiology</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Human / Animal / Medical</div>
+              </div>
+              <span class="dept-item-cnt">16</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Political Science', this)">
+              <div>
+                <div class="dept-item-name">Political Science</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Theory / International Relations</div>
+              </div>
+              <span class="dept-item-cnt">30</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Psychology', this)">
+              <div>
+                <div class="dept-item-name">Psychology</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Behaviour / Clinical / Social</div>
+              </div>
+              <span class="dept-item-cnt">36</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Punjabi', this)">
+              <div>
+                <div class="dept-item-name">Punjabi</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Language / Literature / Poetry</div>
+              </div>
+              <span class="dept-item-cnt">10</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Saraiki', this)">
+              <div>
+                <div class="dept-item-name">Saraiki</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Language / Literature</div>
+              </div>
+              <span class="dept-item-cnt">8</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Social Work', this)">
+              <div>
+                <div class="dept-item-name">Social Work</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Community / Welfare / NGO</div>
+              </div>
+              <span class="dept-item-cnt">14</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Sociology', this)">
+              <div>
+                <div class="dept-item-name">Sociology</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Social Theory / Demography</div>
+              </div>
+              <span class="dept-item-cnt">28</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Statistics', this)">
+              <div>
+                <div class="dept-item-name">Statistics</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Applied / Sampling / Time Series</div>
+              </div>
+              <span class="dept-item-cnt">32</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Urdu', this)">
+              <div>
+                <div class="dept-item-name">Urdu</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Adab / Lisaniyat / Tanqeed</div>
+              </div>
+              <span class="dept-item-cnt">42</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Urdu Shorthand', this)">
+              <div>
+                <div class="dept-item-name">Urdu Shorthand</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Stenography / Typing</div>
+              </div>
+              <span class="dept-item-cnt">6</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Zoology', this)">
+              <div>
+                <div class="dept-item-name">Zoology</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Vertebrates / Invertebrates / Ecology</div>
+              </div>
+              <span class="dept-item-cnt">44</span>
+            </div>
+            <div class="dept-item" onclick="selectDept('Computer Science / Information Technology', this)">
+              <div>
+                <div class="dept-item-name">Computer Science / IT</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:1px;">Programming / Networks / AI / DB</div>
+              </div>
+              <span class="dept-item-cnt">96</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: SUBJECT BROWSE PANEL -->
+        <div class="subj-panel">
+
+          <!-- Dept Header Info Card -->
+          <div class="card" style="padding:var(--space-4) var(--space-5);">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div id="deptTitle" style="font-size:18px;font-weight:700;">Arabic Department</div>
+                <div id="deptMeta" style="font-size:13px;color:var(--text-muted);margin-top:3px;">24 subjects · Classical Arabic, Modern Standard Arabic, Arabic Literature in the Subcontinent</div>
+              </div>
+              <div style="display:flex;gap:var(--space-2);">
+                <button class="btn btn-ghost btn-sm">⬇ Export</button>
+                <button class="btn btn-primary btn-sm" onclick="openModal()">+ Add Subject</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- FILTER + SEARCH BAR -->
+          <div class="sfbar">
+            <div class="sfbar-search">
+              🔍 <input type="text" placeholder="Search subjects by name…" oninput="filterSubjects(this.value)" id="subjSearch">
+            </div>
+            <select class="fsel" onchange="filterSubjects(document.getElementById('subjSearch').value)">
+              <option>All Subjects</option>
+              <option>Mapped to Programs</option>
+              <option>Unmapped</option>
+            </select>
+            <div class="sfbar-spacer"></div>
+            <button class="btn btn-ghost btn-xs" onclick="setView('grid')" id="viewGrid" style="background:var(--brand-50);border:1px solid var(--brand-400);color:var(--brand-600);">⊞ Grid</button>
+            <button class="btn btn-ghost btn-xs" onclick="setView('list')" id="viewList">☰ List</button>
+          </div>
+
+          <!-- ALPHABET JUMP -->
+          <div class="alpha-nav" id="alphNav">
+            <div class="alpha-btn has-data" onclick="jumpAlpha('A')">A</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('B')">B</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('C')">C</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('D')">D</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('E')">E</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('F')">F</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('G')">G</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('H')">H</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('I')">I</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('J')">J</div>
+            <div class="alpha-btn" onclick="jumpAlpha('K')">K</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('L')">L</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('M')">M</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('N')">N</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('O')">O</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('P')">P</div>
+            <div class="alpha-btn" onclick="jumpAlpha('Q')">Q</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('R')">R</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('S')">S</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('T')">T</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('U')">U</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('V')">V</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('W')">W</div>
+            <div class="alpha-btn" onclick="jumpAlpha('X')">X</div>
+            <div class="alpha-btn" onclick="jumpAlpha('Y')">Y</div>
+            <div class="alpha-btn has-data" onclick="jumpAlpha('Z')">Z</div>
+          </div>
+
+          <!-- SUBJECTS: Section A -->
+          <div id="sec-A" class="subj-section">
+            <div class="subj-section-hdr">
+              <div class="subj-section-letter">A</div>
+              <div>
+                <div class="subj-section-title">A — 82 subjects</div>
+                <div class="subj-section-cnt">Accounting · Advanced · Agriculture · AI · Arabic · Applied…</div>
+              </div>
+            </div>
+            <div class="subj-grid" id="gridA">
+              <div class="subj-card"><div class="subj-card-name">Accounting</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0005</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Accounting and Book Keeping</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0006</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Accounting and Finance</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0007</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Accounting and Taxation</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0008</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Actuarial Science</div><div class="subj-card-dept">Statistics / Mathematics</div><div class="subj-card-code">SUB-0010</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Administrative Sciences</div><div class="subj-card-dept">Education</div><div class="subj-card-code">SUB-0016</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Advanced Auditing</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0018</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Advanced Financial Accounting</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0020</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Advanced Macroeconomics</div><div class="subj-card-dept">Economics</div><div class="subj-card-code">SUB-0021</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Advanced Microeconomics</div><div class="subj-card-dept">Economics</div><div class="subj-card-code">SUB-0023</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Advanced Solid State Physics</div><div class="subj-card-dept">Physics</div><div class="subj-card-code">SUB-0027</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Analytical Chemistry</div><div class="subj-card-dept">Chemistry</div><div class="subj-card-code">SUB-0060</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Analytical Geometry</div><div class="subj-card-dept">Mathematics</div><div class="subj-card-code">SUB-0062</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Applied Chemistry</div><div class="subj-card-dept">Chemistry</div><div class="subj-card-code">SUB-0082</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Applied Econometrics</div><div class="subj-card-dept">Economics</div><div class="subj-card-code">SUB-0083</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Applied Linguistics</div><div class="subj-card-dept">English</div><div class="subj-card-code">SUB-0088</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Applied Mathematics</div><div class="subj-card-dept">Mathematics</div><div class="subj-card-code">SUB-0090</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Applied Physics</div><div class="subj-card-dept">Physics</div><div class="subj-card-code">SUB-0093</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Applied Statistics</div><div class="subj-card-dept">Statistics</div><div class="subj-card-code">SUB-0095</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Arabic</div><div class="subj-card-dept">Arabic</div><div class="subj-card-code">SUB-0097</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Arabic Composition</div><div class="subj-card-dept">Arabic</div><div class="subj-card-code">SUB-0098</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Arabic Literature</div><div class="subj-card-dept">Arabic</div><div class="subj-card-code">SUB-0101</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Artificial Intelligence</div><div class="subj-card-dept">Computer Science / IT</div><div class="subj-card-code">SUB-0132</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Auditing</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0140</div><button class="subj-card-menu">⋯</button></div>
+            </div>
+          </div>
+
+          <!-- SUBJECTS: Section B -->
+          <div id="sec-B" class="subj-section">
+            <div class="subj-section-hdr">
+              <div class="subj-section-letter">B</div>
+              <div>
+                <div class="subj-section-title">B — 95 subjects</div>
+                <div class="subj-section-cnt">Banking · Biochemistry · Biology · Botany · Business…</div>
+              </div>
+            </div>
+            <div class="subj-grid">
+              <div class="subj-card"><div class="subj-card-name">Bacteriology</div><div class="subj-card-dept">Biology / Zoology</div><div class="subj-card-code">SUB-0148</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Banking</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0151</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Banking and Finance</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0153</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Basic Econometrics</div><div class="subj-card-dept">Economics</div><div class="subj-card-code">SUB-0156</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Biochemistry</div><div class="subj-card-dept">Chemistry / Biology</div><div class="subj-card-code">SUB-0168</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Bioinformatics</div><div class="subj-card-dept">Computer Science / IT</div><div class="subj-card-code">SUB-0178</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Biology</div><div class="subj-card-dept">Biology</div><div class="subj-card-code">SUB-0186</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Biostatistics</div><div class="subj-card-dept">Statistics</div><div class="subj-card-code">SUB-0189</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Biotechnology</div><div class="subj-card-dept">Biology / Chemistry</div><div class="subj-card-code">SUB-0190</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Book Keeping</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0195</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Botany</div><div class="subj-card-dept">Botany</div><div class="subj-card-code">SUB-0197</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Business Administration</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0202</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Business Analytics</div><div class="subj-card-dept">Commerce / CS</div><div class="subj-card-code">SUB-0203</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Business Economics</div><div class="subj-card-dept">Economics</div><div class="subj-card-code">SUB-0204</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Business Law</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0208</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Business Mathematics</div><div class="subj-card-dept">Mathematics / Commerce</div><div class="subj-card-code">SUB-0211</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Business Statistics</div><div class="subj-card-dept">Statistics</div><div class="subj-card-code">SUB-0214</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Business Studies</div><div class="subj-card-dept">Commerce</div><div class="subj-card-code">SUB-0216</div><button class="subj-card-menu">⋯</button></div>
+            </div>
+          </div>
+
+          <!-- SUBJECTS: Section C (abbreviated) -->
+          <div id="sec-C" class="subj-section">
+            <div class="subj-section-hdr">
+              <div class="subj-section-letter">C</div>
+              <div>
+                <div class="subj-section-title">C — 110 subjects</div>
+                <div class="subj-section-cnt">Calculus · Cell Biology · Chemistry · Civics · Computer Science…</div>
+              </div>
+            </div>
+            <div class="subj-grid">
+              <div class="subj-card"><div class="subj-card-name">Calculus</div><div class="subj-card-dept">Mathematics</div><div class="subj-card-code">SUB-0244</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Calculus and Analytical Geometry</div><div class="subj-card-dept">Mathematics</div><div class="subj-card-code">SUB-0245</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Cell Biology</div><div class="subj-card-dept">Biology</div><div class="subj-card-code">SUB-0248</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Chemistry</div><div class="subj-card-dept">Chemistry</div><div class="subj-card-code">SUB-0285</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Civics</div><div class="subj-card-dept">Civics / Political Science</div><div class="subj-card-code">SUB-0297</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Computer Science</div><div class="subj-card-dept">Computer Science / IT</div><div class="subj-card-code">SUB-0315</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Communication Skills</div><div class="subj-card-dept">English</div><div class="subj-card-code">SUB-0308</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card"><div class="subj-card-name">Comparative Literature</div><div class="subj-card-dept">English / Urdu</div><div class="subj-card-code">SUB-0312</div><button class="subj-card-menu">⋯</button></div>
+              <div class="subj-card" style="border:1px dashed var(--border-medium);background:var(--bg-secondary);">
+                <div style="font-size:12px;color:var(--text-muted);text-align:center;padding:var(--space-3) 0;">
+                  +102 more 'C' subjects<br>
+                  <a href="#" style="color:var(--brand-600);font-weight:500;font-size:11px;">Load all →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAGINATION -->
+          <div class="pag" style="background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:var(--space-4);">
+            <span class="pag-info">Showing A–C (248 of 1,535 subjects) · Grouped by letter</span>
+            <div class="pag-sp"></div>
+            <div class="pgb">‹</div>
+            <div class="pgb act">A–C</div>
+            <div class="pgb">D–F</div>
+            <div class="pgb">G–I</div>
+            <div class="pgb">J–M</div>
+            <div class="pgb">N–R</div>
+            <div class="pgb">S–Z</div>
+            <div class="pgb">›</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD SUBJECT MODAL -->
+<div class="modal-overlay" id="addModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Add New Subject</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid-2">
+        <div class="fg col-span-2">
+          <label class="fl">Subject Name <span class="req">*</span></label>
+          <input type="text" class="fi" placeholder="e.g. Advanced Quantum Mechanics">
+        </div>
+        <div class="fg">
+          <label class="fl">Department (HEP) <span class="req">*</span></label>
+          <select class="fs">
+            <option value="">Select Department</option>
+            <option>Arabic</option><option>Biology</option><option>Botany</option>
+            <option>Chemistry</option><option>Civics</option><option>Commerce</option>
+            <option>Computer Science / IT</option><option>Economics</option>
+            <option>Education</option><option>English</option><option>English Shorthand</option>
+            <option>Fine Arts</option><option>Geography</option><option>Geology</option>
+            <option>Health and Physical Education</option><option>History</option>
+            <option>Home Economics</option><option>Islamiat</option><option>Journalism</option>
+            <option>Library Science</option><option>Mass Communication</option>
+            <option>Mathematics</option><option>Music</option><option>Pakistan Studies</option>
+            <option>Persian</option><option>Philosophy</option><option>Physics</option>
+            <option>Physiology</option><option>Political Science</option>
+            <option>Psychology</option><option>Punjabi</option><option>Saraiki</option>
+            <option>Social Work</option><option>Sociology</option><option>Statistics</option>
+            <option>Urdu</option><option>Urdu Shorthand</option><option>Zoology</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="fl">Subject Code</label>
+          <input type="text" class="fi" placeholder="Auto-generated if blank" style="font-family:var(--font-mono);">
+        </div>
+        <div class="fg">
+          <label class="fl">Subject Type</label>
+          <select class="fs">
+            <option>Core / Compulsory</option>
+            <option>Elective</option>
+            <option>Optional</option>
+            <option>Lab / Practical</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="fl">Credit Hours</label>
+          <select class="fs">
+            <option>1 Credit Hour</option>
+            <option>2 Credit Hours</option>
+            <option>3 Credit Hours</option>
+            <option>4 Credit Hours</option>
+          </select>
+        </div>
+        <div class="fg col-span-2">
+          <label class="fl">Applicable Programs</label>
+          <input type="text" class="fi" placeholder="e.g. B.S. Physics, M.Sc. Physics (comma-separated)">
+        </div>
+        <div class="fg col-span-2">
+          <label class="fl">Notes / Description</label>
+          <input type="text" class="fi" placeholder="Brief description of the subject">
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-secondary">Save as Draft</button>
+      <button class="btn btn-primary">Add Subject</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal()  { document.getElementById('addModal').classList.add('open'); }
+  function closeModal() { document.getElementById('addModal').classList.remove('open'); }
+
+  function selectDept(name, el) {
+    document.querySelectorAll('.dept-item').forEach(d => d.classList.remove('active'));
+    if (el.classList.contains('dept-item')) el.classList.add('active');
+    const titles = {
+      'all': ['All Departments','1,535 subjects across all 38 departments — use search or alphabet navigation to browse'],
+      'Arabic': ['Arabic Department','24 subjects · Arabic Composition, Arabic Literature, Arabic Rhetoric, Arabic Prosody…'],
+      'Biology': ['Biology Department','62 subjects · Cell Biology, Genetics, Ecology, Molecular Biology, Biotechnology…'],
+      'Botany': ['Botany Department','18 subjects · Plant Biology, Taxonomy, Plant Physiology, Ethnobotany…'],
+      'Chemistry': ['Chemistry Department','45 subjects · Organic · Inorganic · Physical · Analytical · Biochemistry…'],
+      'Commerce': ['Commerce Department','78 subjects · Accounting · Finance · Business Law · Auditing · Marketing…'],
+      'Computer Science / Information Technology': ['Computer Science / IT Department','96 subjects · Programming · AI · Machine Learning · Networks · Databases · Web…'],
+      'Economics': ['Economics Department','55 subjects · Macro · Micro · Econometrics · Development · International Trade…'],
+      'English': ['English Department','88 subjects · British Literature · American Literature · Linguistics · Creative Writing…'],
+      'Mathematics': ['Mathematics Department','52 subjects · Calculus · Algebra · Topology · Statistics · Number Theory…'],
+      'Physics': ['Physics Department','48 subjects · Mechanics · Thermodynamics · Quantum · Optics · Astrophysics…'],
+      'Urdu': ['Urdu Department','42 subjects · Urdu Adab · Lisaniyat · Tanqeed · Nawal · Drama · Ghazal…'],
+      'Zoology': ['Zoology Department','44 subjects · Vertebrates · Invertebrates · Ecology · Animal Physiology…'],
+    };
+    const t = titles[name] || [name + ' Department', 'Subjects linked to this department'];
+    document.getElementById('deptTitle').textContent = t[0];
+    document.getElementById('deptMeta').textContent = t[1];
+  }
+
+  function filterDepts(q) {
+    q = q.toLowerCase();
+    document.querySelectorAll('.dept-item').forEach(function(el) {
+      el.style.display = (!q || el.textContent.toLowerCase().includes(q)) ? '' : 'none';
+    });
+  }
+
+  function filterSubjects(q) {
+    q = q.toLowerCase();
+    document.querySelectorAll('.subj-card').forEach(function(el) {
+      el.style.display = (!q || el.textContent.toLowerCase().includes(q)) ? '' : 'none';
+    });
+  }
+
+  function jumpAlpha(letter) {
+    const el = document.getElementById('sec-' + letter);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  function setView(mode) {
+    document.getElementById('viewGrid').style.background = mode === 'grid' ? 'var(--brand-50)' : '';
+    document.getElementById('viewGrid').style.border = mode === 'grid' ? '1px solid var(--brand-400)' : '';
+    document.getElementById('viewGrid').style.color = mode === 'grid' ? 'var(--brand-600)' : '';
+    document.getElementById('viewList').style.background = mode === 'list' ? 'var(--brand-50)' : '';
+    document.getElementById('viewList').style.border = mode === 'list' ? '1px solid var(--brand-400)' : '';
+    document.getElementById('viewList').style.color = mode === 'list' ? 'var(--brand-600)' : '';
+    document.querySelectorAll('.subj-grid').forEach(function(g) {
+      g.style.gridTemplateColumns = mode === 'list' ? '1fr' : 'repeat(3,1fr)';
+    });
+  }
+</script>
+</body>
+</html>

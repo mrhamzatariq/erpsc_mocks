@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Institute Register — ERP System for Public Colleges</title>
+  <style>
+    /* ============================================================
+       DESIGN SYSTEM — INLINE (zero-dependency, mirrors design-system.css)
+       ============================================================ */
+    :root {
+      --brand-900:#26215C; --brand-700:#3D368F; --brand-600:#534AB7;
+      --brand-500:#6B63D4; --brand-400:#8B85E0; --brand-100:#ECEAFF; --brand-50:#F4F3FF;
+      --bg-page:#F4F3F1; --bg-surface:#FFFFFF; --bg-secondary:#F8F8F7; --bg-tertiary:#EFEEEC;
+      --border-light:#E5E4E1; --border-medium:#D0CFC9;
+      --text-primary:#1A1A2E; --text-secondary:#4A4A6A; --text-muted:#8A8A9A; --text-inverse:#FFFFFF;
+      --success-bg:#EAF3DE; --success-text:#3B6D11; --success-border:#97C459;
+      --warning-bg:#FAEEDA; --warning-text:#854F0B; --warning-border:#EF9F27;
+      --danger-bg:#FCEBEB;  --danger-text:#A32D2D;  --danger-border:#E24B4A;
+      --info-bg:#E6F1FB;    --info-text:#185FA5;    --info-border:#378ADD;
+      --neutral-bg:#F2F2F0; --neutral-text:#4A4A5A; --neutral-border:#C8C8C0;
+      --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+      --space-5:20px; --space-6:24px; --space-7:28px; --space-8:32px;
+      --radius-sm:6px; --radius-md:8px; --radius-lg:12px; --radius-xl:16px; --radius-full:9999px;
+      --font-sans:'Inter',system-ui,-apple-system,sans-serif;
+      --font-mono:'JetBrains Mono','Courier New',monospace;
+      --sidebar-w:240px; --topbar-h:56px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{font-size:14px;}
+    body{font-family:var(--font-sans);background:var(--bg-page);color:var(--text-primary);min-height:100vh;}
+
+    /* ── LAYOUT ── */
+    .shell{display:flex;height:100vh;overflow:hidden;}
+
+    /* SIDEBAR */
+    .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--brand-900);color:var(--text-inverse);
+      display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;height:100vh;
+      position:fixed;left:0;top:0;z-index:50;}
+    .sidebar-brand{height:var(--topbar-h);padding:0 var(--space-5);display:flex;align-items:center;
+      gap:var(--space-3);border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+    .sidebar-brand-icon{width:32px;height:32px;border-radius:var(--radius-md);background:var(--brand-500);
+      display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+    .sidebar-brand-text{font-size:12px;font-weight:600;line-height:1.3;}
+    .sidebar-brand-sub{font-size:10px;opacity:.55;font-weight:400;}
+    .sidebar-role{margin:var(--space-3) var(--space-4);padding:var(--space-2) var(--space-3);
+      background:rgba(255,255,255,.07);border-radius:var(--radius-md);border:1px solid rgba(255,255,255,.10);}
+    .sidebar-role-label{font-size:10px;opacity:.5;text-transform:uppercase;letter-spacing:.06em;}
+    .sidebar-role-name{font-size:12px;font-weight:600;margin-top:2px;}
+    .sidebar-role-dept{font-size:11px;opacity:.6;margin-top:1px;}
+    .sidebar-section-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;opacity:.4;
+      padding:var(--space-4) var(--space-5) var(--space-1);}
+    .nav-item{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-5);
+      font-size:13px;font-weight:500;color:rgba(255,255,255,.65);cursor:pointer;text-decoration:none;
+      transition:background .15s,color .15s;}
+    .nav-item:hover{background:rgba(255,255,255,.06);color:#fff;}
+    .nav-item.active{background:var(--brand-600);color:#fff;border-right:3px solid var(--brand-400);}
+    .nav-item .nav-icon{width:16px;text-align:center;font-size:14px;flex-shrink:0;}
+    .nav-badge{margin-left:auto;background:var(--danger-bg);color:var(--danger-text);
+      font-size:10px;font-weight:700;padding:1px 6px;border-radius:var(--radius-full);}
+    .nav-sub{padding-left:calc(var(--space-5) + 28px);font-size:12px;}
+    .sidebar-footer{margin-top:auto;border-top:1px solid rgba(255,255,255,.08);padding:var(--space-3) var(--space-4);}
+    .sidebar-user{display:flex;align-items:center;gap:var(--space-3);}
+    .avatar{width:32px;height:32px;border-radius:var(--radius-full);background:var(--brand-500);color:#fff;
+      display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+    .sidebar-user-name{font-size:12px;font-weight:600;}
+    .sidebar-user-email{font-size:11px;opacity:.5;}
+
+    /* MAIN */
+    .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+
+    /* TOPBAR */
+    .topbar{height:var(--topbar-h);background:var(--bg-surface);border-bottom:1px solid var(--border-light);
+      display:flex;align-items:center;gap:var(--space-4);padding:0 var(--space-6);flex-shrink:0;
+      position:sticky;top:0;z-index:40;}
+    .topbar-breadcrumb{display:flex;align-items:center;gap:var(--space-2);font-size:13px;}
+    .topbar-breadcrumb a{color:var(--text-muted);text-decoration:none;}
+    .topbar-breadcrumb a:hover{color:var(--text-primary);}
+    .topbar-breadcrumb .sep{color:var(--border-medium);}
+    .topbar-breadcrumb .current{color:var(--text-primary);font-weight:600;}
+    .topbar-spacer{flex:1;}
+    .topbar-search{display:flex;align-items:center;gap:var(--space-2);background:var(--bg-secondary);
+      border:1px solid var(--border-light);border-radius:var(--radius-full);padding:var(--space-1) var(--space-3);
+      font-size:13px;color:var(--text-muted);cursor:pointer;width:220px;}
+    .topbar-icon-btn{width:36px;height:36px;border-radius:var(--radius-md);display:flex;align-items:center;
+      justify-content:center;background:none;border:1px solid var(--border-light);cursor:pointer;
+      color:var(--text-secondary);font-size:16px;position:relative;transition:background .15s;}
+    .topbar-icon-btn:hover{background:var(--bg-secondary);}
+    .notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;
+      background:var(--danger-border);border:2px solid white;}
+
+    /* CONTENT */
+    .content{flex:1;overflow-y:auto;padding:var(--space-6);}
+
+    /* PAGE HEADER */
+    .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-5);}
+    .page-header-left h1{font-size:22px;font-weight:700;color:var(--text-primary);line-height:1.2;}
+    .page-header-left p{font-size:13px;color:var(--text-muted);margin-top:4px;}
+    .page-header-right{display:flex;gap:var(--space-2);align-items:center;flex-shrink:0;}
+
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);
+      border-radius:var(--radius-md);font-size:13px;font-weight:500;font-family:var(--font-sans);
+      border:1px solid transparent;cursor:pointer;transition:all .15s;text-decoration:none;white-space:nowrap;}
+    .btn-primary{background:var(--brand-600);color:#fff;border-color:var(--brand-600);}
+    .btn-primary:hover{background:var(--brand-700);}
+    .btn-secondary{background:var(--bg-surface);color:var(--text-primary);border-color:var(--border-medium);}
+    .btn-secondary:hover{background:var(--bg-secondary);}
+    .btn-ghost{background:none;color:var(--text-secondary);border-color:transparent;}
+    .btn-ghost:hover{background:var(--bg-secondary);color:var(--text-primary);}
+    .btn-danger{background:var(--danger-bg);color:var(--danger-text);border-color:var(--danger-border);}
+    .btn-sm{padding:5px var(--space-3);font-size:12px;}
+    .btn-xs{padding:3px var(--space-2);font-size:11px;}
+
+    /* CARD */
+    .card{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:var(--space-5);}
+    .card-header{display:flex;align-items:flex-start;justify-content:space-between;
+      margin-bottom:var(--space-4);padding-bottom:var(--space-4);border-bottom:1px solid var(--border-light);}
+    .card-title{font-size:15px;font-weight:600;color:var(--text-primary);}
+    .card-subtitle{font-size:12px;color:var(--text-muted);margin-top:2px;}
+
+    /* METRICS ROW */
+    .metrics-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--space-3);margin-bottom:var(--space-5);}
+    .mstrip{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-md);
+      padding:var(--space-3) var(--space-4);display:flex;flex-direction:column;gap:3px;}
+    .mstrip-val{font-size:20px;font-weight:700;color:var(--text-primary);}
+    .mstrip-lbl{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;}
+    .mstrip-sub{font-size:11px;color:var(--text-muted);}
+
+    /* FILTER BAR */
+    .filter-bar{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);
+      padding:var(--space-4) var(--space-5);margin-bottom:var(--space-4);display:flex;flex-wrap:wrap;gap:var(--space-3);align-items:flex-end;}
+    .filter-group{display:flex;flex-direction:column;gap:4px;min-width:140px;}
+    .filter-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);}
+    .filter-select{font-size:12px;border:1px solid var(--border-medium);border-radius:var(--radius-md);
+      padding:6px 10px;background:var(--bg-surface);color:var(--text-primary);cursor:pointer;
+      appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238A8A9A' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;}
+    .filter-search{display:flex;align-items:center;gap:var(--space-2);background:var(--bg-surface);
+      border:1px solid var(--border-medium);border-radius:var(--radius-md);padding:6px var(--space-3);flex:1;min-width:200px;}
+    .filter-search input{border:none;outline:none;font-size:13px;font-family:var(--font-sans);width:100%;background:transparent;}
+    .filter-spacer{flex:1;}
+
+    /* TABS */
+    .tab-bar{display:flex;gap:0;border-bottom:2px solid var(--border-light);margin-bottom:var(--space-4);}
+    .tab-item{padding:var(--space-3) var(--space-4);font-size:13px;font-weight:500;color:var(--text-muted);
+      cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;}
+    .tab-item:hover{color:var(--text-primary);}
+    .tab-item.active{color:var(--brand-600);border-bottom-color:var(--brand-600);font-weight:600;}
+    .tab-count{display:inline-flex;align-items:center;justify-content:center;
+      background:var(--bg-secondary);color:var(--text-muted);font-size:10px;font-weight:700;
+      padding:1px 6px;border-radius:var(--radius-full);margin-left:5px;}
+    .tab-item.active .tab-count{background:var(--brand-50);color:var(--brand-600);}
+
+    /* BULK ACTION BAR */
+    .bulk-bar{display:flex;align-items:center;gap:var(--space-3);background:var(--brand-900);
+      border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);margin-bottom:var(--space-3);
+      color:#fff;font-size:13px;}
+    .bulk-bar-spacer{flex:1;}
+    .bulk-btn{padding:5px 12px;border-radius:var(--radius-md);font-size:12px;font-weight:500;
+      border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;cursor:pointer;}
+    .bulk-btn:hover{background:rgba(255,255,255,.2);}
+    .bulk-btn.danger{border-color:var(--danger-border);background:var(--danger-bg);color:var(--danger-text);}
+
+    /* TABLE */
+    .table-wrapper{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    th{background:var(--bg-secondary);color:var(--text-secondary);font-size:11px;font-weight:600;
+      text-transform:uppercase;letter-spacing:.06em;padding:var(--space-3) var(--space-4);text-align:left;
+      border-bottom:2px solid var(--border-light);white-space:nowrap;}
+    th.sortable{cursor:pointer;}
+    th.sortable:hover{color:var(--text-primary);}
+    th.sorted{color:var(--brand-600);}
+    td{padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--border-light);color:var(--text-primary);vertical-align:middle;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:var(--bg-secondary);}
+    .col-mono{font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);}
+    .col-right{text-align:right;}
+    .col-center{text-align:center;}
+    .col-num{font-family:var(--font-mono);font-size:13px;font-weight:600;}
+    .institute-name{font-weight:600;color:var(--text-primary);line-height:1.3;}
+    .institute-addr{font-size:11px;color:var(--text-muted);margin-top:2px;}
+    .institute-date{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);}
+
+    /* BADGES */
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--radius-full);
+      font-size:11px;font-weight:600;white-space:nowrap;}
+    .badge-success{background:var(--success-bg);color:var(--success-text);}
+    .badge-warning{background:var(--warning-bg);color:var(--warning-text);}
+    .badge-danger{background:var(--danger-bg);color:var(--danger-text);}
+    .badge-info{background:var(--info-bg);color:var(--info-text);}
+    .badge-neutral{background:var(--neutral-bg);color:var(--neutral-text);}
+    .badge-brand{background:var(--brand-100);color:var(--brand-600);}
+    .badge::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:currentColor;}
+
+    /* ROW ACTIONS */
+    .actions-cell{display:flex;gap:4px;align-items:center;}
+    .row-btn{padding:3px 9px;border-radius:var(--radius-sm);font-size:11px;font-weight:500;
+      border:1px solid var(--border-light);background:var(--bg-surface);cursor:pointer;
+      color:var(--text-secondary);transition:all .12s;white-space:nowrap;}
+    .row-btn:hover{background:var(--bg-secondary);}
+    .row-btn.primary{background:var(--brand-50);border-color:var(--brand-400);color:var(--brand-600);}
+    .row-btn.approve{background:var(--success-bg);border-color:var(--success-border);color:var(--success-text);}
+    .row-btn.danger{background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger-text);}
+
+    /* PAGINATION */
+    .pagination{display:flex;align-items:center;gap:var(--space-2);padding-top:var(--space-4);
+      border-top:1px solid var(--border-light);margin-top:var(--space-2);}
+    .pagination-info{font-size:12px;color:var(--text-muted);}
+    .pagination-spacer{flex:1;}
+    .page-btn{width:30px;height:30px;border-radius:var(--radius-md);display:flex;align-items:center;
+      justify-content:center;font-size:12px;font-weight:500;cursor:pointer;
+      border:1px solid var(--border-light);background:var(--bg-surface);color:var(--text-secondary);}
+    .page-btn.active{background:var(--brand-600);color:#fff;border-color:var(--brand-600);}
+    .page-btn:hover:not(.active){background:var(--bg-secondary);}
+    .page-elipsis{font-size:12px;color:var(--text-muted);padding:0 4px;}
+
+    /* PROGRESS */
+    .progress-bar{height:5px;background:var(--bg-tertiary);border-radius:var(--radius-full);overflow:hidden;min-width:60px;}
+    .progress-fill{height:100%;border-radius:var(--radius-full);}
+
+    /* COLUMN VISIBILITY TOGGLE */
+    .col-vis{display:inline-flex;align-items:center;gap:3px;font-size:12px;color:var(--text-secondary);cursor:pointer;
+      padding:4px 8px;border:1px solid var(--border-light);border-radius:var(--radius-md);background:var(--bg-surface);}
+    .col-vis:hover{background:var(--bg-secondary);}
+
+    /* UTILS */
+    .mb-3{margin-bottom:var(--space-3);}
+    .mb-4{margin-bottom:var(--space-4);}
+    .mb-5{margin-bottom:var(--space-5);}
+    .flex{display:flex;}
+    .items-center{align-items:center;}
+    .justify-between{justify-content:space-between;}
+    .gap-2{gap:var(--space-2);}
+    .gap-3{gap:var(--space-3);}
+    .text-muted{color:var(--text-muted);}
+    .text-sm{font-size:12px;}
+    .font-mono{font-family:var(--font-mono);}
+    .font-semibold{font-weight:600;}
+
+    /* INSTITUTE DETAIL SIDE PANEL (slide in) */
+    .detail-panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;display:none;}
+    .detail-panel-overlay.open{display:block;}
+    .detail-panel{position:fixed;top:0;right:0;height:100vh;width:460px;background:var(--bg-surface);
+      z-index:101;box-shadow:-8px 0 32px rgba(0,0,0,.12);display:flex;flex-direction:column;
+      transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);}
+    .detail-panel.open{transform:translateX(0);}
+    .panel-header{padding:var(--space-5);border-bottom:1px solid var(--border-light);
+      display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;}
+    .panel-close{width:28px;height:28px;border:none;background:var(--bg-secondary);border-radius:var(--radius-md);
+      cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .panel-body{flex:1;overflow-y:auto;padding:var(--space-5);}
+    .detail-row{display:flex;padding:var(--space-3) 0;border-bottom:1px solid var(--border-light);}
+    .detail-row:last-child{border-bottom:none;}
+    .detail-lbl{width:140px;flex-shrink:0;font-size:12px;color:var(--text-muted);font-weight:500;}
+    .detail-val{flex:1;font-size:13px;color:var(--text-primary);}
+    .panel-actions{padding:var(--space-4) var(--space-5);border-top:1px solid var(--border-light);
+      display:flex;gap:var(--space-2);flex-shrink:0;}
+  </style>
+</head>
+
+<body>
+<div class="shell">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">🏛</div>
+      <div>
+        <div class="sidebar-brand-text">ERP — Public Colleges</div>
+        <div class="sidebar-brand-sub">Punjab Higher Education Dept.</div>
+      </div>
+    </div>
+    <div class="sidebar-role">
+      <div class="sidebar-role-label">Signed in as</div>
+      <div class="sidebar-role-name">HED Super Admin</div>
+      <div class="sidebar-role-dept">Provincial Level · Full Access</div>
+    </div>
+
+    <div class="sidebar-section-label">Overview</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">📊</span> Provincial Dashboard
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">✅</span> Approvals
+      <span class="nav-badge">7</span>
+    </a>
+
+    <div class="sidebar-section-label">Institutions</div>
+    <a class="nav-item active" href="#">
+      <span class="nav-icon">🏫</span> Institutes
+    </a>
+    <a class="nav-item nav-sub active" href="#">All Colleges</a>
+    <a class="nav-item nav-sub" href="#">Add Institute</a>
+    <a class="nav-item nav-sub" href="#">Bulk Import</a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🗺</span> Division Map
+    </a>
+
+    <div class="sidebar-section-label">Academics</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🎓</span> Programs
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">📚</span> Subjects & Departments
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">📅</span> Academic Sessions
+    </a>
+
+    <div class="sidebar-section-label">Human Resources</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">👥</span> Staff & Faculty
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🏷</span> Designations
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">📬</span> Posts & Sanctioned
+    </a>
+
+    <div class="sidebar-section-label">Operations</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🎫</span> Admissions
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">📝</span> Examinations
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">💰</span> Finance
+    </a>
+
+    <div class="sidebar-section-label">System</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🔧</span> Configuration
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">👤</span> User Management
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">SA</div>
+        <div>
+          <div class="sidebar-user-name">Super Admin</div>
+          <div class="sidebar-user-email">admin@hed.punjab.gov.pk</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ════════ MAIN ════════ -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <a href="#">Home</a>
+        <span class="sep">›</span>
+        <a href="#">Institutions</a>
+        <span class="sep">›</span>
+        <span class="current">Institute Register</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">
+        🔍 <span>Search colleges, programs, staff…</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);">AY 2025–26</div>
+      <button class="topbar-icon-btn">🔔<span class="notif-dot"></span></button>
+      <button class="topbar-icon-btn">📋</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Institute Register</h1>
+          <p>All 800 public colleges registered under Punjab Higher Education Department</p>
+        </div>
+        <div class="page-header-right">
+          <button class="btn btn-ghost btn-sm">⬇ Export CSV</button>
+          <button class="btn btn-ghost btn-sm">🖨 Print</button>
+          <button class="btn btn-secondary btn-sm">📤 Bulk Import</button>
+          <button class="btn btn-primary btn-sm" onclick="openPanel()">+ Add Institute</button>
+        </div>
+      </div>
+
+      <!-- METRICS STRIP -->
+      <div class="metrics-strip">
+        <div class="mstrip">
+          <div class="mstrip-val">800</div>
+          <div class="mstrip-lbl">Total Colleges</div>
+          <div class="mstrip-sub">Province-wide</div>
+        </div>
+        <div class="mstrip">
+          <div class="mstrip-val" style="color:var(--success-text);">789</div>
+          <div class="mstrip-lbl">Active</div>
+          <div class="mstrip-sub">Operational</div>
+        </div>
+        <div class="mstrip">
+          <div class="mstrip-val" style="color:var(--warning-text);">7</div>
+          <div class="mstrip-lbl">Pending</div>
+          <div class="mstrip-sub">Awaiting approval</div>
+        </div>
+        <div class="mstrip">
+          <div class="mstrip-val" style="color:var(--danger-text);">4</div>
+          <div class="mstrip-lbl">Inactive</div>
+          <div class="mstrip-sub">Non-operational</div>
+        </div>
+        <div class="mstrip">
+          <div class="mstrip-val" style="color:var(--info-text);">388</div>
+          <div class="mstrip-lbl">Female Colleges</div>
+          <div class="mstrip-sub">48.5% of total</div>
+        </div>
+        <div class="mstrip">
+          <div class="mstrip-val" style="color:var(--brand-600);">148</div>
+          <div class="mstrip-lbl">Hard Area</div>
+          <div class="mstrip-sub">Special allowance zones</div>
+        </div>
+      </div>
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <div class="filter-group" style="flex:2;min-width:220px;">
+          <div class="filter-label">Search</div>
+          <div class="filter-search">
+            <span style="font-size:14px;">🔍</span>
+            <input type="text" placeholder="College name, CMIS code, address…" id="searchInput" oninput="filterTable()">
+          </div>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Division</div>
+          <select class="filter-select" onchange="filterTable()">
+            <option value="">All Divisions</option>
+            <option>Lahore</option>
+            <option>Faisalabad</option>
+            <option>Rawalpindi</option>
+            <option>Gujranwala</option>
+            <option>Multan</option>
+            <option>Bahawalpur</option>
+            <option>Dera Ghazi Khan</option>
+            <option>Sargodha</option>
+            <option>Sahiwal</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Type</div>
+          <select class="filter-select" onchange="filterTable()">
+            <option value="">All Types</option>
+            <option>General</option>
+            <option>Commerce</option>
+            <option>Associate</option>
+            <option>Admin Unit</option>
+            <option>Autonomous</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Level</div>
+          <select class="filter-select">
+            <option value="">All Levels</option>
+            <option>Graduate</option>
+            <option>Associate</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Gender</div>
+          <select class="filter-select">
+            <option value="">All</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Co-Education</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Status</div>
+          <select class="filter-select">
+            <option value="">All Statuses</option>
+            <option>Active</option>
+            <option>Pending</option>
+            <option>Inactive</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Area</div>
+          <select class="filter-select">
+            <option value="">All Areas</option>
+            <option>Urban</option>
+            <option>Rural</option>
+            <option>Hard Area</option>
+            <option>Periphery</option>
+          </select>
+        </div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:18px;">✕ Clear</button>
+      </div>
+
+      <!-- MAIN CARD -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">All Colleges</div>
+            <div class="card-subtitle" id="resultCount">Showing 20 of 800 colleges</div>
+          </div>
+          <div class="flex gap-2 items-center">
+            <button class="col-vis">⚙ Columns</button>
+            <button class="btn btn-ghost btn-xs">↕ Sort</button>
+            <button class="btn btn-secondary btn-xs">⬇ Export</button>
+          </div>
+        </div>
+
+        <!-- STATUS TABS -->
+        <div class="tab-bar">
+          <div class="tab-item active" onclick="setTab(this,'all')">
+            All <span class="tab-count">800</span>
+          </div>
+          <div class="tab-item" onclick="setTab(this,'active')">
+            Active <span class="tab-count">789</span>
+          </div>
+          <div class="tab-item" onclick="setTab(this,'pending')">
+            Pending Approval <span class="tab-count">7</span>
+          </div>
+          <div class="tab-item" onclick="setTab(this,'inactive')">
+            Inactive <span class="tab-count">4</span>
+          </div>
+          <div class="tab-item" onclick="setTab(this,'hard')">
+            Hard Area <span class="tab-count">148</span>
+          </div>
+        </div>
+
+        <!-- BULK ACTION BAR (shown when rows selected) -->
+        <div class="bulk-bar" id="bulkBar" style="display:none;">
+          <input type="checkbox" checked style="accent-color:var(--brand-400);">
+          <span><strong id="bulkCount">3</strong> colleges selected</span>
+          <div class="bulk-bar-spacer"></div>
+          <button class="bulk-btn">📤 Export Selected</button>
+          <button class="bulk-btn">✉ Send Notification</button>
+          <button class="bulk-btn">✅ Bulk Approve</button>
+          <button class="bulk-btn danger">🗑 Deactivate</button>
+          <button class="bulk-btn" onclick="clearBulk()">✕ Clear</button>
+        </div>
+
+        <div class="table-wrapper">
+          <table id="mainTable">
+            <thead>
+              <tr>
+                <th style="width:36px;"><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)" style="accent-color:var(--brand-500);"></th>
+                <th class="sortable sorted">CMIS Code ↑</th>
+                <th>Institute</th>
+                <th class="sortable">Division</th>
+                <th class="sortable">District</th>
+                <th>Type</th>
+                <th>Level</th>
+                <th>Gender</th>
+                <th>Area</th>
+                <th class="col-right sortable">Students</th>
+                <th class="col-right sortable">Faculty</th>
+                <th>Estd.</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+
+              <!-- Active Colleges -->
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCL-0001</td>
+                <td>
+                  <div class="institute-name">Govt. College of Commerce, Lahore</div>
+                  <div class="institute-addr">📍 Abbot Road, Lahore Cantt, Lahore</div>
+                </td>
+                <td>Lahore</td>
+                <td>Lahore</td>
+                <td><span class="badge badge-info">Commerce</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Male</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Urban</span></td>
+                <td class="col-right col-num">1,840</td>
+                <td class="col-right col-num">62</td>
+                <td class="institute-date">1948</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCL-0002</td>
+                <td>
+                  <div class="institute-name">Govt. Islamia College for Women, Lahore</div>
+                  <div class="institute-addr">📍 Cooper Road, Lahore City</div>
+                </td>
+                <td>Lahore</td>
+                <td>Lahore</td>
+                <td><span class="badge badge-brand">General</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Female</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Urban</span></td>
+                <td class="col-right col-num">3,200</td>
+                <td class="col-right col-num">88</td>
+                <td class="institute-date">1939</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCL-0003</td>
+                <td>
+                  <div class="institute-name">Govt. College for Women, Gulberg</div>
+                  <div class="institute-addr">📍 Gulberg III, Lahore</div>
+                </td>
+                <td>Lahore</td>
+                <td>Lahore</td>
+                <td><span class="badge badge-brand">General</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Female</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Urban</span></td>
+                <td class="col-right col-num">2,640</td>
+                <td class="col-right col-num">71</td>
+                <td class="institute-date">1962</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCR-0072</td>
+                <td>
+                  <div class="institute-name">Govt. Gordon College, Rawalpindi</div>
+                  <div class="institute-addr">📍 Haider Road, Rawalpindi Saddar</div>
+                </td>
+                <td>Rawalpindi</td>
+                <td>Rawalpindi</td>
+                <td><span class="badge badge-brand">General</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Male</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Urban</span></td>
+                <td class="col-right col-num">2,480</td>
+                <td class="col-right col-num">72</td>
+                <td class="institute-date">1894</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCF-0018</td>
+                <td>
+                  <div class="institute-name">Govt. College for Women, Jhang Road</div>
+                  <div class="institute-addr">📍 Jhang Road, Faisalabad</div>
+                </td>
+                <td>Faisalabad</td>
+                <td>Faisalabad</td>
+                <td><span class="badge badge-brand">General</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Female</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Urban</span></td>
+                <td class="col-right col-num">2,750</td>
+                <td class="col-right col-num">74</td>
+                <td class="institute-date">1956</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCF-0021</td>
+                <td>
+                  <div class="institute-name">Govt. College of Commerce, Faisalabad</div>
+                  <div class="institute-addr">📍 Jail Road, Faisalabad City</div>
+                </td>
+                <td>Faisalabad</td>
+                <td>Faisalabad</td>
+                <td><span class="badge badge-info">Commerce</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Male</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Urban</span></td>
+                <td class="col-right col-num">1,620</td>
+                <td class="col-right col-num">48</td>
+                <td class="institute-date">1961</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCM-0034</td>
+                <td>
+                  <div class="institute-name">Govt. Emerson College, Multan</div>
+                  <div class="institute-addr">📍 Multan Saddar, Multan</div>
+                </td>
+                <td>Multan</td>
+                <td>Multan</td>
+                <td><span class="badge badge-brand">General</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Male</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Urban</span></td>
+                <td class="col-right col-num">2,100</td>
+                <td class="col-right col-num">67</td>
+                <td class="institute-date">1879</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCB-0055</td>
+                <td>
+                  <div class="institute-name">Govt. Sadiq Egerton College, Bahawalpur</div>
+                  <div class="institute-addr">📍 Civil Lines, Bahawalpur</div>
+                </td>
+                <td>Bahawalpur</td>
+                <td>Bahawalpur</td>
+                <td><span class="badge badge-brand">General</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Male</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Urban</span></td>
+                <td class="col-right col-num">1,960</td>
+                <td class="col-right col-num">58</td>
+                <td class="institute-date">1886</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCG-0089</td>
+                <td>
+                  <div class="institute-name">Govt. Murray College, Sialkot</div>
+                  <div class="institute-addr">📍 Trunk Bazaar Road, Sialkot</div>
+                </td>
+                <td>Gujranwala</td>
+                <td>Sialkot</td>
+                <td><span class="badge badge-brand">General</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Male</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Urban</span></td>
+                <td class="col-right col-num">1,780</td>
+                <td class="col-right col-num">54</td>
+                <td class="institute-date">1889</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCS-0104</td>
+                <td>
+                  <div class="institute-name">Govt. College for Women, Sargodha</div>
+                  <div class="institute-addr">📍 University Road, Sargodha</div>
+                </td>
+                <td>Sargodha</td>
+                <td>Sargodha</td>
+                <td><span class="badge badge-brand">General</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Female</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Urban</span></td>
+                <td class="col-right col-num">1,540</td>
+                <td class="col-right col-num">46</td>
+                <td class="institute-date">1952</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCK-0118</td>
+                <td>
+                  <div class="institute-name">Govt. Associate College, Taunsa</div>
+                  <div class="institute-addr">📍 Taunsa Sharif, Dera Ghazi Khan</div>
+                </td>
+                <td>D.G. Khan</td>
+                <td>D.G. Khan</td>
+                <td><span class="badge badge-neutral">Associate</span></td>
+                <td><span class="badge badge-neutral">Associate</span></td>
+                <td>Male</td>
+                <td><span style="color:var(--warning-text);font-size:11px;">⚑ Hard Area</span></td>
+                <td class="col-right col-num">380</td>
+                <td class="col-right col-num">11</td>
+                <td class="institute-date">1998</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCK-0125</td>
+                <td>
+                  <div class="institute-name">Govt. Associate College for Women, Rajanpur</div>
+                  <div class="institute-addr">📍 Rajanpur, Dera Ghazi Khan</div>
+                </td>
+                <td>D.G. Khan</td>
+                <td>D.G. Khan</td>
+                <td><span class="badge badge-neutral">Associate</span></td>
+                <td><span class="badge badge-neutral">Associate</span></td>
+                <td>Female</td>
+                <td><span style="color:var(--warning-text);font-size:11px;">⚑ Hard Area</span></td>
+                <td class="col-right col-num">290</td>
+                <td class="col-right col-num">9</td>
+                <td class="institute-date">2004</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCW-0210</td>
+                <td>
+                  <div class="institute-name">Govt. College for Women, Vehari</div>
+                  <div class="institute-addr">📍 Vehari Road, Vehari</div>
+                </td>
+                <td>Multan</td>
+                <td>Vehari</td>
+                <td><span class="badge badge-brand">General</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Female</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Rural</span></td>
+                <td class="col-right col-num">920</td>
+                <td class="col-right col-num">28</td>
+                <td class="institute-date">1974</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCH-0298</td>
+                <td>
+                  <div class="institute-name">Govt. Associate College for Women, Hasilpur</div>
+                  <div class="institute-addr">📍 Hasilpur, Bahawalpur</div>
+                </td>
+                <td>Bahawalpur</td>
+                <td>Bahawalpur</td>
+                <td><span class="badge badge-neutral">Associate</span></td>
+                <td><span class="badge badge-neutral">Associate</span></td>
+                <td>Female</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Rural</span></td>
+                <td class="col-right col-num">310</td>
+                <td class="col-right col-num">9</td>
+                <td class="institute-date">2002</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCQ-0411</td>
+                <td>
+                  <div class="institute-name">Govt. College for Women, Okara</div>
+                  <div class="institute-addr">📍 Model Town, Okara</div>
+                </td>
+                <td>Sahiwal</td>
+                <td>Okara</td>
+                <td><span class="badge badge-brand">General</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Female</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Rural</span></td>
+                <td class="col-right col-num">740</td>
+                <td class="col-right col-num">22</td>
+                <td class="institute-date">1981</td>
+                <td><span class="badge badge-success">Active</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn primary" onclick="openPanel()">View</button>
+                  <button class="row-btn">Edit</button>
+                  <button class="row-btn">Programs</button>
+                </div></td>
+              </tr>
+
+              <!-- Pending Approval rows -->
+              <tr style="background:rgba(250,238,218,.25);">
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono" style="color:var(--text-muted);">—</td>
+                <td>
+                  <div class="institute-name">Govt. College for Women, Narowal</div>
+                  <div class="institute-addr">📍 New Campus Road, Narowal</div>
+                </td>
+                <td>Gujranwala</td>
+                <td>Narowal</td>
+                <td><span class="badge badge-brand">General</span></td>
+                <td><span class="badge badge-brand">Graduate</span></td>
+                <td>Female</td>
+                <td><span style="font-size:11px;color:var(--text-muted);">Urban</span></td>
+                <td class="col-right" style="color:var(--text-muted);">—</td>
+                <td class="col-right" style="color:var(--text-muted);">—</td>
+                <td class="institute-date">2025</td>
+                <td><span class="badge badge-warning">Pending</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn approve">✓ Approve</button>
+                  <button class="row-btn">View</button>
+                  <button class="row-btn danger">Reject</button>
+                </div></td>
+              </tr>
+              <tr style="background:rgba(250,238,218,.25);">
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono" style="color:var(--text-muted);">—</td>
+                <td>
+                  <div class="institute-name">Govt. Associate College, Kot Chutta</div>
+                  <div class="institute-addr">📍 Kot Chutta Bazaar, Dera Ghazi Khan</div>
+                </td>
+                <td>D.G. Khan</td>
+                <td>D.G. Khan</td>
+                <td><span class="badge badge-neutral">Associate</span></td>
+                <td><span class="badge badge-neutral">Associate</span></td>
+                <td>Male</td>
+                <td><span style="color:var(--warning-text);font-size:11px;">⚑ Hard Area</span></td>
+                <td class="col-right" style="color:var(--text-muted);">—</td>
+                <td class="col-right" style="color:var(--text-muted);">—</td>
+                <td class="institute-date">2025</td>
+                <td><span class="badge badge-warning">Pending</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn approve">✓ Approve</button>
+                  <button class="row-btn">View</button>
+                  <button class="row-btn danger">Reject</button>
+                </div></td>
+              </tr>
+
+              <!-- Inactive row -->
+              <tr style="opacity:.65;">
+                <td><input type="checkbox" class="row-check" onchange="updateBulk()" style="accent-color:var(--brand-500);"></td>
+                <td class="col-mono">GCX-0508</td>
+                <td>
+                  <div class="institute-name">Govt. Associate College, Jampur</div>
+                  <div class="institute-addr">📍 Jampur, Dera Ghazi Khan</div>
+                </td>
+                <td>D.G. Khan</td>
+                <td>D.G. Khan</td>
+                <td><span class="badge badge-neutral">Associate</span></td>
+                <td><span class="badge badge-neutral">Associate</span></td>
+                <td>Male</td>
+                <td><span style="color:var(--warning-text);font-size:11px;">⚑ Hard Area</span></td>
+                <td class="col-right col-num">0</td>
+                <td class="col-right col-num">0</td>
+                <td class="institute-date">2010</td>
+                <td><span class="badge badge-danger">Inactive</span></td>
+                <td><div class="actions-cell">
+                  <button class="row-btn">View</button>
+                  <button class="row-btn">Reactivate</button>
+                </div></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="pagination">
+          <span class="pagination-info">Showing 18 of 800 colleges</span>
+          <div class="pagination-spacer"></div>
+          <div style="font-size:12px;color:var(--text-muted);margin-right:var(--space-2);">Per page:</div>
+          <select style="font-size:12px;border:1px solid var(--border-light);border-radius:var(--radius-md);padding:3px 8px;background:var(--bg-surface);">
+            <option>20</option><option>50</option><option>100</option>
+          </select>
+          <div style="width:var(--space-4);"></div>
+          <div class="page-btn">«</div>
+          <div class="page-btn">‹</div>
+          <div class="page-btn active">1</div>
+          <div class="page-btn">2</div>
+          <div class="page-btn">3</div>
+          <div class="page-elipsis">…</div>
+          <div class="page-btn">40</div>
+          <div class="page-btn">›</div>
+          <div class="page-btn">»</div>
+          <div style="width:var(--space-3);"></div>
+          <span style="font-size:12px;color:var(--text-muted);">Go to:</span>
+          <input type="number" value="1" min="1" max="40" style="width:52px;padding:4px 8px;font-size:12px;border:1px solid var(--border-light);border-radius:var(--radius-md);">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════════ DETAIL SIDE PANEL ════════ -->
+<div class="detail-panel-overlay" id="overlay" onclick="closePanel()"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="panel-header">
+    <div>
+      <div style="font-size:15px;font-weight:700;color:var(--text-primary);">Govt. College of Commerce, Lahore</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:2px;font-family:var(--font-mono);">CMIS: GCL-0001 &nbsp;·&nbsp; Estd. 1948</div>
+    </div>
+    <button class="panel-close" onclick="closePanel()">✕</button>
+  </div>
+  <div class="panel-body">
+    <!-- Status badges -->
+    <div style="display:flex;gap:var(--space-2);margin-bottom:var(--space-4);flex-wrap:wrap;">
+      <span class="badge badge-success">Active</span>
+      <span class="badge badge-info">Commerce</span>
+      <span class="badge badge-brand">Graduate Level</span>
+      <span style="font-size:11px;background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-full);padding:2px 8px;color:var(--text-muted);">Male College</span>
+      <span style="font-size:11px;background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-full);padding:2px 8px;color:var(--text-muted);">Urban</span>
+    </div>
+
+    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:var(--space-3);">Location</div>
+    <div class="detail-row"><div class="detail-lbl">Division</div><div class="detail-val">Lahore</div></div>
+    <div class="detail-row"><div class="detail-lbl">District</div><div class="detail-val">Lahore</div></div>
+    <div class="detail-row"><div class="detail-lbl">Tehsil</div><div class="detail-val">Lahore Cantt</div></div>
+    <div class="detail-row"><div class="detail-lbl">Address</div><div class="detail-val">Abbot Road, Lahore Cantt, Lahore, Punjab 54000</div></div>
+    <div class="detail-row"><div class="detail-lbl">Coordinates</div><div class="detail-val" style="font-family:var(--font-mono);font-size:12px;">31.5570° N, 74.3040° E</div></div>
+
+    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin:var(--space-4) 0 var(--space-3);">Classification</div>
+    <div class="detail-row"><div class="detail-lbl">Type</div><div class="detail-val"><span class="badge badge-info">Commerce</span></div></div>
+    <div class="detail-row"><div class="detail-lbl">Level</div><div class="detail-val"><span class="badge badge-brand">Graduate</span></div></div>
+    <div class="detail-row"><div class="detail-lbl">Gender</div><div class="detail-val">Male</div></div>
+    <div class="detail-row"><div class="detail-lbl">Hard Area</div><div class="detail-val">Without Hard Area</div></div>
+    <div class="detail-row"><div class="detail-lbl">Periphery</div><div class="detail-val">No</div></div>
+
+    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin:var(--space-4) 0 var(--space-3);">Statistics (AY 2025–26)</div>
+    <div class="detail-row"><div class="detail-lbl">Total Students</div><div class="detail-val" style="font-weight:600;">1,840</div></div>
+    <div class="detail-row"><div class="detail-lbl">Total Faculty</div><div class="detail-val" style="font-weight:600;">62</div></div>
+    <div class="detail-row"><div class="detail-lbl">Programs Offered</div><div class="detail-val">8</div></div>
+    <div class="detail-row"><div class="detail-lbl">Sanctioned Posts</div><div class="detail-val">70 (62 filled · 8 vacant)</div></div>
+
+    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin:var(--space-4) 0 var(--space-3);">Contact</div>
+    <div class="detail-row"><div class="detail-lbl">Phone</div><div class="detail-val">042-36370001</div></div>
+    <div class="detail-row"><div class="detail-lbl">Email</div><div class="detail-val">gccom.lahore@hed.punjab.gov.pk</div></div>
+    <div class="detail-row"><div class="detail-lbl">Principal</div><div class="detail-val">Prof. Dr. Muhammad Asif</div></div>
+
+    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin:var(--space-4) 0 var(--space-3);">Operational Status</div>
+    <div class="detail-row"><div class="detail-lbl">Status</div><div class="detail-val"><span class="badge badge-success">Active</span></div></div>
+    <div class="detail-row"><div class="detail-lbl">Operational</div><div class="detail-val"><span class="badge badge-success">Operational</span></div></div>
+    <div class="detail-row"><div class="detail-lbl">Established</div><div class="detail-val">1948</div></div>
+    <div class="detail-row"><div class="detail-lbl">Last Updated</div><div class="detail-val" style="font-family:var(--font-mono);font-size:12px;">2025-06-10 by HED Admin</div></div>
+  </div>
+  <div class="panel-actions">
+    <button class="btn btn-primary btn-sm" style="flex:1;">✏ Edit Institute</button>
+    <button class="btn btn-secondary btn-sm">📚 Programs</button>
+    <button class="btn btn-secondary btn-sm">👥 Staff</button>
+    <button class="btn btn-ghost btn-sm">⬇ Export</button>
+  </div>
+</div>
+
+<script>
+  function openPanel() {
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('detailPanel').classList.add('open');
+  }
+  function closePanel() {
+    document.getElementById('overlay').classList.remove('open');
+    document.getElementById('detailPanel').classList.remove('open');
+  }
+
+  function setTab(el, type) {
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function toggleSelectAll(cb) {
+    document.querySelectorAll('.row-check').forEach(c => c.checked = cb.checked);
+    updateBulk();
+  }
+
+  function updateBulk() {
+    const checked = document.querySelectorAll('.row-check:checked').length;
+    const bar = document.getElementById('bulkBar');
+    if (checked > 0) {
+      bar.style.display = 'flex';
+      document.getElementById('bulkCount').textContent = checked;
+    } else {
+      bar.style.display = 'none';
+    }
+  }
+
+  function clearBulk() {
+    document.querySelectorAll('.row-check').forEach(c => c.checked = false);
+    document.getElementById('selectAll').checked = false;
+    document.getElementById('bulkBar').style.display = 'none';
+  }
+</script>
+</body>
+</html>

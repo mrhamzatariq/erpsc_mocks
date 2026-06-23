@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programs Register — ERP System for Public Colleges</title>
+  <style>
+    :root {
+      --brand-900:#26215C; --brand-700:#3D368F; --brand-600:#534AB7;
+      --brand-500:#6B63D4; --brand-400:#8B85E0; --brand-100:#ECEAFF; --brand-50:#F4F3FF;
+      --bg-page:#F4F3F1; --bg-surface:#FFFFFF; --bg-secondary:#F8F8F7; --bg-tertiary:#EFEEEC;
+      --border-light:#E5E4E1; --border-medium:#D0CFC9;
+      --text-primary:#1A1A2E; --text-secondary:#4A4A6A; --text-muted:#8A8A9A; --text-inverse:#FFFFFF;
+      --success-bg:#EAF3DE; --success-text:#3B6D11; --success-border:#97C459;
+      --warning-bg:#FAEEDA; --warning-text:#854F0B; --warning-border:#EF9F27;
+      --danger-bg:#FCEBEB;  --danger-text:#A32D2D;  --danger-border:#E24B4A;
+      --info-bg:#E6F1FB;    --info-text:#185FA5;    --info-border:#378ADD;
+      --neutral-bg:#F2F2F0; --neutral-text:#4A4A5A; --neutral-border:#C8C8C0;
+      --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+      --space-5:20px; --space-6:24px; --space-8:32px;
+      --radius-sm:6px; --radius-md:8px; --radius-lg:12px; --radius-xl:16px; --radius-full:9999px;
+      --font-sans:'Inter',system-ui,-apple-system,sans-serif;
+      --font-mono:'JetBrains Mono','Courier New',monospace;
+      --sidebar-w:240px; --topbar-h:56px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--font-sans);background:var(--bg-page);color:var(--text-primary);font-size:14px;}
+    .shell{display:flex;height:100vh;overflow:hidden;}
+
+    /* SIDEBAR */
+    .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--brand-900);color:#fff;
+      display:flex;flex-direction:column;overflow-y:auto;height:100vh;position:fixed;left:0;top:0;z-index:50;}
+    .sb-brand{height:var(--topbar-h);padding:0 var(--space-5);display:flex;align-items:center;
+      gap:var(--space-3);border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+    .sb-brand-icon{width:32px;height:32px;border-radius:var(--radius-md);background:var(--brand-500);
+      display:flex;align-items:center;justify-content:center;font-size:15px;}
+    .sb-brand-name{font-size:12px;font-weight:600;line-height:1.3;}
+    .sb-brand-sub{font-size:10px;opacity:.5;}
+    .sb-role{margin:var(--space-3) var(--space-4);padding:var(--space-2) var(--space-3);
+      background:rgba(255,255,255,.07);border-radius:var(--radius-md);border:1px solid rgba(255,255,255,.10);}
+    .sb-role-lbl{font-size:10px;opacity:.5;text-transform:uppercase;letter-spacing:.06em;}
+    .sb-role-name{font-size:12px;font-weight:600;margin-top:2px;}
+    .sb-role-dept{font-size:11px;opacity:.6;margin-top:1px;}
+    .sb-sec{font-size:10px;text-transform:uppercase;letter-spacing:.08em;opacity:.4;padding:var(--space-4) var(--space-5) var(--space-1);}
+    .nav-item{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-5);
+      font-size:13px;font-weight:500;color:rgba(255,255,255,.65);cursor:pointer;text-decoration:none;transition:background .15s;}
+    .nav-item:hover{background:rgba(255,255,255,.06);color:#fff;}
+    .nav-item.active{background:var(--brand-600);color:#fff;border-right:3px solid var(--brand-400);}
+    .nav-icon{width:16px;text-align:center;font-size:14px;flex-shrink:0;}
+    .nav-badge{margin-left:auto;background:var(--danger-bg);color:var(--danger-text);font-size:10px;font-weight:700;padding:1px 6px;border-radius:var(--radius-full);}
+    .nav-sub{padding-left:calc(var(--space-5) + 28px);font-size:12px;}
+    .sb-footer{margin-top:auto;border-top:1px solid rgba(255,255,255,.08);padding:var(--space-3) var(--space-4);}
+    .sb-user{display:flex;align-items:center;gap:var(--space-3);}
+    .avatar{width:32px;height:32px;border-radius:var(--radius-full);background:var(--brand-500);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+    .sb-user-name{font-size:12px;font-weight:600;}
+    .sb-user-email{font-size:11px;opacity:.5;}
+
+    /* MAIN */
+    .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+
+    /* TOPBAR */
+    .topbar{height:var(--topbar-h);background:var(--bg-surface);border-bottom:1px solid var(--border-light);
+      display:flex;align-items:center;gap:var(--space-4);padding:0 var(--space-6);flex-shrink:0;}
+    .bc{display:flex;align-items:center;gap:var(--space-2);font-size:13px;}
+    .bc a{color:var(--text-muted);text-decoration:none;}
+    .bc .sep{color:var(--border-medium);}
+    .bc .cur{font-weight:600;}
+    .topbar-spacer{flex:1;}
+    .topbar-search{display:flex;align-items:center;gap:var(--space-2);background:var(--bg-secondary);
+      border:1px solid var(--border-light);border-radius:var(--radius-full);padding:var(--space-1) var(--space-3);
+      font-size:13px;color:var(--text-muted);width:220px;}
+    .icon-btn{width:36px;height:36px;border-radius:var(--radius-md);display:flex;align-items:center;
+      justify-content:center;background:none;border:1px solid var(--border-light);cursor:pointer;font-size:16px;position:relative;}
+    .notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--danger-border);border:2px solid white;}
+
+    /* CONTENT */
+    .content{flex:1;overflow-y:auto;padding:var(--space-6);}
+
+    /* PAGE HEADER */
+    .ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-5);}
+    .ph-left h1{font-size:22px;font-weight:700;}
+    .ph-left p{font-size:13px;color:var(--text-muted);margin-top:4px;}
+    .ph-right{display:flex;gap:var(--space-2);align-items:center;}
+
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);
+      border-radius:var(--radius-md);font-size:13px;font-weight:500;font-family:var(--font-sans);
+      border:1px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap;}
+    .btn-primary{background:var(--brand-600);color:#fff;border-color:var(--brand-600);}
+    .btn-primary:hover{background:var(--brand-700);}
+    .btn-secondary{background:var(--bg-surface);color:var(--text-primary);border-color:var(--border-medium);}
+    .btn-secondary:hover{background:var(--bg-secondary);}
+    .btn-ghost{background:none;color:var(--text-secondary);border-color:transparent;}
+    .btn-ghost:hover{background:var(--bg-secondary);}
+    .btn-sm{padding:5px var(--space-3);font-size:12px;}
+    .btn-xs{padding:3px var(--space-2);font-size:11px;}
+
+    /* CARD */
+    .card{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:var(--space-5);}
+    .card-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-4);padding-bottom:var(--space-4);border-bottom:1px solid var(--border-light);}
+    .card-title{font-size:15px;font-weight:600;}
+    .card-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
+
+    /* METRICS */
+    .ms{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--space-3);margin-bottom:var(--space-5);}
+    .mc{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);}
+    .mc-val{font-size:22px;font-weight:700;}
+    .mc-lbl{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
+    .mc-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+    /* MAIN LAYOUT */
+    .main-grid{display:grid;grid-template-columns:1fr 300px;gap:var(--space-4);}
+
+    /* TABS */
+    .tab-bar{display:flex;border-bottom:2px solid var(--border-light);margin-bottom:var(--space-4);}
+    .tab{padding:var(--space-3) var(--space-4);font-size:13px;font-weight:500;color:var(--text-muted);
+      cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;}
+    .tab.active{color:var(--brand-600);border-bottom-color:var(--brand-600);font-weight:600;}
+    .tc{display:inline-flex;align-items:center;background:var(--bg-secondary);color:var(--text-muted);
+      font-size:10px;font-weight:700;padding:1px 6px;border-radius:var(--radius-full);margin-left:5px;}
+    .tab.active .tc{background:var(--brand-50);color:var(--brand-600);}
+
+    /* FILTER BAR */
+    .ftb{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-3);flex-wrap:wrap;}
+    .ftb-search{display:flex;align-items:center;gap:var(--space-2);background:var(--bg-surface);
+      border:1px solid var(--border-medium);border-radius:var(--radius-md);padding:6px var(--space-3);flex:1;max-width:260px;}
+    .ftb-search input{border:none;outline:none;font-size:13px;font-family:var(--font-sans);width:100%;background:transparent;}
+    .fchip{padding:4px 10px;border-radius:var(--radius-full);background:var(--bg-secondary);
+      border:1px solid var(--border-light);font-size:12px;color:var(--text-secondary);cursor:pointer;white-space:nowrap;}
+    .fchip.active{background:var(--brand-50);border-color:var(--brand-400);color:var(--brand-600);font-weight:500;}
+    .fsel{font-size:12px;border:1px solid var(--border-light);border-radius:var(--radius-md);padding:5px 10px;background:var(--bg-surface);}
+    .ftb-spacer{flex:1;}
+
+    /* TABLE */
+    .tw{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    th{background:var(--bg-secondary);color:var(--text-secondary);font-size:11px;font-weight:600;
+      text-transform:uppercase;letter-spacing:.06em;padding:var(--space-3) var(--space-4);
+      text-align:left;border-bottom:2px solid var(--border-light);white-space:nowrap;}
+    td{padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--border-light);vertical-align:middle;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:var(--bg-secondary);}
+    .col-mono{font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);}
+    .col-r{text-align:right;}
+    .col-num{font-family:var(--font-mono);font-weight:600;}
+
+    /* BADGES */
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:var(--radius-full);font-size:11px;font-weight:600;white-space:nowrap;}
+    .bs{background:var(--success-bg);color:var(--success-text);}
+    .bw{background:var(--warning-bg);color:var(--warning-text);}
+    .bd{background:var(--danger-bg);color:var(--danger-text);}
+    .bi{background:var(--info-bg);color:var(--info-text);}
+    .bn{background:var(--neutral-bg);color:var(--neutral-text);}
+    .bb{background:var(--brand-100);color:var(--brand-600);}
+
+    /* PROGRESS */
+    .pb{height:5px;background:var(--bg-tertiary);border-radius:var(--radius-full);overflow:hidden;min-width:60px;}
+    .pf{height:100%;border-radius:var(--radius-full);}
+
+    /* ROW BTNS */
+    .rb{padding:3px 9px;border-radius:var(--radius-sm);font-size:11px;font-weight:500;
+      border:1px solid var(--border-light);background:var(--bg-surface);cursor:pointer;color:var(--text-secondary);white-space:nowrap;}
+    .rb:hover{background:var(--bg-secondary);}
+    .rb.p{background:var(--brand-50);border-color:var(--brand-400);color:var(--brand-600);}
+    .rb.a{background:var(--success-bg);border-color:var(--success-border);color:var(--success-text);}
+    .rb.d{background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger-text);}
+
+    /* PAGINATION */
+    .pag{display:flex;align-items:center;gap:var(--space-2);padding-top:var(--space-4);border-top:1px solid var(--border-light);}
+    .pag-info{font-size:12px;color:var(--text-muted);}
+    .pag-sp{flex:1;}
+    .pgb{width:30px;height:30px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;
+      font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border-light);background:var(--bg-surface);color:var(--text-secondary);}
+    .pgb.act{background:var(--brand-600);color:#fff;border-color:var(--brand-600);}
+    .pgb:hover:not(.act){background:var(--bg-secondary);}
+
+    /* SIDE PANELS */
+    .sc{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:var(--space-4);}
+    .sc-hdr{padding:var(--space-4) var(--space-4) var(--space-3);border-bottom:1px solid var(--border-light);}
+    .sc-title{font-size:13px;font-weight:600;}
+    .sc-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+    .sc-body{padding:var(--space-4);}
+
+    /* LEGEND */
+    .leg{display:flex;align-items:center;gap:var(--space-2);font-size:12px;margin-bottom:5px;}
+    .leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+    .leg-val{font-weight:600;margin-left:auto;padding-left:var(--space-3);}
+
+    /* STAT ROW */
+    .sr{display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) 0;border-bottom:1px solid var(--border-light);font-size:13px;}
+    .sr:last-child{border-bottom:none;}
+
+    /* PROGRAM NAME CELL */
+    .prog-name{font-weight:600;line-height:1.3;}
+    .prog-meta{font-size:11px;color:var(--text-muted);margin-top:2px;}
+    .prog-tags{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;}
+
+    /* GROUP HEADER */
+    .grp-hdr td{background:var(--brand-900);color:rgba(255,255,255,.9);font-size:11px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.06em;padding:var(--space-2) var(--space-4);}
+
+    /* MB */
+    .mb-3{margin-bottom:var(--space-3);}
+    .mb-4{margin-bottom:var(--space-4);}
+    .mb-5{margin-bottom:var(--space-5);}
+    .flex{display:flex;}
+    .items-center{align-items:center;}
+    .gap-2{gap:var(--space-2);}
+    .gap-3{gap:var(--space-3);}
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-brand-icon">🏛</div>
+      <div><div class="sb-brand-name">ERP — Public Colleges</div><div class="sb-brand-sub">Punjab Higher Education Dept.</div></div>
+    </div>
+    <div class="sb-role">
+      <div class="sb-role-lbl">Signed in as</div>
+      <div class="sb-role-name">HED Super Admin</div>
+      <div class="sb-role-dept">Provincial Level · Full Access</div>
+    </div>
+
+    <div class="sb-sec">Overview</div>
+    <a class="nav-item" href="#"><span class="nav-icon">📊</span> Provincial Dashboard</a>
+    <a class="nav-item" href="#"><span class="nav-icon">✅</span> Approvals <span class="nav-badge">7</span></a>
+
+    <div class="sb-sec">Institutions</div>
+    <a class="nav-item" href="#"><span class="nav-icon">🏫</span> Institutes</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🗺</span> Division Map</a>
+
+    <div class="sb-sec">Academics</div>
+    <a class="nav-item active" href="#"><span class="nav-icon">🎓</span> Programs</a>
+    <a class="nav-item nav-sub active" href="#">All Programs</a>
+    <a class="nav-item nav-sub" href="#">Add Program</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📚</span> Subjects &amp; Departments</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📅</span> Academic Sessions</a>
+
+    <div class="sb-sec">Human Resources</div>
+    <a class="nav-item" href="#"><span class="nav-icon">👥</span> Staff &amp; Faculty</a>
+    <a class="nav-item" href="#"><span class="nav-icon">🏷</span> Designations</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📬</span> Posts &amp; Sanctioned</a>
+
+    <div class="sb-sec">Operations</div>
+    <a class="nav-item" href="#"><span class="nav-icon">🎫</span> Admissions</a>
+    <a class="nav-item" href="#"><span class="nav-icon">📝</span> Examinations</a>
+    <a class="nav-item" href="#"><span class="nav-icon">💰</span> Finance</a>
+
+    <div class="sb-sec">System</div>
+    <a class="nav-item" href="#"><span class="nav-icon">🔧</span> Configuration</a>
+    <a class="nav-item" href="#"><span class="nav-icon">👤</span> User Management</a>
+
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="avatar">SA</div>
+        <div><div class="sb-user-name">Super Admin</div><div class="sb-user-email">admin@hed.punjab.gov.pk</div></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="bc">
+        <a href="#">Home</a><span class="sep">›</span>
+        <a href="#">Academics</a><span class="sep">›</span>
+        <span class="cur">Programs Register</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">🔍 <span>Search programs, subjects…</span></div>
+      <div style="font-size:12px;color:var(--text-muted);">AY 2025–26</div>
+      <button class="icon-btn">🔔<span class="notif-dot"></span></button>
+      <button class="icon-btn">📋</button>
+    </div>
+
+    <div class="content">
+
+      <!-- PAGE HEADER -->
+      <div class="ph">
+        <div class="ph-left">
+          <h1>Programs Register</h1>
+          <p>Province-wide academic programs across all 800 public colleges — AY 2025–26</p>
+        </div>
+        <div class="ph-right">
+          <button class="btn btn-ghost btn-sm">⬇ Export CSV</button>
+          <button class="btn btn-secondary btn-sm">📋 Session Config</button>
+          <button class="btn btn-primary btn-sm">+ Add Program</button>
+        </div>
+      </div>
+
+      <!-- METRICS -->
+      <div class="ms">
+        <div class="mc">
+          <div class="mc-val">1,800+</div>
+          <div class="mc-lbl">Total Programs</div>
+          <div class="mc-sub">All levels · All colleges</div>
+        </div>
+        <div class="mc">
+          <div class="mc-val" style="color:var(--brand-600);">1,764</div>
+          <div class="mc-lbl">Active</div>
+          <div class="mc-sub">Currently running</div>
+        </div>
+        <div class="mc">
+          <div class="mc-val" style="color:var(--warning-text);">11</div>
+          <div class="mc-lbl">Pending Approval</div>
+          <div class="mc-sub">Awaiting HED sign-off</div>
+        </div>
+        <div class="mc">
+          <div class="mc-val" style="color:var(--info-text);">680</div>
+          <div class="mc-lbl">Intermediate</div>
+          <div class="mc-sub">F.A / F.Sc / I.Com / Others</div>
+        </div>
+        <div class="mc">
+          <div class="mc-val" style="color:var(--success-text);">840</div>
+          <div class="mc-lbl">Bachelor (ADP/BS)</div>
+          <div class="mc-sub">2-year &amp; 4-year</div>
+        </div>
+        <div class="mc">
+          <div class="mc-val" style="color:var(--neutral-text);">280</div>
+          <div class="mc-lbl">Masters</div>
+          <div class="mc-sub">MA / MSc / MBA / M.Com</div>
+        </div>
+      </div>
+
+      <!-- MAIN GRID -->
+      <div class="main-grid">
+
+        <!-- LEFT: TABLE -->
+        <div>
+          <div class="card">
+            <div class="card-hdr">
+              <div>
+                <div class="card-title">All Programs</div>
+                <div class="card-sub">Showing canonical program catalogue — colleges can link programs to their institute</div>
+              </div>
+              <div class="flex gap-2">
+                <button class="btn btn-ghost btn-xs">⬇ Export</button>
+                <button class="btn btn-primary btn-xs">+ Add Program</button>
+              </div>
+            </div>
+
+            <!-- TABS -->
+            <div class="tab-bar">
+              <div class="tab active" onclick="setTab(this)">All <span class="tc">1,800+</span></div>
+              <div class="tab" onclick="setTab(this)">Intermediate <span class="tc">680</span></div>
+              <div class="tab" onclick="setTab(this)">ADP / BS <span class="tc">840</span></div>
+              <div class="tab" onclick="setTab(this)">Masters <span class="tc">280</span></div>
+              <div class="tab" onclick="setTab(this)">Pending <span class="tc">11</span></div>
+              <div class="tab" onclick="setTab(this)">Discontinued <span class="tc">25</span></div>
+            </div>
+
+            <!-- FILTER BAR -->
+            <div class="ftb">
+              <div class="ftb-search">🔍<input type="text" placeholder="Program name, code, department…"></div>
+              <span class="fchip active">All Levels</span>
+              <span class="fchip">Annual</span>
+              <span class="fchip">Semester</span>
+              <div class="ftb-spacer"></div>
+              <select class="fsel">
+                <option>All Departments</option>
+                <option>Arabic</option><option>Biology</option><option>Botany</option>
+                <option>Chemistry</option><option>Commerce</option>
+                <option>Computer Science / IT</option><option>Economics</option>
+                <option>Education</option><option>English</option><option>Geography</option>
+                <option>History</option><option>Islamiat</option>
+                <option>Mathematics</option><option>Physics</option>
+                <option>Political Science</option><option>Psychology</option>
+                <option>Sociology</option><option>Statistics</option>
+                <option>Urdu</option><option>Zoology</option>
+              </select>
+              <select class="fsel">
+                <option>All Sessions</option>
+                <option>Annual</option><option>Semester</option>
+              </select>
+              <select class="fsel">
+                <option>All Statuses</option>
+                <option>Active</option><option>Pending</option><option>Discontinued</option>
+              </select>
+            </div>
+
+            <div class="tw">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:32px;"><input type="checkbox" style="accent-color:var(--brand-500);"></th>
+                    <th>Program Code</th>
+                    <th>Program Name</th>
+                    <th>Level</th>
+                    <th>Department</th>
+                    <th>Session</th>
+                    <th>Duration</th>
+                    <th class="col-r">Colleges</th>
+                    <th class="col-r">Students</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <!-- INTERMEDIATE -->
+                  <tr class="grp-hdr"><td colspan="11">📘 Intermediate Programs — Faculty of Arts / Science / Commerce (F.A · F.Sc · I.Com · Others)</td></tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-I-001</td>
+                    <td>
+                      <div class="prog-name">F.Sc Pre-Medical</div>
+                      <div class="prog-meta">Physics · Chemistry · Biology</div>
+                    </td>
+                    <td><span class="badge bb">Intermediate</span></td>
+                    <td>Biology / Chemistry</td>
+                    <td><span class="badge bn">Annual</span></td>
+                    <td>2 Years / Part I &amp; II</td>
+                    <td class="col-r col-num">482</td>
+                    <td class="col-r col-num">148,000</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-I-002</td>
+                    <td>
+                      <div class="prog-name">F.Sc Pre-Engineering</div>
+                      <div class="prog-meta">Physics · Chemistry · Mathematics</div>
+                    </td>
+                    <td><span class="badge bb">Intermediate</span></td>
+                    <td>Physics / Mathematics</td>
+                    <td><span class="badge bn">Annual</span></td>
+                    <td>2 Years / Part I &amp; II</td>
+                    <td class="col-r col-num">450</td>
+                    <td class="col-r col-num">138,000</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-I-003</td>
+                    <td>
+                      <div class="prog-name">F.A. (General)</div>
+                      <div class="prog-meta">Urdu · English · Islamiat + Electives</div>
+                    </td>
+                    <td><span class="badge bb">Intermediate</span></td>
+                    <td>Urdu / English</td>
+                    <td><span class="badge bn">Annual</span></td>
+                    <td>2 Years / Part I &amp; II</td>
+                    <td class="col-r col-num">560</td>
+                    <td class="col-r col-num">172,000</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-I-004</td>
+                    <td>
+                      <div class="prog-name">I.Com (Intermediate in Commerce)</div>
+                      <div class="prog-meta">Accounting · Business Studies · Economics</div>
+                    </td>
+                    <td><span class="badge bb">Intermediate</span></td>
+                    <td>Commerce</td>
+                    <td><span class="badge bn">Annual</span></td>
+                    <td>2 Years / Part I &amp; II</td>
+                    <td class="col-r col-num">112</td>
+                    <td class="col-r col-num">34,800</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-I-005</td>
+                    <td>
+                      <div class="prog-name">F.A. (Home Economics)</div>
+                      <div class="prog-meta">Home Economics · Urdu · English · Islamiat</div>
+                    </td>
+                    <td><span class="badge bb">Intermediate</span></td>
+                    <td>Home Economics</td>
+                    <td><span class="badge bn">Annual</span></td>
+                    <td>2 Years / Part I &amp; II</td>
+                    <td class="col-r col-num">240</td>
+                    <td class="col-r col-num">42,000</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+
+                  <!-- ADP / BS -->
+                  <tr class="grp-hdr"><td colspan="11">📗 Bachelor Programs — ADP · B.S. (2-Year &amp; 4-Year)</td></tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-B-001</td>
+                    <td>
+                      <div class="prog-name">B.S. Computer Science (4-Year)</div>
+                      <div class="prog-meta">Programming · Algorithms · Networks · DB · AI Electives</div>
+                    </td>
+                    <td><span class="badge bi">Bachelor — BS</span></td>
+                    <td>Computer Science / IT</td>
+                    <td><span class="badge" style="background:#F0EDFF;color:var(--brand-600);">Semester</span></td>
+                    <td>4 Years / 8 Semesters</td>
+                    <td class="col-r col-num">128</td>
+                    <td class="col-r col-num">18,400</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-B-002</td>
+                    <td>
+                      <div class="prog-name">B.S. Mathematics (4-Year)</div>
+                      <div class="prog-meta">Calculus · Algebra · Statistics · Topology</div>
+                    </td>
+                    <td><span class="badge bi">Bachelor — BS</span></td>
+                    <td>Mathematics</td>
+                    <td><span class="badge" style="background:#F0EDFF;color:var(--brand-600);">Semester</span></td>
+                    <td>4 Years / 8 Semesters</td>
+                    <td class="col-r col-num">210</td>
+                    <td class="col-r col-num">28,000</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-B-003</td>
+                    <td>
+                      <div class="prog-name">A.D.P. (General) — 2 Year</div>
+                      <div class="prog-meta">Associate Degree Programme — major + minor subjects</div>
+                    </td>
+                    <td><span class="badge bi">Bachelor — ADP</span></td>
+                    <td>Multiple</td>
+                    <td><span class="badge bn">Annual</span></td>
+                    <td>2 Years / Part I &amp; II</td>
+                    <td class="col-r col-num">340</td>
+                    <td class="col-r col-num">68,000</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-B-004</td>
+                    <td>
+                      <div class="prog-name">B.S. Chemistry (4-Year)</div>
+                      <div class="prog-meta">Organic · Inorganic · Physical · Analytical Chemistry</div>
+                    </td>
+                    <td><span class="badge bi">Bachelor — BS</span></td>
+                    <td>Chemistry</td>
+                    <td><span class="badge" style="background:#F0EDFF;color:var(--brand-600);">Semester</span></td>
+                    <td>4 Years / 8 Semesters</td>
+                    <td class="col-r col-num">180</td>
+                    <td class="col-r col-num">24,000</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-B-005</td>
+                    <td>
+                      <div class="prog-name">B.S. Physics (4-Year)</div>
+                      <div class="prog-meta">Mechanics · Thermodynamics · Optics · Quantum Physics</div>
+                    </td>
+                    <td><span class="badge bi">Bachelor — BS</span></td>
+                    <td>Physics</td>
+                    <td><span class="badge" style="background:#F0EDFF;color:var(--brand-600);">Semester</span></td>
+                    <td>4 Years / 8 Semesters</td>
+                    <td class="col-r col-num">165</td>
+                    <td class="col-r col-num">22,000</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-B-006</td>
+                    <td>
+                      <div class="prog-name">B.Com (Bachelor of Commerce) — 2-Year</div>
+                      <div class="prog-meta">Financial Accounting · Business Law · Economics</div>
+                    </td>
+                    <td><span class="badge bi">Bachelor — B.Com</span></td>
+                    <td>Commerce</td>
+                    <td><span class="badge bn">Annual</span></td>
+                    <td>2 Years / Part I &amp; II</td>
+                    <td class="col-r col-num">112</td>
+                    <td class="col-r col-num">18,000</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-B-007</td>
+                    <td>
+                      <div class="prog-name">B.S. English Literature (4-Year)</div>
+                      <div class="prog-meta">Literary Theory · British · American · Post-Colonial</div>
+                    </td>
+                    <td><span class="badge bi">Bachelor — BS</span></td>
+                    <td>English</td>
+                    <td><span class="badge" style="background:#F0EDFF;color:var(--brand-600);">Semester</span></td>
+                    <td>4 Years / 8 Semesters</td>
+                    <td class="col-r col-num">195</td>
+                    <td class="col-r col-num">26,000</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-B-008</td>
+                    <td>
+                      <div class="prog-name">B.S. Artificial Intelligence (4-Year)</div>
+                      <div class="prog-meta">ML · Deep Learning · NLP · Computer Vision · Robotics</div>
+                      <div class="prog-tags"><span style="font-size:10px;background:var(--warning-bg);color:var(--warning-text);border-radius:var(--radius-full);padding:1px 7px;border:1px solid var(--warning-border);">⚑ New Program</span></div>
+                    </td>
+                    <td><span class="badge bi">Bachelor — BS</span></td>
+                    <td>Computer Science / IT</td>
+                    <td><span class="badge" style="background:#F0EDFF;color:var(--brand-600);">Semester</span></td>
+                    <td>4 Years / 8 Semesters</td>
+                    <td class="col-r col-num">24</td>
+                    <td class="col-r col-num">1,440</td>
+                    <td><span class="badge bw">Pending</span></td>
+                    <td><div class="flex gap-2"><button class="rb a">Approve</button><button class="rb p">View</button><button class="rb d">Reject</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-B-009</td>
+                    <td>
+                      <div class="prog-name">B.S. Data Science (4-Year)</div>
+                      <div class="prog-meta">Statistics · Programming · Data Mining · Visualization</div>
+                      <div class="prog-tags"><span style="font-size:10px;background:var(--warning-bg);color:var(--warning-text);border-radius:var(--radius-full);padding:1px 7px;border:1px solid var(--warning-border);">⚑ New Program</span></div>
+                    </td>
+                    <td><span class="badge bi">Bachelor — BS</span></td>
+                    <td>Computer Science / IT</td>
+                    <td><span class="badge" style="background:#F0EDFF;color:var(--brand-600);">Semester</span></td>
+                    <td>4 Years / 8 Semesters</td>
+                    <td class="col-r col-num">18</td>
+                    <td class="col-r col-num">1,080</td>
+                    <td><span class="badge bw">Pending</span></td>
+                    <td><div class="flex gap-2"><button class="rb a">Approve</button><button class="rb p">View</button><button class="rb d">Reject</button></div></td>
+                  </tr>
+
+                  <!-- MASTERS -->
+                  <tr class="grp-hdr"><td colspan="11">📕 Masters Programs — M.A · M.Sc · M.Com · MBA</td></tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-M-001</td>
+                    <td>
+                      <div class="prog-name">M.A. English</div>
+                      <div class="prog-meta">Literary Criticism · Linguistics · Research Methodology</div>
+                    </td>
+                    <td><span class="badge bn">Masters — M.A.</span></td>
+                    <td>English</td>
+                    <td><span class="badge bn">Annual</span></td>
+                    <td>2 Years / Part I &amp; II</td>
+                    <td class="col-r col-num">88</td>
+                    <td class="col-r col-num">5,280</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-M-002</td>
+                    <td>
+                      <div class="prog-name">M.Sc Mathematics</div>
+                      <div class="prog-meta">Advanced Analysis · Abstract Algebra · Topology</div>
+                    </td>
+                    <td><span class="badge bn">Masters — M.Sc</span></td>
+                    <td>Mathematics</td>
+                    <td><span class="badge bn">Annual</span></td>
+                    <td>2 Years / Part I &amp; II</td>
+                    <td class="col-r col-num">72</td>
+                    <td class="col-r col-num">4,320</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-M-003</td>
+                    <td>
+                      <div class="prog-name">M.Com</div>
+                      <div class="prog-meta">Advanced Accounting · Auditing · Business Finance</div>
+                    </td>
+                    <td><span class="badge bn">Masters — M.Com</span></td>
+                    <td>Commerce</td>
+                    <td><span class="badge bn">Annual</span></td>
+                    <td>2 Years / Part I &amp; II</td>
+                    <td class="col-r col-num">56</td>
+                    <td class="col-r col-num">3,360</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" style="accent-color:var(--brand-500);"></td>
+                    <td class="col-mono">PRG-M-004</td>
+                    <td>
+                      <div class="prog-name">M.A. Urdu</div>
+                      <div class="prog-meta">Urdu Adab · Lisaniyat · Tanqeed · Tahqeeq</div>
+                    </td>
+                    <td><span class="badge bn">Masters — M.A.</span></td>
+                    <td>Urdu</td>
+                    <td><span class="badge bn">Annual</span></td>
+                    <td>2 Years / Part I &amp; II</td>
+                    <td class="col-r col-num">96</td>
+                    <td class="col-r col-num">5,760</td>
+                    <td><span class="badge bs">Active</span></td>
+                    <td><div class="flex gap-2"><button class="rb p">View</button><button class="rb">Edit</button><button class="rb">Colleges</button></div></td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pag">
+              <span class="pag-info">Showing 16 of 1,800+ programs · Page 1 of 90</span>
+              <div class="pag-sp"></div>
+              <select style="font-size:12px;border:1px solid var(--border-light);border-radius:var(--radius-md);padding:3px 8px;background:var(--bg-surface);">
+                <option>20</option><option>50</option><option>100</option>
+              </select>
+              &nbsp;
+              <div class="pgb">«</div>
+              <div class="pgb">‹</div>
+              <div class="pgb act">1</div>
+              <div class="pgb">2</div>
+              <div class="pgb">3</div>
+              <div style="font-size:12px;color:var(--text-muted);">…</div>
+              <div class="pgb">90</div>
+              <div class="pgb">›</div>
+              <div class="pgb">»</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: SIDE PANELS -->
+        <div>
+
+          <!-- Level Split Chart -->
+          <div class="sc">
+            <div class="sc-hdr">
+              <div class="sc-title">Programs by Level</div>
+              <div class="sc-sub">Distribution of 1,800+ programs</div>
+            </div>
+            <div class="sc-body">
+              <svg width="100%" viewBox="0 0 260 130" xmlns="http://www.w3.org/2000/svg" style="display:block;margin-bottom:12px;">
+                <!-- Intermediate bar -->
+                <text x="0" y="16" font-size="11" fill="#4A4A6A">Intermediate (F.A/F.Sc/I.Com)</text>
+                <text x="258" y="16" font-size="11" fill="#534AB7" text-anchor="end" font-weight="600">680</text>
+                <rect x="0" y="22" width="260" height="8" fill="#EFEEEC" rx="4"/>
+                <rect x="0" y="22" width="98" height="8" fill="#534AB7" rx="4"/>
+
+                <text x="0" y="52" font-size="11" fill="#4A4A6A">Bachelor — ADP / BS (2-yr &amp; 4-yr)</text>
+                <text x="258" y="52" font-size="11" fill="#378ADD" text-anchor="end" font-weight="600">840</text>
+                <rect x="0" y="58" width="260" height="8" fill="#EFEEEC" rx="4"/>
+                <rect x="0" y="58" width="121" height="8" fill="#378ADD" rx="4"/>
+
+                <text x="0" y="88" font-size="11" fill="#4A4A6A">Masters (MA / MSc / MBA / M.Com)</text>
+                <text x="258" y="88" font-size="11" fill="#97C459" text-anchor="end" font-weight="600">280</text>
+                <rect x="0" y="94" width="260" height="8" fill="#EFEEEC" rx="4"/>
+                <rect x="0" y="94" width="40" height="8" fill="#97C459" rx="4"/>
+
+                <text x="0" y="124" font-size="11" fill="#4A4A6A">Pending Approval</text>
+                <text x="258" y="124" font-size="11" fill="#EF9F27" text-anchor="end" font-weight="600">11</text>
+                <rect x="0" y="130" width="260" height="8" fill="#EFEEEC" rx="4"/>
+                <rect x="0" y="130" width="4" height="8" fill="#EF9F27" rx="4"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Session Type Split -->
+          <div class="sc">
+            <div class="sc-hdr">
+              <div class="sc-title">Session System</div>
+              <div class="sc-sub">Annual vs Semester-based</div>
+            </div>
+            <div class="sc-body">
+              <div style="display:flex;height:12px;border-radius:var(--radius-full);overflow:hidden;margin-bottom:var(--space-3);">
+                <div style="width:62%;background:var(--brand-500);"></div>
+                <div style="width:38%;background:var(--info-border);margin-left:2px;"></div>
+              </div>
+              <div class="leg"><div class="leg-dot" style="background:var(--brand-500);"></div>Annual System<span class="leg-val">1,116</span></div>
+              <div class="leg"><div class="leg-dot" style="background:var(--info-border);"></div>Semester System<span class="leg-val">695</span></div>
+            </div>
+          </div>
+
+          <!-- Top Programs by College Count -->
+          <div class="sc">
+            <div class="sc-hdr">
+              <div class="sc-title">Most Widespread</div>
+              <div class="sc-sub">Top programs by college count</div>
+            </div>
+            <div class="sc-body">
+              <div class="sr"><div><div style="font-size:12px;font-weight:500;">F.A. (General)</div><div style="font-size:11px;color:var(--text-muted);">Intermediate</div></div><span style="font-weight:700;font-family:var(--font-mono);">560</span></div>
+              <div class="sr"><div><div style="font-size:12px;font-weight:500;">F.Sc Pre-Medical</div><div style="font-size:11px;color:var(--text-muted);">Intermediate</div></div><span style="font-weight:700;font-family:var(--font-mono);">482</span></div>
+              <div class="sr"><div><div style="font-size:12px;font-weight:500;">F.Sc Pre-Engineering</div><div style="font-size:11px;color:var(--text-muted);">Intermediate</div></div><span style="font-weight:700;font-family:var(--font-mono);">450</span></div>
+              <div class="sr"><div><div style="font-size:12px;font-weight:500;">A.D.P. (General)</div><div style="font-size:11px;color:var(--text-muted);">Bachelor — ADP</div></div><span style="font-weight:700;font-family:var(--font-mono);">340</span></div>
+              <div class="sr"><div><div style="font-size:12px;font-weight:500;">B.S. English Literature</div><div style="font-size:11px;color:var(--text-muted);">Bachelor — BS</div></div><span style="font-weight:700;font-family:var(--font-mono);">195</span></div>
+              <div class="sr" style="border:none;"><div><div style="font-size:12px;font-weight:500;">B.S. Mathematics</div><div style="font-size:11px;color:var(--text-muted);">Bachelor — BS</div></div><span style="font-weight:700;font-family:var(--font-mono);">210</span></div>
+            </div>
+          </div>
+
+          <!-- Pending Approvals -->
+          <div class="sc">
+            <div class="sc-hdr">
+              <div class="sc-title">Pending Approval <span style="background:var(--warning-bg);color:var(--warning-text);font-size:10px;font-weight:700;padding:1px 6px;border-radius:var(--radius-full);margin-left:5px;">11</span></div>
+            </div>
+            <div class="sc-body" style="padding:0;">
+              <div style="padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--border-light);">
+                <div style="font-size:12px;font-weight:500;">B.S. Artificial Intelligence</div>
+                <div style="font-size:11px;color:var(--text-muted);">24 colleges · CS/IT</div>
+                <div style="display:flex;gap:4px;margin-top:6px;">
+                  <button class="rb a" style="font-size:10px;padding:2px 7px;">✓ Approve</button>
+                  <button class="rb d" style="font-size:10px;padding:2px 7px;">Reject</button>
+                </div>
+              </div>
+              <div style="padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--border-light);">
+                <div style="font-size:12px;font-weight:500;">B.S. Data Science</div>
+                <div style="font-size:11px;color:var(--text-muted);">18 colleges · CS/IT</div>
+                <div style="display:flex;gap:4px;margin-top:6px;">
+                  <button class="rb a" style="font-size:10px;padding:2px 7px;">✓ Approve</button>
+                  <button class="rb d" style="font-size:10px;padding:2px 7px;">Reject</button>
+                </div>
+              </div>
+              <div style="padding:var(--space-3) var(--space-4);">
+                <a href="#" style="font-size:12px;color:var(--brand-600);font-weight:500;">View all 11 pending →</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="sc">
+            <div class="sc-hdr"><div class="sc-title">Quick Actions</div></div>
+            <div class="sc-body" style="display:flex;flex-direction:column;gap:8px;">
+              <button class="btn btn-primary btn-sm" style="justify-content:center;">+ Add New Program</button>
+              <button class="btn btn-secondary btn-sm" style="justify-content:center;">📅 Configure AY Sessions</button>
+              <button class="btn btn-secondary btn-sm" style="justify-content:center;">📚 Manage Subjects</button>
+              <button class="btn btn-ghost btn-sm" style="justify-content:center;">⬇ Export Program Catalogue</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setTab(el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>

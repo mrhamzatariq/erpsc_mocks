@@ -97,15 +97,14 @@
                     <select id="level" class="form-select" onchange="toggleProgramOptions()">
                         <option value="">Select Level</option>
                         <option value="Intermediate">Intermediate</option>
-                        <option value="ADP">ADP</option>
-                        <option value="BS">BS</option>
+                        <option value="Bachelors">Bachelors</option>
                         <option value="Masters">Masters</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Program Name *</label>
-                    <select id="programName" class="form-select" onchange="toggleProgramOptions()">
+                    <select id="programName" class="form-select" onchange="programChanged()">
                         <option value="">Select Program</option>
                         <option value="humanities">Humanities</option>
                         <option value="general-science">General Science</option>
@@ -144,12 +143,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Duration</label>
-                    <select class="form-select">
-                        <option>2 Years</option>
-                        <option>4 Years</option>
+                    <label class="form-lable">Duration</label>
+                    <select id="duration" class="form-select" onchange="updateAcademicSession()">
+
+                        <option value="">Select Duration</option>
+                        <option value="2">2 Years</option>
+                        <option value="4">4 Years</option>
+
                     </select>
                 </div>
+
 
                 <div class="form-group">
                     <label class="form-label">Session Type</label>
@@ -159,9 +162,29 @@
                     </select>
                 </div>
 
+                <div class="form-group" id="startingSemesterGroup" style="display:none;">
+
+                    <label class="form-label">
+                        Program Starting Semester *
+                    </label>
+
+                    <select id="startingSemester" class="form-select">
+
+                        <option value="1" selected>
+                            Semester 1
+                        </option>
+
+                        <option value="5">
+                            Semester 5
+                        </option>
+
+                    </select>
+
+                </div>
+
                 <div class="form-group">
                     <label class="form-label">Academic Session</label>
-                    <input class="form-input" value="2025-26" disabled>
+                    <input type="text" id="academicSession" class="form-input" readonly disabled>
                 </div>
 
             </div>
@@ -237,16 +260,107 @@
                 placeholder: 'Search Affiliation'
             });
         }
+        function programChanged() {
+
+            const program = document.getElementById('programName').value;
+
+            const semesterGroup =
+                document.getElementById('startingSemesterGroup');
+
+            const semester =
+                document.getElementById('startingSemester');
+
+            const major =
+                document.getElementById('majorTitle');
+
+            major.innerHTML =
+                '<option value="">Select Major / Title</option>';
+
+            const majorMap = {
+                'humanities': ['Arts', 'History', 'Political Science', 'Economics'],
+                'general-science': ['Physics', 'Chemistry', 'Biology', 'Computer Science'],
+                'pre-engineering': ['Pre-Engineering'],
+                'pre-medical': ['Pre-Medical'],
+                'commerce': ['Commerce'],
+                'adp': ['Arts', 'Commerce', 'Economics', 'Computer Science'],
+                'bs': ['Computer Science', 'IT', 'Software Engineering', 'AI']
+            };
+
+            if (majorMap[program]) {
+                majorMap[program].forEach(x => {
+                    major.innerHTML += `<option>${x}</option>`;
+                });
+            }
+
+            if (program === 'bs') {
+                semesterGroup.style.display = 'block';
+                semester.value = '1';
+            } else {
+                semesterGroup.style.display = 'none';
+                semester.value = '1';
+            }
+
+            document.getElementById('groupSection').style.display =
+                ['humanities', 'general-science', 'adp']
+                    .includes(program)
+                    ? 'block'
+                    : 'none';
+        }
+        function handleProgramChange() {
+
+            const program = document.getElementById('programName').value;
+            const semesterField = document.getElementById('startingSemesterGroup');
+            const semesterDropdown = document.getElementById('startingSemester');
+
+            if (program === 'bs') {
+                semesterField.style.display = 'block';
+
+                // Default value
+                semesterDropdown.value = '1';
+            } else {
+                semesterField.style.display = 'none';
+
+                // Reset when hidden
+                semesterDropdown.value = '1';
+            }
+        }
+
+        function updateAcademicSession() {
+
+            const duration =
+                parseInt(document.getElementById('duration').value);
+
+            const sessionField =
+                document.getElementById('academicSession');
+
+            if (!duration) {
+                sessionField.value = '';
+                return;
+            }
+
+            const currentYear = new Date().getFullYear();
+
+            const endingYear = currentYear + duration;
+
+            sessionField.value =
+                currentYear + '-' +
+                endingYear.toString().slice(-2);
+        }
 
         function toggleProgramOptions() {
+
 
             const level = document.getElementById('level').value;
             const program = document.getElementById('programName').value;
             const affiliation = document.getElementById('affiliation');
             const major = document.getElementById('majorTitle');
+            const programName =
+                document.getElementById('programName');
 
             affiliation.innerHTML = '<option value="">Select Affiliation</option>';
             major.innerHTML = '<option value="">Select Major / Title</option>';
+            document.getElementById('startingSemesterGroup')
+                .style.display = 'none';
 
             if (level === 'Intermediate') {
                 boards.forEach(x => affiliation.innerHTML += `<option>${x}</option>`);
@@ -274,7 +388,28 @@
                 ['humanities', 'general-science', 'adp'].includes(program)
                     ? 'block' : 'none';
 
+
+            if (level === 'Intermediate') {
+                programName.innerHTML = `
+        <option value="">Select Program</option>
+        <option value="humanities">Humanities</option>
+        <option value="general-science">General Science</option>
+        <option value="pre-engineering">Pre-Engineering</option>
+        <option value="pre-medical">Pre-Medical</option>
+        <option value="commerce">Commerce</option>`;
+            } else if (level === 'Bachelors') {
+                programName.innerHTML = `
+        <option value="">Select Program</option>
+        <option value="adp">ADP</option>
+        <option value="bs">BS</option>`;
+            } else if (level === 'Masters') {
+                programName.innerHTML = `
+        <option value="">Select Program</option>
+        <option value="masters">Masters</option>`;
+            }
+
             $('#affiliation').select2('destroy');
+
             refreshSelect2();
         }
 
@@ -311,6 +446,7 @@ Remove
 
         $(document).ready(function () {
             refreshSelect2();
+            updateAcademicSession();
         });
     </script>
 

@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Designations Management — ERP System for Public Colleges</title>
+  <style>
+    /* ============================================================
+       DESIGN SYSTEM — INLINE (zero-dependency, mirrors design-system.css)
+       ============================================================ */
+    :root {
+      --brand-900:#26215C; --brand-700:#3D368F; --brand-600:#534AB7;
+      --brand-500:#6B63D4; --brand-400:#8B85E0; --brand-100:#ECEAFF; --brand-50:#F4F3FF;
+      --bg-page:#F4F3F1; --bg-surface:#FFFFFF; --bg-secondary:#F8F8F7; --bg-tertiary:#EFEEEC;
+      --border-light:#E5E4E1; --border-medium:#D0CFC9;
+      --text-primary:#1A1A2E; --text-secondary:#4A4A6A; --text-muted:#8A8A9A; --text-inverse:#FFFFFF;
+      --success-bg:#EAF3DE; --success-text:#3B6D11; --success-border:#97C459;
+      --warning-bg:#FAEEDA; --warning-text:#854F0B; --warning-border:#EF9F27;
+      --danger-bg:#FCEBEB;  --danger-text:#A32D2D;  --danger-border:#E24B4A;
+      --info-bg:#E6F1FB;    --info-text:#185FA5;    --info-border:#378ADD;
+      --neutral-bg:#F2F2F0; --neutral-text:#4A4A5A; --neutral-border:#C8C8C0;
+      --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+      --space-5:20px; --space-6:24px; --space-7:28px; --space-8:32px;
+      --radius-sm:6px; --radius-md:8px; --radius-lg:12px; --radius-xl:16px; --radius-full:9999px;
+      --font-sans:'Inter',system-ui,-apple-system,sans-serif;
+      --font-mono:'JetBrains Mono','Courier New',monospace;
+      --sidebar-w:240px; --topbar-h:56px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{font-size:14px;}
+    body{font-family:var(--font-sans);background:var(--bg-page);color:var(--text-primary);min-height:100vh;}
+
+    /* ── LAYOUT ── */
+    .shell{display:flex;height:100vh;overflow:hidden;}
+
+    /* SIDEBAR */
+    .sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--brand-900);color:var(--text-inverse);
+      display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;height:100vh;
+      position:fixed;left:0;top:0;z-index:50;}
+    .sidebar-brand{height:var(--topbar-h);padding:0 var(--space-5);display:flex;align-items:center;
+      gap:var(--space-3);border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+    .sidebar-brand-icon{width:32px;height:32px;border-radius:var(--radius-md);background:var(--brand-500);
+      display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+    .sidebar-brand-text{font-size:12px;font-weight:600;line-height:1.3;}
+    .sidebar-brand-sub{font-size:10px;opacity:.55;font-weight:400;}
+    .sidebar-role{margin:var(--space-3) var(--space-4);padding:var(--space-2) var(--space-3);
+      background:rgba(255,255,255,.07);border-radius:var(--radius-md);border:1px solid rgba(255,255,255,.10);}
+    .sidebar-role-label{font-size:10px;opacity:.5;text-transform:uppercase;letter-spacing:.06em;}
+    .sidebar-role-name{font-size:12px;font-weight:600;margin-top:2px;}
+    .sidebar-role-dept{font-size:11px;opacity:.6;margin-top:1px;}
+    .sidebar-section-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;opacity:.4;
+      padding:var(--space-4) var(--space-5) var(--space-1);}
+    .nav-item{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-5);
+      font-size:13px;font-weight:500;color:rgba(255,255,255,.65);cursor:pointer;text-decoration:none;
+      transition:background .15s,color .15s;}
+    .nav-item:hover{background:rgba(255,255,255,.06);color:#fff;}
+    .nav-item.active{background:var(--brand-600);color:#fff;border-right:3px solid var(--brand-400);}
+    .nav-item .nav-icon{width:16px;text-align:center;font-size:14px;flex-shrink:0;}
+    .nav-badge{margin-left:auto;background:var(--danger-bg);color:var(--danger-text);
+      font-size:10px;font-weight:700;padding:1px 6px;border-radius:var(--radius-full);}
+    .nav-sub{padding-left:calc(var(--space-5) + 28px);font-size:12px;}
+    .sidebar-footer{margin-top:auto;border-top:1px solid rgba(255,255,255,.08);padding:var(--space-3) var(--space-4);}
+    .sidebar-user{display:flex;align-items:center;gap:var(--space-3);}
+    .avatar{width:32px;height:32px;border-radius:var(--radius-full);background:var(--brand-500);color:#fff;
+      display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+    .sidebar-user-name{font-size:12px;font-weight:600;}
+    .sidebar-user-email{font-size:11px;opacity:.5;}
+
+    /* MAIN */
+    .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+
+    /* TOPBAR */
+    .topbar{height:var(--topbar-h);background:var(--bg-surface);border-bottom:1px solid var(--border-light);
+      display:flex;align-items:center;gap:var(--space-4);padding:0 var(--space-6);flex-shrink:0;}
+    .topbar-breadcrumb{display:flex;align-items:center;gap:var(--space-2);font-size:13px;}
+    .topbar-breadcrumb a{color:var(--text-muted);text-decoration:none;}
+    .topbar-breadcrumb a:hover{color:var(--text-primary);}
+    .topbar-breadcrumb .sep{color:var(--border-medium);}
+    .topbar-breadcrumb .current{color:var(--text-primary);font-weight:600;}
+    .topbar-spacer{flex:1;}
+    .topbar-search{display:flex;align-items:center;gap:var(--space-2);background:var(--bg-secondary);
+      border:1px solid var(--border-light);border-radius:var(--radius-full);padding:var(--space-1) var(--space-3);
+      font-size:13px;color:var(--text-muted);cursor:pointer;width:220px;}
+    .topbar-icon-btn{width:36px;height:36px;border-radius:var(--radius-md);display:flex;align-items:center;
+      justify-content:center;background:none;border:1px solid var(--border-light);cursor:pointer;
+      color:var(--text-secondary);font-size:16px;position:relative;}
+    .notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;
+      background:var(--danger-border);border:2px solid white;}
+
+    /* CONTENT */
+    .content{flex:1;overflow-y:auto;padding:var(--space-6);}
+
+    /* PAGE HEADER */
+    .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-5);}
+    .page-header-left h1{font-size:22px;font-weight:700;}
+    .page-header-left p{font-size:13px;color:var(--text-muted);margin-top:4px;}
+    .page-header-right{display:flex;gap:var(--space-2);align-items:center;flex-shrink:0;}
+
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);
+      border-radius:var(--radius-md);font-size:13px;font-weight:500;font-family:var(--font-sans);
+      border:1px solid transparent;cursor:pointer;transition:all .15s;text-decoration:none;white-space:nowrap;}
+    .btn-primary{background:var(--brand-600);color:#fff;border-color:var(--brand-600);}
+    .btn-primary:hover{background:var(--brand-700);}
+    .btn-secondary{background:var(--bg-surface);color:var(--text-primary);border-color:var(--border-medium);}
+    .btn-secondary:hover{background:var(--bg-secondary);}
+    .btn-ghost{background:none;color:var(--text-secondary);border-color:transparent;}
+    .btn-ghost:hover{background:var(--bg-secondary);}
+    .btn-sm{padding:5px var(--space-3);font-size:12px;}
+    .btn-xs{padding:3px var(--space-2);font-size:11px;}
+
+    /* CARDS */
+    .card{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:var(--space-5);}
+    .card-header{display:flex;align-items:flex-start;justify-content:space-between;
+      margin-bottom:var(--space-4);padding-bottom:var(--space-4);border-bottom:1px solid var(--border-light);}
+    .card-title{font-size:15px;font-weight:600;}
+    .card-subtitle{font-size:12px;color:var(--text-muted);margin-top:2px;}
+
+    /* METRICS STRIP */
+    .metrics-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--space-3);margin-bottom:var(--space-5);}
+    .mstrip{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-md);
+      padding:var(--space-3) var(--space-4);}
+    .mstrip-val{font-size:22px;font-weight:700;}
+    .mstrip-lbl{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
+    .mstrip-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+
+    /* LAYOUT GRID */
+    .layout-grid{display:grid;grid-template-columns:1fr 320px;gap:var(--space-4);}
+
+    /* TABS */
+    .tab-bar{display:flex;gap:0;border-bottom:2px solid var(--border-light);margin-bottom:var(--space-4);}
+    .tab-item{padding:var(--space-3) var(--space-4);font-size:13px;font-weight:500;color:var(--text-muted);
+      cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;}
+    .tab-item.active{color:var(--brand-600);border-bottom-color:var(--brand-600);font-weight:600;}
+    .tab-count{display:inline-flex;align-items:center;justify-content:center;
+      background:var(--bg-secondary);color:var(--text-muted);font-size:10px;font-weight:700;
+      padding:1px 6px;border-radius:var(--radius-full);margin-left:5px;}
+    .tab-item.active .tab-count{background:var(--brand-50);color:var(--brand-600);}
+
+    /* FILTER BAR */
+    .filter-toolbar{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-3);}
+    .filter-search{display:flex;align-items:center;gap:var(--space-2);background:var(--bg-surface);
+      border:1px solid var(--border-medium);border-radius:var(--radius-md);
+      padding:6px var(--space-3);flex:1;max-width:280px;}
+    .filter-search input{border:none;outline:none;font-size:13px;font-family:var(--font-sans);width:100%;background:transparent;}
+    .filter-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;
+      border-radius:var(--radius-full);background:var(--bg-secondary);border:1px solid var(--border-light);
+      font-size:12px;color:var(--text-secondary);cursor:pointer;white-space:nowrap;}
+    .filter-chip.active{background:var(--brand-50);border-color:var(--brand-400);color:var(--brand-600);font-weight:500;}
+    .filter-select{font-size:12px;border:1px solid var(--border-light);border-radius:var(--radius-md);
+      padding:5px 10px;background:var(--bg-surface);}
+    .toolbar-spacer{flex:1;}
+
+    /* TABLE */
+    .table-wrapper{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;font-size:13px;}
+    th{background:var(--bg-secondary);color:var(--text-secondary);font-size:11px;font-weight:600;
+      text-transform:uppercase;letter-spacing:.06em;padding:var(--space-3) var(--space-4);text-align:left;
+      border-bottom:2px solid var(--border-light);white-space:nowrap;}
+    td{padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--border-light);vertical-align:middle;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:var(--bg-secondary);}
+    .col-mono{font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);}
+    .col-right{text-align:right;}
+    .col-num{font-family:var(--font-mono);font-size:13px;font-weight:600;}
+
+    /* BADGES */
+    .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;
+      border-radius:var(--radius-full);font-size:11px;font-weight:600;white-space:nowrap;}
+    .badge-success{background:var(--success-bg);color:var(--success-text);}
+    .badge-warning{background:var(--warning-bg);color:var(--warning-text);}
+    .badge-danger{background:var(--danger-bg);color:var(--danger-text);}
+    .badge-info{background:var(--info-bg);color:var(--info-text);}
+    .badge-neutral{background:var(--neutral-bg);color:var(--neutral-text);}
+    .badge-brand{background:var(--brand-100);color:var(--brand-600);}
+
+    /* PROGRESS */
+    .progress-bar{height:5px;background:var(--bg-tertiary);border-radius:var(--radius-full);overflow:hidden;min-width:60px;}
+    .progress-fill{height:100%;border-radius:var(--radius-full);}
+
+    /* ROW ACTIONS */
+    .row-btn{padding:3px 9px;border-radius:var(--radius-sm);font-size:11px;font-weight:500;
+      border:1px solid var(--border-light);background:var(--bg-surface);cursor:pointer;
+      color:var(--text-secondary);transition:all .12s;white-space:nowrap;}
+    .row-btn:hover{background:var(--bg-secondary);}
+    .row-btn.primary{background:var(--brand-50);border-color:var(--brand-400);color:var(--brand-600);}
+    .row-btn.danger{background:var(--danger-bg);border-color:var(--danger-border);color:var(--danger-text);}
+
+    /* PAGINATION */
+    .pagination{display:flex;align-items:center;gap:var(--space-2);padding-top:var(--space-4);
+      border-top:1px solid var(--border-light);margin-top:var(--space-2);}
+    .pagination-info{font-size:12px;color:var(--text-muted);}
+    .pagination-spacer{flex:1;}
+    .page-btn{width:30px;height:30px;border-radius:var(--radius-md);display:flex;align-items:center;
+      justify-content:center;font-size:12px;font-weight:500;cursor:pointer;
+      border:1px solid var(--border-light);background:var(--bg-surface);color:var(--text-secondary);}
+    .page-btn.active{background:var(--brand-600);color:#fff;border-color:var(--brand-600);}
+    .page-btn:hover:not(.active){background:var(--bg-secondary);}
+
+    /* SIDE PANEL */
+    .side-card{background:var(--bg-surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);overflow:hidden;}
+    .side-card+.side-card{margin-top:var(--space-4);}
+    .side-card-header{padding:var(--space-4) var(--space-4) var(--space-3);border-bottom:1px solid var(--border-light);}
+    .side-card-title{font-size:13px;font-weight:600;}
+    .side-card-sub{font-size:11px;color:var(--text-muted);margin-top:2px;}
+    .side-card-body{padding:var(--space-4);}
+
+    /* DONUT CHART VIA SVG */
+    .chart-donut{display:flex;align-items:center;gap:var(--space-4);}
+    .legend-item{display:flex;align-items:center;gap:var(--space-2);font-size:12px;margin-bottom:5px;}
+    .legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+    .legend-val{font-weight:600;margin-left:auto;padding-left:var(--space-3);}
+
+    /* STAT LIST */
+    .stat-list-row{display:flex;align-items:center;justify-content:space-between;
+      padding:var(--space-3) 0;border-bottom:1px solid var(--border-light);font-size:13px;}
+    .stat-list-row:last-child{border-bottom:none;}
+
+    /* CATEGORY GROUP HEADER */
+    .group-header td{background:var(--bg-secondary);font-size:11px;font-weight:700;
+      text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);
+      padding:var(--space-2) var(--space-4);}
+
+    /* ADD FORM MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;
+      align-items:center;justify-content:center;}
+    .modal-overlay.open{display:flex;}
+    .modal{background:var(--bg-surface);border-radius:var(--radius-xl);width:520px;max-width:calc(100vw - 32px);
+      box-shadow:0 24px 64px rgba(0,0,0,.18);}
+    .modal-header{padding:var(--space-5);border-bottom:1px solid var(--border-light);
+      display:flex;align-items:center;justify-content:space-between;}
+    .modal-title{font-size:16px;font-weight:700;}
+    .modal-close{width:28px;height:28px;border:none;background:var(--bg-secondary);
+      border-radius:var(--radius-md);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+    .modal-body{padding:var(--space-5);}
+    .modal-footer{padding:var(--space-4) var(--space-5);border-top:1px solid var(--border-light);
+      display:flex;gap:var(--space-2);justify-content:flex-end;}
+    .form-group{margin-bottom:var(--space-4);}
+    .form-label{display:block;font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:5px;}
+    .required{color:var(--danger-text);}
+    .form-select{width:100%;padding:var(--space-2) var(--space-3);border:1px solid var(--border-medium);
+      border-radius:var(--radius-md);font-size:13px;font-family:var(--font-sans);
+      background:var(--bg-surface);color:var(--text-primary);}
+    .form-input{width:100%;padding:var(--space-2) var(--space-3);border:1px solid var(--border-medium);
+      border-radius:var(--radius-md);font-size:13px;font-family:var(--font-sans);}
+    .form-select:focus,.form-input:focus{outline:none;border-color:var(--brand-500);
+      box-shadow:0 0 0 3px var(--brand-50);}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);}
+
+    /* UTILS */
+    .mb-3{margin-bottom:var(--space-3);}
+    .mb-4{margin-bottom:var(--space-4);}
+    .mb-5{margin-bottom:var(--space-5);}
+    .flex{display:flex;}
+    .items-center{align-items:center;}
+    .justify-between{justify-content:space-between;}
+    .gap-2{gap:var(--space-2);}
+    .gap-3{gap:var(--space-3);}
+    .text-muted{color:var(--text-muted);}
+    .text-sm{font-size:12px;}
+    .font-mono{font-family:var(--font-mono);}
+    .font-semibold{font-weight:600;}
+  </style>
+</head>
+
+<body>
+<div class="shell">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">🏛</div>
+      <div>
+        <div class="sidebar-brand-text">ERP — Public Colleges</div>
+        <div class="sidebar-brand-sub">Punjab Higher Education Dept.</div>
+      </div>
+    </div>
+    <div class="sidebar-role">
+      <div class="sidebar-role-label">Signed in as</div>
+      <div class="sidebar-role-name">HED Super Admin</div>
+      <div class="sidebar-role-dept">Provincial Level · Full Access</div>
+    </div>
+
+    <div class="sidebar-section-label">Overview</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">📊</span> Provincial Dashboard
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">✅</span> Approvals
+      <span class="nav-badge">7</span>
+    </a>
+
+    <div class="sidebar-section-label">Institutions</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🏫</span> Institutes
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🗺</span> Division Map
+    </a>
+
+    <div class="sidebar-section-label">Academics</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🎓</span> Programs
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">📚</span> Subjects & Departments
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">📅</span> Academic Sessions
+    </a>
+
+    <div class="sidebar-section-label">Human Resources</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">👥</span> Staff & Faculty
+    </a>
+    <a class="nav-item active" href="#">
+      <span class="nav-icon">🏷</span> Designations
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">📬</span> Posts & Sanctioned
+    </a>
+
+    <div class="sidebar-section-label">Operations</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🎫</span> Admissions
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">📝</span> Examinations
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">💰</span> Finance
+    </a>
+
+    <div class="sidebar-section-label">System</div>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">🔧</span> Configuration
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-icon">👤</span> User Management
+    </a>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar">SA</div>
+        <div>
+          <div class="sidebar-user-name">Super Admin</div>
+          <div class="sidebar-user-email">admin@hed.punjab.gov.pk</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ════════ MAIN ════════ -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-breadcrumb">
+        <a href="#">Home</a>
+        <span class="sep">›</span>
+        <a href="#">Human Resources</a>
+        <span class="sep">›</span>
+        <span class="current">Designations</span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <div class="topbar-search">🔍 <span>Search colleges, programs, staff…</span></div>
+      <div style="font-size:12px;color:var(--text-muted);">AY 2025–26</div>
+      <button class="topbar-icon-btn">🔔<span class="notif-dot"></span></button>
+      <button class="topbar-icon-btn">📋</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Designations Master List</h1>
+          <p>All 123 sanctioned designations across General Colleges, Commerce Colleges, and Admin Units — Punjab HED</p>
+        </div>
+        <div class="page-header-right">
+          <button class="btn btn-ghost btn-sm">⬇ Export CSV</button>
+          <button class="btn btn-secondary btn-sm">📋 BPS Reference</button>
+          <button class="btn btn-primary btn-sm" onclick="openModal()">+ Add Designation</button>
+        </div>
+      </div>
+
+      <!-- METRICS STRIP -->
+      <div class="metrics-strip">
+        <div class="mstrip">
+          <div class="mstrip-val">123</div>
+          <div class="mstrip-lbl">Designations</div>
+          <div class="mstrip-sub">In master list</div>
+        </div>
+        <div class="mstrip">
+          <div class="mstrip-val" style="color:var(--success-text);">44</div>
+          <div class="mstrip-lbl">Teaching</div>
+          <div class="mstrip-sub">Post Type: Teaching</div>
+        </div>
+        <div class="mstrip">
+          <div class="mstrip-val" style="color:var(--neutral-text);">79</div>
+          <div class="mstrip-lbl">Non-Teaching</div>
+          <div class="mstrip-sub">Post Type: Non-Teaching</div>
+        </div>
+        <div class="mstrip">
+          <div class="mstrip-val" style="color:var(--brand-600);">25,880</div>
+          <div class="mstrip-lbl">Total Posts</div>
+          <div class="mstrip-sub">Province-wide sanctioned</div>
+        </div>
+        <div class="mstrip">
+          <div class="mstrip-val" style="color:var(--info-text);">18,000</div>
+          <div class="mstrip-lbl">Teaching Posts</div>
+          <div class="mstrip-sub">17,838 filled</div>
+        </div>
+        <div class="mstrip">
+          <div class="mstrip-val" style="color:var(--warning-text);">1,742</div>
+          <div class="mstrip-lbl">Vacant Posts</div>
+          <div class="mstrip-sub">Across all designations</div>
+        </div>
+      </div>
+
+      <!-- MAIN TWO-COLUMN LAYOUT -->
+      <div class="layout-grid">
+
+        <!-- LEFT: MAIN TABLE -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">All Designations</div>
+                <div class="card-subtitle">Source: HED Designations Master · 123 records</div>
+              </div>
+              <div class="flex gap-2">
+                <button class="btn btn-ghost btn-xs">⬇ Export</button>
+                <button class="btn btn-primary btn-xs" onclick="openModal()">+ Add</button>
+              </div>
+            </div>
+
+            <!-- FILTER BAR -->
+            <div class="filter-toolbar">
+              <div class="filter-search">
+                🔍
+                <input type="text" placeholder="Search designation name…" id="desigSearch" oninput="filterDesig()">
+              </div>
+              <span class="filter-chip active" onclick="setChip(this,'all')">All (123)</span>
+              <span class="filter-chip" onclick="setChip(this,'teaching')">Teaching (44)</span>
+              <span class="filter-chip" onclick="setChip(this,'nonteaching')">Non-Teaching (79)</span>
+              <div class="toolbar-spacer"></div>
+              <select class="filter-select" onchange="filterDesig()">
+                <option value="">All Office Types</option>
+                <option>General College</option>
+                <option>Commerce College</option>
+                <option>Admin Unit</option>
+              </select>
+            </div>
+
+            <!-- TABS -->
+            <div class="tab-bar">
+              <div class="tab-item active" onclick="setTab(this)">All <span class="tab-count">123</span></div>
+              <div class="tab-item" onclick="setTab(this)">General College <span class="tab-count">7</span></div>
+              <div class="tab-item" onclick="setTab(this)">Commerce College <span class="tab-count">11</span></div>
+              <div class="tab-item" onclick="setTab(this)">Admin Unit <span class="tab-count">26</span></div>
+              <div class="tab-item" onclick="setTab(this)">Non-Teaching <span class="tab-count">79</span></div>
+            </div>
+
+            <div class="table-wrapper">
+              <table id="desigTable">
+                <thead>
+                  <tr>
+                    <th style="width:40px;">#</th>
+                    <th>Designation</th>
+                    <th>Office Type</th>
+                    <th>Staff Type</th>
+                    <th>Post Type</th>
+                    <th class="col-right">Est. Posts</th>
+                    <th class="col-right">Filled</th>
+                    <th class="col-right">Vacant</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <!-- ═══ GROUP: GENERAL COLLEGE — TEACHING ═══ -->
+                  <tr class="group-header">
+                    <td colspan="9">🏫 General College — Teaching Designations (7)</td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">001</td>
+                    <td><strong>Professor</strong></td>
+                    <td><span class="badge badge-brand">General College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">1,240</td>
+                    <td class="col-right" style="color:var(--success-text);">1,218</td>
+                    <td class="col-right" style="color:var(--warning-text);">22</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">002</td>
+                    <td><strong>Associate Professor</strong></td>
+                    <td><span class="badge badge-brand">General College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">2,180</td>
+                    <td class="col-right" style="color:var(--success-text);">2,145</td>
+                    <td class="col-right" style="color:var(--warning-text);">35</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">003</td>
+                    <td><strong>Assistant Professor</strong></td>
+                    <td><span class="badge badge-brand">General College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">3,400</td>
+                    <td class="col-right" style="color:var(--success-text);">3,312</td>
+                    <td class="col-right" style="color:var(--warning-text);">88</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">004</td>
+                    <td><strong>Lecturer</strong></td>
+                    <td><span class="badge badge-brand">General College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">8,960</td>
+                    <td class="col-right" style="color:var(--success-text);">8,840</td>
+                    <td class="col-right" style="color:var(--warning-text);">120</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">005</td>
+                    <td><strong>Principal</strong></td>
+                    <td><span class="badge badge-brand">General College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">800</td>
+                    <td class="col-right" style="color:var(--success-text);">794</td>
+                    <td class="col-right" style="color:var(--warning-text);">6</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">006</td>
+                    <td><strong>Vice Principal</strong></td>
+                    <td><span class="badge badge-brand">General College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">620</td>
+                    <td class="col-right" style="color:var(--success-text);">608</td>
+                    <td class="col-right" style="color:var(--warning-text);">12</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">007</td>
+                    <td><strong>Librarian</strong></td>
+                    <td><span class="badge badge-brand">General College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">400</td>
+                    <td class="col-right" style="color:var(--success-text);">388</td>
+                    <td class="col-right" style="color:var(--warning-text);">12</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+
+                  <!-- ═══ GROUP: COMMERCE COLLEGE — TEACHING ═══ -->
+                  <tr class="group-header">
+                    <td colspan="9">🏪 Commerce College — Teaching Designations (11)</td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">008</td>
+                    <td><strong>Chief Director Physical Education</strong></td>
+                    <td><span class="badge badge-info">Commerce College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">22</td>
+                    <td class="col-right" style="color:var(--success-text);">20</td>
+                    <td class="col-right" style="color:var(--warning-text);">2</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">009</td>
+                    <td><strong>Chief Instructor</strong></td>
+                    <td><span class="badge badge-info">Commerce College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">112</td>
+                    <td class="col-right" style="color:var(--success-text);">109</td>
+                    <td class="col-right" style="color:var(--warning-text);">3</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">010</td>
+                    <td><strong>Chief Librarian</strong></td>
+                    <td><span class="badge badge-info">Commerce College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">48</td>
+                    <td class="col-right" style="color:var(--success-text);">46</td>
+                    <td class="col-right" style="color:var(--warning-text);">2</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">011</td>
+                    <td><strong>Deputy Chief Librarian</strong></td>
+                    <td><span class="badge badge-info">Commerce College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">48</td>
+                    <td class="col-right" style="color:var(--success-text);">45</td>
+                    <td class="col-right" style="color:var(--warning-text);">3</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">012</td>
+                    <td><strong>Director Physical Education</strong></td>
+                    <td><span class="badge badge-info">Commerce College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">56</td>
+                    <td class="col-right" style="color:var(--success-text);">54</td>
+                    <td class="col-right" style="color:var(--warning-text);">2</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">013</td>
+                    <td><strong>Instructor</strong></td>
+                    <td><span class="badge badge-info">Commerce College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">560</td>
+                    <td class="col-right" style="color:var(--success-text);">540</td>
+                    <td class="col-right" style="color:var(--warning-text);">20</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">014</td>
+                    <td><strong>Junior Instructor</strong></td>
+                    <td><span class="badge badge-info">Commerce College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">224</td>
+                    <td class="col-right" style="color:var(--success-text);">218</td>
+                    <td class="col-right" style="color:var(--warning-text);">6</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">015</td>
+                    <td><strong>Senior Chief Instructor</strong></td>
+                    <td><span class="badge badge-info">Commerce College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">56</td>
+                    <td class="col-right" style="color:var(--success-text);">54</td>
+                    <td class="col-right" style="color:var(--warning-text);">2</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">016</td>
+                    <td><strong>Senior Director Physical Education</strong></td>
+                    <td><span class="badge badge-info">Commerce College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">14</td>
+                    <td class="col-right" style="color:var(--success-text);">13</td>
+                    <td class="col-right" style="color:var(--warning-text);">1</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">017</td>
+                    <td><strong>Senior Instructor</strong></td>
+                    <td><span class="badge badge-info">Commerce College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">168</td>
+                    <td class="col-right" style="color:var(--success-text);">162</td>
+                    <td class="col-right" style="color:var(--warning-text);">6</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">018</td>
+                    <td><strong>Senior Librarian</strong></td>
+                    <td><span class="badge badge-info">Commerce College</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">56</td>
+                    <td class="col-right" style="color:var(--success-text);">54</td>
+                    <td class="col-right" style="color:var(--warning-text);">2</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+
+                  <!-- ═══ GROUP: ADMIN UNIT — TEACHER STAFF (NON-TEACHING POST) ═══ -->
+                  <tr class="group-header">
+                    <td colspan="9">🏢 Admin Unit — Teacher Staff on Non-Teaching Posts (26)</td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">019</td>
+                    <td><strong>Additional Director Public Instructor</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">6</td>
+                    <td class="col-right" style="color:var(--success-text);">6</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">020</td>
+                    <td><strong>Additional Secretary</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">2</td>
+                    <td class="col-right" style="color:var(--success-text);">2</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">021</td>
+                    <td><strong>Additional Secretary (Boards)</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">1</td>
+                    <td class="col-right" style="color:var(--success-text);">1</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">022</td>
+                    <td><strong>Assistant Director</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">18</td>
+                    <td class="col-right" style="color:var(--success-text);">17</td>
+                    <td class="col-right" style="color:var(--warning-text);">1</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">023</td>
+                    <td><strong>Assistant Director Colleges</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">12</td>
+                    <td class="col-right" style="color:var(--success-text);">11</td>
+                    <td class="col-right" style="color:var(--warning-text);">1</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">024</td>
+                    <td><strong>Assistant Director Software Engineering</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">4</td>
+                    <td class="col-right" style="color:var(--success-text);">4</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">025</td>
+                    <td><strong>Deputy Director</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">9</td>
+                    <td class="col-right" style="color:var(--success-text);">9</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">026</td>
+                    <td><strong>Deputy Director Academic - I</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">027</td>
+                    <td><strong>Deputy Director Admin</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">028</td>
+                    <td><strong>Deputy Director Colleges</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">9</td>
+                    <td class="col-right" style="color:var(--success-text);">8</td>
+                    <td class="col-right" style="color:var(--warning-text);">1</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">029</td>
+                    <td><strong>Deputy Director Female Establishment - I</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">030</td>
+                    <td><strong>Deputy Director Female Establishment - II</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">031</td>
+                    <td><strong>Deputy Director General</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">032</td>
+                    <td><strong>Deputy Secretary</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">2</td>
+                    <td class="col-right" style="color:var(--success-text);">2</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">033</td>
+                    <td><strong>Director Admin</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">034</td>
+                    <td><strong>Director Admin Women</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">035</td>
+                    <td><strong>Director Education Colleges</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">036</td>
+                    <td><strong>Director General</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">037</td>
+                    <td><strong>Director Information Technology</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">038</td>
+                    <td><strong>Director Planning and Budget</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">039</td>
+                    <td><strong>Director Public Instruction</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">040</td>
+                    <td><strong>Director Sports</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">3</td>
+                    <td class="col-right" style="color:var(--success-text);">3</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">041</td>
+                    <td><strong>Program Officer</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">9</td>
+                    <td class="col-right" style="color:var(--success-text);">8</td>
+                    <td class="col-right" style="color:var(--warning-text);">1</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">042</td>
+                    <td><strong>Research Officer</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">6</td>
+                    <td class="col-right" style="color:var(--success-text);">6</td>
+                    <td class="col-right" style="color:var(--text-muted);">0</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">043</td>
+                    <td><strong>Section Officer</strong></td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-info">Teacher</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">18</td>
+                    <td class="col-right" style="color:var(--success-text);">16</td>
+                    <td class="col-right" style="color:var(--warning-text);">2</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">044</td>
+                    <td>
+                      <strong>Web Manager</strong>
+                      <span style="font-size:10px;background:var(--warning-bg);color:var(--warning-text);
+                        border:1px solid var(--warning-border);border-radius:var(--radius-full);
+                        padding:1px 6px;margin-left:6px;">Mixed Classification</span>
+                    </td>
+                    <td><span class="badge badge-neutral">Admin Unit</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td><span class="badge badge-success">Teaching</span></td>
+                    <td class="col-right col-num">9</td>
+                    <td class="col-right" style="color:var(--success-text);">8</td>
+                    <td class="col-right" style="color:var(--warning-text);">1</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+
+                  <!-- ═══ GROUP: NON-TEACHING STAFF ═══ -->
+                  <tr class="group-header">
+                    <td colspan="9">📋 Non-Teaching Staff Designations (79) — All Colleges &amp; Admin Units</td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">045</td>
+                    <td><strong>Accountant</strong></td>
+                    <td><span style="font-size:11px;color:var(--text-muted);">All</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">960</td>
+                    <td class="col-right" style="color:var(--success-text);">880</td>
+                    <td class="col-right" style="color:var(--warning-text);">80</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">046</td>
+                    <td><strong>Accounts Officer</strong></td>
+                    <td><span style="font-size:11px;color:var(--text-muted);">All</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">480</td>
+                    <td class="col-right" style="color:var(--success-text);">440</td>
+                    <td class="col-right" style="color:var(--warning-text);">40</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">047</td>
+                    <td><strong>Lab Superintendent</strong></td>
+                    <td><span style="font-size:11px;color:var(--text-muted);">All</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">1,200</td>
+                    <td class="col-right" style="color:var(--success-text);">1,060</td>
+                    <td class="col-right" style="color:var(--warning-text);">140</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">048</td>
+                    <td><strong>Superintendent</strong></td>
+                    <td><span style="font-size:11px;color:var(--text-muted);">All</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">1,440</td>
+                    <td class="col-right" style="color:var(--success-text);">1,260</td>
+                    <td class="col-right" style="color:var(--warning-text);">180</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">049</td>
+                    <td><strong>Junior Clerk</strong></td>
+                    <td><span style="font-size:11px;color:var(--text-muted);">All</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">1,600</td>
+                    <td class="col-right" style="color:var(--success-text);">1,380</td>
+                    <td class="col-right" style="color:var(--warning-text);">220</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">050</td>
+                    <td><strong>Senior Clerk</strong></td>
+                    <td><span style="font-size:11px;color:var(--text-muted);">All</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">960</td>
+                    <td class="col-right" style="color:var(--success-text);">840</td>
+                    <td class="col-right" style="color:var(--warning-text);">120</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">051</td>
+                    <td><strong>Naib Qasid</strong></td>
+                    <td><span style="font-size:11px;color:var(--text-muted);">All</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">2,400</td>
+                    <td class="col-right" style="color:var(--success-text);">2,100</td>
+                    <td class="col-right" style="color:var(--warning-text);">300</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">052</td>
+                    <td><strong>Chowkidar</strong></td>
+                    <td><span style="font-size:11px;color:var(--text-muted);">All</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">960</td>
+                    <td class="col-right" style="color:var(--success-text);">820</td>
+                    <td class="col-right" style="color:var(--warning-text);">140</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td class="col-mono">053</td>
+                    <td><strong>Sweeper</strong></td>
+                    <td><span style="font-size:11px;color:var(--text-muted);">All</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td><span class="badge badge-neutral">Non-Teaching</span></td>
+                    <td class="col-right col-num">1,600</td>
+                    <td class="col-right" style="color:var(--success-text);">1,340</td>
+                    <td class="col-right" style="color:var(--warning-text);">260</td>
+                    <td><div style="display:flex;gap:4px;">
+                      <button class="row-btn primary">Posts</button>
+                      <button class="row-btn">Edit</button>
+                    </div></td>
+                  </tr>
+                  <tr>
+                    <td colspan="9" style="text-align:center;padding:var(--space-4);color:var(--text-muted);font-size:12px;">
+                      … 70 more non-teaching designations (e.g. Driver, Gardener, Lab Assistant, Computer Operator, Registrar, Bursar, Security Guard, Hostel Warden…)
+                      &nbsp;<a href="#" style="color:var(--brand-600);font-weight:600;">Load All 79 →</a>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+            <!-- PAGINATION -->
+            <div class="pagination">
+              <span class="pagination-info">Showing 53 of 123 designations</span>
+              <div class="pagination-spacer"></div>
+              <div class="page-btn">‹</div>
+              <div class="page-btn active">1</div>
+              <div class="page-btn">2</div>
+              <div class="page-btn">3</div>
+              <div class="page-btn">›</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: SUMMARY PANELS -->
+        <div>
+
+          <!-- Posts Summary -->
+          <div class="side-card">
+            <div class="side-card-header">
+              <div class="side-card-title">Posts Summary</div>
+              <div class="side-card-sub">Province-wide sanctioned strength</div>
+            </div>
+            <div class="side-card-body">
+              <div class="stat-list-row">
+                <span>Teaching Posts</span>
+                <span style="font-weight:700;color:var(--brand-600);">18,000</span>
+              </div>
+              <div style="margin-bottom:var(--space-3);">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;">
+                  <span>Filled: 17,838</span><span>Vacant: 162</span>
+                </div>
+                <div class="progress-bar" style="height:7px;">
+                  <div class="progress-fill" style="width:99%;background:var(--brand-500);"></div>
+                </div>
+              </div>
+              <div class="stat-list-row">
+                <span>Non-Teaching Posts</span>
+                <span style="font-weight:700;color:var(--info-text);">7,880</span>
+              </div>
+              <div style="margin-bottom:var(--space-3);">
+                <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:4px;">
+                  <span>Filled: 6,300</span><span>Vacant: 1,580</span>
+                </div>
+                <div class="progress-bar" style="height:7px;">
+                  <div class="progress-fill" style="width:80%;background:var(--info-border);"></div>
+                </div>
+              </div>
+              <div class="stat-list-row">
+                <span><strong>Total Sanctioned</strong></span>
+                <span style="font-weight:700;">25,880</span>
+              </div>
+              <div class="stat-list-row">
+                <span>Total Filled</span>
+                <span style="font-weight:600;color:var(--success-text);">24,138</span>
+              </div>
+              <div class="stat-list-row" style="border-bottom:none;">
+                <span>Total Vacant</span>
+                <span style="font-weight:600;color:var(--warning-text);">1,742</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Designation Breakdown by Office Type -->
+          <div class="side-card" style="margin-top:var(--space-4);">
+            <div class="side-card-header">
+              <div class="side-card-title">By Office Type</div>
+              <div class="side-card-sub">Distribution of 123 designations</div>
+            </div>
+            <div class="side-card-body">
+              <!-- SVG Donut Chart -->
+              <div class="chart-donut">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                  <!-- Non-Teaching (79/123 = 64%) -->
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="#F2F2F0" stroke-width="14"/>
+                  <!-- General College (7/123 = 5.7%) -->
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="#534AB7" stroke-width="14"
+                    stroke-dasharray="12.8 213.2" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+                  <!-- Commerce (11/123 = 8.9%) -->
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="#378ADD" stroke-width="14"
+                    stroke-dasharray="20 206" stroke-dashoffset="-12.8" transform="rotate(-90 50 50)"/>
+                  <!-- Admin Unit (26/123 = 21.1%) -->
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="#EF9F27" stroke-width="14"
+                    stroke-dasharray="47.5 178.5" stroke-dashoffset="-32.8" transform="rotate(-90 50 50)"/>
+                  <!-- Non-Teaching 79 (64.2%) -->
+                  <circle cx="50" cy="50" r="36" fill="none" stroke="#D0CFC9" stroke-width="14"
+                    stroke-dasharray="144.5 81.5" stroke-dashoffset="-80.3" transform="rotate(-90 50 50)"/>
+                  <text x="50" y="46" text-anchor="middle" font-size="13" font-weight="700" fill="#1A1A2E">123</text>
+                  <text x="50" y="58" text-anchor="middle" font-size="8" fill="#8A8A9A">desig.</text>
+                </svg>
+                <div class="donut-legend" style="flex:1;">
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#534AB7;"></div>
+                    <span>General College</span>
+                    <span class="legend-val">7</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#378ADD;"></div>
+                    <span>Commerce College</span>
+                    <span class="legend-val">11</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#EF9F27;"></div>
+                    <span>Admin Unit</span>
+                    <span class="legend-val">26</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot" style="background:#D0CFC9;"></div>
+                    <span>Non-Teaching</span>
+                    <span class="legend-val">79</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Biggest Designation Posts -->
+          <div class="side-card" style="margin-top:var(--space-4);">
+            <div class="side-card-header">
+              <div class="side-card-title">Largest Post Counts</div>
+              <div class="side-card-sub">Top 6 by sanctioned posts</div>
+            </div>
+            <div class="side-card-body">
+              <div class="stat-list-row">
+                <div>
+                  <div style="font-size:13px;font-weight:500;">Naib Qasid</div>
+                  <div style="font-size:11px;color:var(--text-muted);">Non-Teaching</div>
+                </div>
+                <span style="font-weight:700;font-family:var(--font-mono);">2,400</span>
+              </div>
+              <div class="stat-list-row">
+                <div>
+                  <div style="font-size:13px;font-weight:500;">Lecturer</div>
+                  <div style="font-size:11px;color:var(--text-muted);">General College · Teaching</div>
+                </div>
+                <span style="font-weight:700;font-family:var(--font-mono);">8,960</span>
+              </div>
+              <div class="stat-list-row">
+                <div>
+                  <div style="font-size:13px;font-weight:500;">Superintendent</div>
+                  <div style="font-size:11px;color:var(--text-muted);">Non-Teaching</div>
+                </div>
+                <span style="font-weight:700;font-family:var(--font-mono);">1,440</span>
+              </div>
+              <div class="stat-list-row">
+                <div>
+                  <div style="font-size:13px;font-weight:500;">Assistant Professor</div>
+                  <div style="font-size:11px;color:var(--text-muted);">General College · Teaching</div>
+                </div>
+                <span style="font-weight:700;font-family:var(--font-mono);">3,400</span>
+              </div>
+              <div class="stat-list-row">
+                <div>
+                  <div style="font-size:13px;font-weight:500;">Junior Clerk</div>
+                  <div style="font-size:11px;color:var(--text-muted);">Non-Teaching</div>
+                </div>
+                <span style="font-weight:700;font-family:var(--font-mono);">1,600</span>
+              </div>
+              <div class="stat-list-row" style="border:none;">
+                <div>
+                  <div style="font-size:13px;font-weight:500;">Associate Professor</div>
+                  <div style="font-size:11px;color:var(--text-muted);">General College · Teaching</div>
+                </div>
+                <span style="font-weight:700;font-family:var(--font-mono);">2,180</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="side-card" style="margin-top:var(--space-4);">
+            <div class="side-card-header">
+              <div class="side-card-title">Quick Actions</div>
+            </div>
+            <div class="side-card-body" style="display:flex;flex-direction:column;gap:var(--space-2);">
+              <button class="btn btn-primary btn-sm" style="justify-content:center;" onclick="openModal()">+ Add New Designation</button>
+              <button class="btn btn-secondary btn-sm" style="justify-content:center;">📬 Manage All Posts</button>
+              <button class="btn btn-secondary btn-sm" style="justify-content:center;">📊 Posts vs Vacancies Report</button>
+              <button class="btn btn-ghost btn-sm" style="justify-content:center;">⬇ Export Master List (CSV)</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ ADD DESIGNATION MODAL ════════ -->
+<div class="modal-overlay" id="addModal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Add New Designation</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid-2">
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">Designation Name <span class="required">*</span></label>
+          <input type="text" class="form-input" placeholder="e.g. Senior Lecturer">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Office Type <span class="required">*</span></label>
+          <select class="form-select">
+            <option value="">Select Office Type</option>
+            <option>General College</option>
+            <option>Commerce College</option>
+            <option>Admin Unit</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Staff Type <span class="required">*</span></label>
+          <select class="form-select">
+            <option value="">Select Staff Type</option>
+            <option>Teacher</option>
+            <option>Non-Teaching</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Post Type <span class="required">*</span></label>
+          <select class="form-select">
+            <option value="">Select Post Type</option>
+            <option>Teaching</option>
+            <option>Non-Teaching</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">BPS Grade</label>
+          <select class="form-select">
+            <option value="">Select BPS</option>
+            <option>BPS-01</option><option>BPS-02</option><option>BPS-03</option>
+            <option>BPS-05</option><option>BPS-07</option><option>BPS-09</option>
+            <option>BPS-11</option><option>BPS-14</option><option>BPS-16</option>
+            <option>BPS-17</option><option>BPS-18</option><option>BPS-19</option>
+            <option>BPS-20</option><option>BPS-21</option>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">Sanctioned Posts (Provincial Estimate)</label>
+          <input type="number" class="form-input" placeholder="Enter number of posts" min="1">
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label class="form-label">Notes / Remarks</label>
+          <input type="text" class="form-input" placeholder="Any additional notes">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-secondary">Save as Draft</button>
+      <button class="btn btn-primary">Add Designation</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModal()  { document.getElementById('addModal').classList.add('open'); }
+  function closeModal() { document.getElementById('addModal').classList.remove('open'); }
+  function handleOverlayClick(e) { if (e.target === e.currentTarget) closeModal(); }
+
+  function setTab(el) {
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function setChip(el, type) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function filterDesig() {
+    const q = document.getElementById('desigSearch').value.toLowerCase();
+    document.querySelectorAll('#desigTable tbody tr:not(.group-header)').forEach(function(row) {
+      const text = row.textContent.toLowerCase();
+      row.style.display = (q === '' || text.includes(q)) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
