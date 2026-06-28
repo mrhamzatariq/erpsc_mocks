@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Funds & Expense Management — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar { display:flex; gap:0; border-bottom:1px solid var(--border-light); margin-bottom:var(--space-5); overflow-x:auto; }
+  .tab-item { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:all .15s; }
+  .tab-item.active { color:var(--brand-600); border-bottom-color:var(--brand-600); }
+  .tab-item:hover:not(.active) { color:var(--text-primary); background:var(--bg-secondary); }
+
+  .head-row { display:flex; align-items:center; gap:12px; padding:12px; border-radius:var(--radius-md); border:1px solid var(--border-light); margin-bottom:8px; cursor:pointer; transition:all .15s; }
+  .head-row:hover { border-color:var(--brand-200); background:var(--brand-50); }
+  .head-row.selected { border-color:var(--brand-500); background:var(--brand-50); }
+  .head-icon { width:36px; height:36px; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; background:var(--bg-tertiary); }
+  .head-bar { height:6px; border-radius:var(--radius-full); background:var(--bg-tertiary); overflow:hidden; margin-top:6px; }
+
+  .txn-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border-light); font-size:12px; }
+  .txn-row:last-child { border-bottom:none; }
+
+  .detail-row { display:flex; padding:7px 0; border-bottom:1px solid var(--border-light); font-size:13px; gap:8px; }
+  .detail-row:last-child { border-bottom:none; }
+  .detail-key { color:var(--text-muted); width:130px; flex-shrink:0; }
+  .stub-note { font-size:12px; color:var(--text-muted); background:var(--bg-secondary); border:1px dashed var(--border-medium); border-radius:var(--radius-md); padding:10px 14px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">College Administration</div>
+      <div class="role-sub">GC Lahore</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="02-principal-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">Finance</div>
+      <a class="nav-item" href="11-fee-management.html"><span class="nav-icon">💳</span><span>Fee Management</span></a>
+      <a class="nav-item active" href="#"><span class="nav-icon">🏦</span><span>Funds & Expense</span><span class="nav-badge warn">7</span></a>
+      <a class="nav-item" href="36-inventory-management.html"><span class="nav-icon">📦</span><span>Inventory</span></a>
+
+      <div class="sidebar-section-label">System</div>
+      <a class="nav-item" href="19-audit-log.html"><span class="nav-icon">🕵️</span><span>Audit Log</span></a>
+      <a class="nav-item" href="10-reports-analytics.html"><span class="nav-icon">📊</span><span>Reports</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">RA</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Rabia Anjum</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">Admin Officer, GC Lahore</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <span>Finance</span><span>›</span>
+        <span class="crumb-active">Funds & Expense</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search vouchers, budget heads, transactions…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">RA</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Funds & Expense Management</h1>
+          <p>GC Lahore · Annual budget allocation, expenditure tracking and financial audit trail</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">⬇ Export statement</button>
+          <button class="btn btn-primary">+ Record expense</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="grid grid-4 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Annual budget (2025–26)</div>
+          <div class="metric-value">₨ 42.0M</div>
+          <div class="metric-delta delta-neutral">8 budget heads</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Spent to date</div>
+          <div class="metric-value" style="color:var(--color-info-text)">₨ 28.6M</div>
+          <div class="metric-delta delta-neutral">68% of annual budget</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Remaining balance</div>
+          <div class="metric-value" style="color:var(--color-success-text)">₨ 13.4M</div>
+          <div class="metric-delta delta-neutral">32% remaining, 4 months left</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Pending approvals</div>
+          <div class="metric-value" style="color:var(--color-warning-text)">7</div>
+          <div class="metric-delta" style="color:var(--color-warning-text)">Awaiting Principal sign-off</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active" data-tab="budget" onclick="switchETab('budget', this)">Budget Allocation</div>
+        <div class="tab-item" data-tab="vouchers" onclick="switchETab('vouchers', this)">Expense Vouchers</div>
+        <div class="tab-item" data-tab="approvals" onclick="switchETab('approvals', this)">Pending Approvals</div>
+        <div class="tab-item" data-tab="audit" onclick="switchETab('audit', this)">Audit Trail</div>
+      </div>
+
+      <!-- ===================== BUDGET ALLOCATION ===================== -->
+      <div class="tab-panel" id="etab-budget">
+        <div class="grid" style="grid-template-columns:1fr 340px;gap:16px">
+
+          <div class="card">
+            <div class="card-title mb-3">Budget heads — FY 2025–26</div>
+
+            <div class="head-row selected" onclick="selectHead(this,'salaries')">
+              <div class="head-icon">👥</div>
+              <div style="flex:1">
+                <div class="flex-between"><span style="font-weight:600">Salaries & Allowances</span><span class="font-mono text-sm">₨ 22.0M / ₨ 28.0M</span></div>
+                <div class="head-bar"><div class="progress-fill info" style="width:79%;height:100%"></div></div>
+              </div>
+            </div>
+            <div class="head-row" onclick="selectHead(this,'utilities')">
+              <div class="head-icon">⚡</div>
+              <div style="flex:1">
+                <div class="flex-between"><span style="font-weight:600">Utilities (Electricity, Gas, Water)</span><span class="font-mono text-sm">₨ 2.8M / ₨ 4.0M</span></div>
+                <div class="head-bar"><div class="progress-fill info" style="width:70%;height:100%"></div></div>
+              </div>
+            </div>
+            <div class="head-row" onclick="selectHead(this,'maintenance')">
+              <div class="head-icon">🔧</div>
+              <div style="flex:1">
+                <div class="flex-between"><span style="font-weight:600">Building Maintenance</span><span class="font-mono text-sm">₨ 1.9M / ₨ 2.5M</span></div>
+                <div class="head-bar"><div class="progress-fill warning" style="width:76%;height:100%"></div></div>
+              </div>
+            </div>
+            <div class="head-row" onclick="selectHead(this,'lab')">
+              <div class="head-icon">🔬</div>
+              <div style="flex:1">
+                <div class="flex-between"><span style="font-weight:600">Lab Consumables & Chemicals</span><span class="font-mono text-sm">₨ 0.9M / ₨ 1.5M</span></div>
+                <div class="head-bar"><div class="progress-fill info" style="width:60%;height:100%"></div></div>
+              </div>
+            </div>
+            <div class="head-row" onclick="selectHead(this,'stationery')">
+              <div class="head-icon">📎</div>
+              <div style="flex:1">
+                <div class="flex-between"><span style="font-weight:600">Stationery & Office Supplies</span><span class="font-mono text-sm">₨ 0.6M / ₨ 0.8M</span></div>
+                <div class="head-bar"><div class="progress-fill warning" style="width:75%;height:100%"></div></div>
+              </div>
+            </div>
+            <div class="head-row" onclick="selectHead(this,'library')">
+              <div class="head-icon">📚</div>
+              <div style="flex:1">
+                <div class="flex-between"><span style="font-weight:600">Library Acquisitions</span><span class="font-mono text-sm">₨ 0.2M / ₨ 1.0M</span></div>
+                <div class="head-bar"><div class="progress-fill success" style="width:20%;height:100%"></div></div>
+              </div>
+            </div>
+            <div class="head-row" onclick="selectHead(this,'sports')">
+              <div class="head-icon">🏀</div>
+              <div style="flex:1">
+                <div class="flex-between"><span style="font-weight:600">Sports & Co-curricular</span><span class="font-mono text-sm">₨ 0.18M / ₨ 0.5M</span></div>
+                <div class="head-bar"><div class="progress-fill success" style="width:36%;height:100%"></div></div>
+              </div>
+            </div>
+            <div class="head-row" onclick="selectHead(this,'contingency')">
+              <div class="head-icon">🛟</div>
+              <div style="flex:1">
+                <div class="flex-between"><span style="font-weight:600">Contingency Reserve</span><span class="font-mono text-sm">₨ 0.02M / ₨ 3.7M</span></div>
+                <div class="head-bar"><div class="progress-fill success" style="width:1%;height:100%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Budget head detail -->
+          <div class="card">
+            <div class="card-title mb-1" id="headTitle">Salaries & Allowances</div>
+            <div class="text-muted text-sm mb-3" id="headSub">Budget head · FY 2025–26</div>
+
+            <div class="detail-row"><span class="detail-key">Allocated</span><span id="headAllocated" style="font-weight:500">₨ 28.0M</span></div>
+            <div class="detail-row"><span class="detail-key">Spent</span><span id="headSpent">₨ 22.0M</span></div>
+            <div class="detail-row"><span class="detail-key">Remaining</span><span id="headRemaining" style="color:var(--color-success-text);font-weight:500">₨ 6.0M</span></div>
+            <div class="detail-row"><span class="detail-key">% utilised</span><span id="headPct">79%</span></div>
+
+            <div class="divider"></div>
+            <div class="card-title mb-2">Recent transactions</div>
+            <div id="headTxns">
+              <div class="txn-row"><span style="flex:1">June payroll — teaching staff</span><span class="font-mono">₨ 1.84M</span></div>
+              <div class="txn-row"><span style="flex:1">June payroll — non-teaching staff</span><span class="font-mono">₨ 0.62M</span></div>
+              <div class="txn-row"><span style="flex:1">May payroll — teaching staff</span><span class="font-mono">₨ 1.84M</span></div>
+            </div>
+
+            <div class="divider"></div>
+            <button class="btn btn-secondary" style="width:100%">📋 View full ledger</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== EXPENSE VOUCHERS ===================== -->
+      <div class="tab-panel" id="etab-vouchers" style="display:none">
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="grid-toolbar">
+            <div class="toolbar-search"><span>🔍</span><input type="text" placeholder="Search vouchers…"/></div>
+            <span class="filter-chip">Budget head: All <span class="remove">×</span></span>
+            <div class="ml-auto" style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-sm">⬇ Export</button>
+              <button class="btn btn-primary btn-sm">+ New voucher</button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Voucher No.</th><th>Description</th><th>Budget head</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td class="font-mono">EXP-2026-1142</td><td>Electricity bill — June</td><td>Utilities</td><td>₨ 312,000</td><td>20 Jun 2026</td><td><span class="badge badge-success">Paid</span></td></tr>
+                <tr><td class="font-mono">EXP-2026-1139</td><td>Lab reagent restock</td><td>Lab Consumables</td><td>₨ 95,000</td><td>17 Jun 2026</td><td><span class="badge badge-warning">Pending approval</span></td></tr>
+                <tr><td class="font-mono">EXP-2026-1136</td><td>Generator fuel — June</td><td>Utilities</td><td>₨ 48,000</td><td>15 Jun 2026</td><td><span class="badge badge-success">Paid</span></td></tr>
+                <tr><td class="font-mono">EXP-2026-1130</td><td>Roof leakage repair, Block C</td><td>Building Maintenance</td><td>₨ 86,000</td><td>10 Jun 2026</td><td><span class="badge badge-warning">Pending approval</span></td></tr>
+                <tr><td class="font-mono">EXP-2026-1124</td><td>A4 paper & toner — quarterly</td><td>Stationery</td><td>₨ 64,000</td><td>5 Jun 2026</td><td><span class="badge badge-success">Paid</span></td></tr>
+                <tr><td class="font-mono">EXP-2026-1118</td><td>Library books — new arrivals</td><td>Library Acquisitions</td><td>₨ 120,000</td><td>1 Jun 2026</td><td><span class="badge badge-danger">Rejected — over budget line</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span class="text-muted text-sm">Showing 1–6 of 214 vouchers</span>
+            <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+              <button class="page-btn">←</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">→</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== PENDING APPROVALS ===================== -->
+      <div class="tab-panel" id="etab-approvals" style="display:none">
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Voucher No.</th><th>Description</th><th>Amount</th><th>Submitted by</th><th>Awaiting</th><th></th></tr></thead>
+              <tbody>
+                <tr><td class="font-mono">EXP-2026-1139</td><td>Lab reagent restock</td><td>₨ 95,000</td><td>Lab In-charge, Chemistry</td><td>Principal sign-off</td><td><div class="row-actions"><button class="row-action-btn">Review</button></div></td></tr>
+                <tr><td class="font-mono">EXP-2026-1130</td><td>Roof leakage repair, Block C</td><td>₨ 86,000</td><td>Rabia Anjum</td><td>Principal sign-off</td><td><div class="row-actions"><button class="row-action-btn">Review</button></div></td></tr>
+                <tr><td class="font-mono">EXP-2026-1133</td><td>Sports equipment — annual gala</td><td>₨ 54,000</td><td>PE Department</td><td>Principal sign-off</td><td><div class="row-actions"><button class="row-action-btn">Review</button></div></td></tr>
+                <tr><td class="font-mono">EXP-2026-1127</td><td>Computer Lab — UPS replacement</td><td>₨ 78,000</td><td>Rabia Anjum</td><td>Principal sign-off</td><td><div class="row-actions"><button class="row-action-btn">Review</button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="stub-note" style="margin:14px">Vouchers above ₨ 50,000 require Principal approval; vouchers above ₨ 500,000 additionally route to DDC for co-signature.</p>
+        </div>
+      </div>
+
+      <!-- ===================== AUDIT TRAIL ===================== -->
+      <div class="tab-panel" id="etab-audit" style="display:none">
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Voucher / Head</th><th>Details</th></tr></thead>
+              <tbody>
+                <tr><td class="font-mono text-sm">20 Jun 2026, 4:12 PM</td><td>Principal, GC Lahore</td><td><span class="badge badge-success">Approved</span></td><td class="font-mono">EXP-2026-1142</td><td>Electricity bill marked paid</td></tr>
+                <tr><td class="font-mono text-sm">17 Jun 2026, 11:05 AM</td><td>Rabia Anjum</td><td><span class="badge badge-info">Created</span></td><td class="font-mono">EXP-2026-1139</td><td>Submitted for approval</td></tr>
+                <tr><td class="font-mono text-sm">10 Jun 2026, 2:40 PM</td><td>Rabia Anjum</td><td><span class="badge badge-info">Created</span></td><td class="font-mono">EXP-2026-1130</td><td>Submitted for approval</td></tr>
+                <tr><td class="font-mono text-sm">1 Jun 2026, 9:18 AM</td><td>Principal, GC Lahore</td><td><span class="badge badge-danger">Rejected</span></td><td class="font-mono">EXP-2026-1118</td><td>Exceeds Library Acquisitions remaining balance</td></tr>
+                <tr><td class="font-mono text-sm">28 May 2026, 3:55 PM</td><td>DDC, District Lahore</td><td><span class="badge badge-neutral">Reviewed</span></td><td>Building Maintenance</td><td>Quarterly utilisation review — no objection</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="stub-note" style="margin:14px">Every budget action — allocation, voucher creation, approval, rejection, payment — is logged here and feeds the province-wide financial audit log.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  function switchETab(name, el) {
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+    el.classList.add('active');
+    document.getElementById('etab-' + name).style.display = 'block';
+  }
+
+  const headData = {
+    salaries:     { title:'Salaries & Allowances', allocated:'₨ 28.0M', spent:'₨ 22.0M', remaining:'₨ 6.0M', pct:'79%', remColor:'var(--color-success-text)', txns:['June payroll — teaching staff::₨ 1.84M','June payroll — non-teaching staff::₨ 0.62M','May payroll — teaching staff::₨ 1.84M'] },
+    utilities:    { title:'Utilities (Electricity, Gas, Water)', allocated:'₨ 4.0M', spent:'₨ 2.8M', remaining:'₨ 1.2M', pct:'70%', remColor:'var(--color-success-text)', txns:['Electricity bill — June::₨ 312,000','Generator fuel — June::₨ 48,000','Gas bill — June::₨ 41,000'] },
+    maintenance:  { title:'Building Maintenance', allocated:'₨ 2.5M', spent:'₨ 1.9M', remaining:'₨ 0.6M', pct:'76%', remColor:'var(--color-warning-text)', txns:['Roof leakage repair, Block C::₨ 86,000','Boundary wall plastering::₨ 64,000','Washroom fittings replacement::₨ 38,000'] },
+    lab:          { title:'Lab Consumables & Chemicals', allocated:'₨ 1.5M', spent:'₨ 0.9M', remaining:'₨ 0.6M', pct:'60%', remColor:'var(--color-success-text)', txns:['Lab reagent restock::₨ 95,000','Glassware replacement::₨ 22,000','Biology specimens::₨ 14,000'] },
+    stationery:   { title:'Stationery & Office Supplies', allocated:'₨ 0.8M', spent:'₨ 0.6M', remaining:'₨ 0.2M', pct:'75%', remColor:'var(--color-warning-text)', txns:['A4 paper & toner — quarterly::₨ 64,000','Registers & files::₨ 18,000','Whiteboard markers::₨ 9,000'] },
+    library:      { title:'Library Acquisitions', allocated:'₨ 1.0M', spent:'₨ 0.2M', remaining:'₨ 0.8M', pct:'20%', remColor:'var(--color-success-text)', txns:['Library books — new arrivals::₨ 120,000 (rejected)','Reference set, BS Computer Science::₨ 38,000','Journal subscriptions::₨ 22,000'] },
+    sports:       { title:'Sports & Co-curricular', allocated:'₨ 0.5M', spent:'₨ 0.18M', remaining:'₨ 0.32M', pct:'36%', remColor:'var(--color-success-text)', txns:['Sports equipment — annual gala::₨ 54,000','Cricket kit replacement::₨ 31,000'] },
+    contingency:  { title:'Contingency Reserve', allocated:'₨ 3.7M', spent:'₨ 0.02M', remaining:'₨ 3.68M', pct:'1%', remColor:'var(--color-success-text)', txns:['Emergency plumbing — Hostel Block A::₨ 18,000'] }
+  };
+
+  function selectHead(row, key) {
+    document.querySelectorAll('#etab-budget .head-row').forEach(r => r.classList.remove('selected'));
+    row.classList.add('selected');
+    const d = headData[key];
+    if (!d) return;
+    document.getElementById('headTitle').textContent = d.title;
+    document.getElementById('headAllocated').textContent = d.allocated;
+    document.getElementById('headSpent').textContent = d.spent;
+    document.getElementById('headRemaining').textContent = d.remaining;
+    document.getElementById('headRemaining').style.color = d.remColor;
+    document.getElementById('headPct').textContent = d.pct;
+    document.getElementById('headTxns').innerHTML = d.txns.map(t => {
+      const parts = t.split('::');
+      return '<div class="txn-row"><span style="flex:1">' + parts[0] + '</span><span class="font-mono">' + parts[1] + '</span></div>';
+    }).join('');
+  }
+</script>
+
+</body>
+</html>

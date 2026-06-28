@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Performance Scorecard — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+  .tab-bar { display:flex; gap:0; border-bottom:1px solid var(--border-light); margin-bottom:var(--space-5); overflow-x:auto; }
+  .tab-item { padding:10px 18px; font-size:13px; font-weight:500; color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:all .15s; }
+  .tab-item.active { color:var(--brand-600); border-bottom-color:var(--brand-600); }
+  .tab-item:hover:not(.active) { color:var(--text-primary); background:var(--bg-secondary); }
+
+  .div-row { display:flex; align-items:center; gap:14px; padding:13px 14px; border:1px solid var(--border-light); border-radius:var(--radius-md); margin-bottom:8px; cursor:pointer; transition:all .15s; }
+  .div-row:hover { border-color:var(--brand-200); background:var(--brand-50); }
+  .div-row.selected { border-color:var(--brand-500); background:var(--brand-50); }
+  .div-rank { width:26px; height:26px; border-radius:50%; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
+  .div-rank.top { background:var(--color-success-bg); color:var(--color-success-text); }
+  .div-rank.bottom { background:var(--color-danger-bg); color:var(--color-danger-text); }
+  .score-pill { font-size:13px; font-weight:700; padding:4px 11px; border-radius:var(--radius-full); flex-shrink:0; }
+  .mini-bars { display:flex; gap:3px; align-items:flex-end; height:22px; flex-shrink:0; }
+  .mini-bar { width:5px; border-radius:2px; }
+
+  .chart-bar-group { display:flex; align-items:flex-end; gap:6px; height:90px; }
+  .chart-bar { border-radius:4px 4px 0 0; transition:opacity .2s; flex:1; }
+  .chart-bar:hover { opacity:.8; }
+
+  .detail-row { display:flex; padding:7px 0; border-bottom:1px solid var(--border-light); font-size:13px; gap:8px; }
+  .detail-row:last-child { border-bottom:none; }
+  .detail-key { color:var(--text-muted); width:130px; flex-shrink:0; }
+  .metric-line { display:flex; align-items:center; gap:8px; padding:6px 0; font-size:12px; }
+  .metric-line .lbl { width:110px; color:var(--text-muted); flex-shrink:0; }
+  .metric-line .bar-track { flex:1; height:5px; border-radius:var(--radius-full); background:var(--bg-tertiary); overflow:hidden; }
+  .metric-line .val { width:36px; text-align:right; font-family:var(--font-mono,monospace); flex-shrink:0; }
+  .stub-note { font-size:12px; color:var(--text-muted); background:var(--bg-secondary); border:1px dashed var(--border-medium); border-radius:var(--radius-md); padding:10px 14px; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">E</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Punjab HED</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">HED Super Admin</div>
+      <div class="role-sub">Provincial Administration</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Overview</div>
+      <a class="nav-item" href="01-hed-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+
+      <div class="sidebar-section-label">Academics</div>
+      <a class="nav-item" href="23-college-profile.html"><span class="nav-icon">🏫</span><span>Institutions</span></a>
+      <a class="nav-item" href="17-academic-structure.html"><span class="nav-icon">📚</span><span>Academic Structure</span></a>
+      <a class="nav-item" href="05-admissions-grid.html"><span class="nav-icon">🎓</span><span>Admissions</span></a>
+      <a class="nav-item" href="24-faculty-profile.html"><span class="nav-icon">👨‍🏫</span><span>Faculty</span></a>
+
+      <div class="sidebar-section-label">System</div>
+      <a class="nav-item active" href="10-reports-analytics.html"><span class="nav-icon">📊</span><span>Reports & Analytics</span></a>
+      <a class="nav-item" href="31-system-configuration.html"><span class="nav-icon">⚙️</span><span>System Configuration</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">SA</div>
+        <div class="user-info">
+          <div style="font-size:12px;font-weight:500;color:#fff;">Super Admin</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.45)">admin@hed.punjab.gov.pk</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb">
+        <a href="10-reports-analytics.html" style="color:inherit;text-decoration:none">Reports & Analytics</a><span>›</span>
+        <span class="crumb-active">Performance Scorecard</span>
+      </div>
+      <div class="topbar-search" style="margin-left:16px">
+        <span>🔍</span>
+        <span>Search division, district or college…</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" style="position:relative">🔔<span class="notif-dot"></span></button>
+        <div class="avatar sm">SA</div>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Performance Scorecard</h1>
+          <p>Composite performance ranking across divisions, districts and colleges — updated nightly</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary">⬇ Export</button>
+          <button class="btn btn-primary">⚖ Configure scoring weights</button>
+        </div>
+      </div>
+
+      <!-- KPIs -->
+      <div class="grid grid-4 mb-6" style="gap:12px">
+        <div class="metric-card">
+          <div class="metric-label">Top division</div>
+          <div class="metric-value" style="color:var(--color-success-text)">Lahore</div>
+          <div class="metric-delta delta-up">Score 91 / 100</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Needs attention</div>
+          <div class="metric-value" style="color:var(--color-danger-text)">D.G. Khan</div>
+          <div class="metric-delta" style="color:var(--color-danger-text)">Score 64 / 100</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Avg. fee collection</div>
+          <div class="metric-value">86%</div>
+          <div class="metric-delta delta-up">▲ 3pts vs last quarter</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Avg. faculty vacancy</div>
+          <div class="metric-value" style="color:var(--color-warning-text)">31%</div>
+          <div class="metric-delta delta-neutral">Province-wide</div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar">
+        <div class="tab-item active" data-tab="division" onclick="switchSTab('division', this)">Division Scorecard</div>
+        <div class="tab-item" data-tab="district" onclick="switchSTab('district', this)">District Drill-down</div>
+        <div class="tab-item" data-tab="college" onclick="switchSTab('college', this)">College Ranking</div>
+        <div class="tab-item" data-tab="methodology" onclick="switchSTab('methodology', this)">Scoring Methodology</div>
+      </div>
+
+      <!-- ===================== DIVISION SCORECARD ===================== -->
+      <div class="tab-panel" id="stab-division">
+        <div class="grid" style="grid-template-columns:1fr 360px;gap:16px">
+
+          <div class="card">
+            <div class="card-title mb-3">Divisions ranked by composite score</div>
+
+            <div class="div-row selected" onclick="selectDiv(this,'lahore')">
+              <div class="div-rank top">1</div>
+              <div style="flex:1"><div style="font-weight:600">Lahore</div><div class="text-muted text-sm">4 districts · 296 colleges</div></div>
+              <div class="mini-bars">
+                <div class="mini-bar" style="height:18px;background:var(--color-success-text)"></div>
+                <div class="mini-bar" style="height:14px;background:var(--color-warning-text)"></div>
+                <div class="mini-bar" style="height:19px;background:var(--color-info-text)"></div>
+                <div class="mini-bar" style="height:17px;background:var(--brand-500)"></div>
+                <div class="mini-bar" style="height:20px;background:var(--text-muted)"></div>
+              </div>
+              <span class="score-pill" style="background:var(--color-success-bg);color:var(--color-success-text)">91</span>
+            </div>
+
+            <div class="div-row" onclick="selectDiv(this,'rawalpindi')">
+              <div class="div-rank top">2</div>
+              <div style="flex:1"><div style="font-weight:600">Rawalpindi</div><div class="text-muted text-sm">5 districts · 184 colleges</div></div>
+              <div class="mini-bars">
+                <div class="mini-bar" style="height:17px;background:var(--color-success-text)"></div>
+                <div class="mini-bar" style="height:15px;background:var(--color-warning-text)"></div>
+                <div class="mini-bar" style="height:18px;background:var(--color-info-text)"></div>
+                <div class="mini-bar" style="height:16px;background:var(--brand-500)"></div>
+                <div class="mini-bar" style="height:18px;background:var(--text-muted)"></div>
+              </div>
+              <span class="score-pill" style="background:var(--color-success-bg);color:var(--color-success-text)">87</span>
+            </div>
+
+            <div class="div-row" onclick="selectDiv(this,'gujranwala')">
+              <div class="div-rank">3</div>
+              <div style="flex:1"><div style="font-weight:600">Gujranwala</div><div class="text-muted text-sm">6 districts · 211 colleges</div></div>
+              <div class="mini-bars">
+                <div class="mini-bar" style="height:15px;background:var(--color-success-text)"></div>
+                <div class="mini-bar" style="height:13px;background:var(--color-warning-text)"></div>
+                <div class="mini-bar" style="height:16px;background:var(--color-info-text)"></div>
+                <div class="mini-bar" style="height:14px;background:var(--brand-500)"></div>
+                <div class="mini-bar" style="height:16px;background:var(--text-muted)"></div>
+              </div>
+              <span class="score-pill" style="background:var(--color-info-bg);color:var(--color-info-text)">79</span>
+            </div>
+
+            <div class="div-row" onclick="selectDiv(this,'faisalabad')">
+              <div class="div-rank">4</div>
+              <div style="flex:1"><div style="font-weight:600">Faisalabad</div><div class="text-muted text-sm">4 districts · 178 colleges</div></div>
+              <div class="mini-bars">
+                <div class="mini-bar" style="height:14px;background:var(--color-success-text)"></div>
+                <div class="mini-bar" style="height:12px;background:var(--color-warning-text)"></div>
+                <div class="mini-bar" style="height:15px;background:var(--color-info-text)"></div>
+                <div class="mini-bar" style="height:13px;background:var(--brand-500)"></div>
+                <div class="mini-bar" style="height:15px;background:var(--text-muted)"></div>
+              </div>
+              <span class="score-pill" style="background:var(--color-info-bg);color:var(--color-info-text)">76</span>
+            </div>
+
+            <div class="div-row" onclick="selectDiv(this,'sargodha')">
+              <div class="div-rank">5</div>
+              <div style="flex:1"><div style="font-weight:600">Sargodha</div><div class="text-muted text-sm">5 districts · 142 colleges</div></div>
+              <div class="mini-bars">
+                <div class="mini-bar" style="height:13px;background:var(--color-success-text)"></div>
+                <div class="mini-bar" style="height:11px;background:var(--color-warning-text)"></div>
+                <div class="mini-bar" style="height:14px;background:var(--color-info-text)"></div>
+                <div class="mini-bar" style="height:12px;background:var(--brand-500)"></div>
+                <div class="mini-bar" style="height:14px;background:var(--text-muted)"></div>
+              </div>
+              <span class="score-pill" style="background:var(--color-info-bg);color:var(--color-info-text)">74</span>
+            </div>
+
+            <div class="div-row" onclick="selectDiv(this,'sahiwal')">
+              <div class="div-rank">6</div>
+              <div style="flex:1"><div style="font-weight:600">Sahiwal</div><div class="text-muted text-sm">3 districts · 96 colleges</div></div>
+              <div class="mini-bars">
+                <div class="mini-bar" style="height:12px;background:var(--color-success-text)"></div>
+                <div class="mini-bar" style="height:11px;background:var(--color-warning-text)"></div>
+                <div class="mini-bar" style="height:13px;background:var(--color-info-text)"></div>
+                <div class="mini-bar" style="height:11px;background:var(--brand-500)"></div>
+                <div class="mini-bar" style="height:13px;background:var(--text-muted)"></div>
+              </div>
+              <span class="score-pill" style="background:var(--color-warning-bg);color:var(--color-warning-text)">71</span>
+            </div>
+
+            <div class="div-row" onclick="selectDiv(this,'multan')">
+              <div class="div-rank">7</div>
+              <div style="flex:1"><div style="font-weight:600">Multan</div><div class="text-muted text-sm">6 districts · 203 colleges</div></div>
+              <div class="mini-bars">
+                <div class="mini-bar" style="height:11px;background:var(--color-success-text)"></div>
+                <div class="mini-bar" style="height:9px;background:var(--color-warning-text)"></div>
+                <div class="mini-bar" style="height:12px;background:var(--color-info-text)"></div>
+                <div class="mini-bar" style="height:10px;background:var(--brand-500)"></div>
+                <div class="mini-bar" style="height:12px;background:var(--text-muted)"></div>
+              </div>
+              <span class="score-pill" style="background:var(--color-warning-bg);color:var(--color-warning-text)">69</span>
+            </div>
+
+            <div class="div-row" onclick="selectDiv(this,'bahawalpur')">
+              <div class="div-rank">8</div>
+              <div style="flex:1"><div style="font-weight:600">Bahawalpur</div><div class="text-muted text-sm">3 districts · 88 colleges</div></div>
+              <div class="mini-bars">
+                <div class="mini-bar" style="height:10px;background:var(--color-success-text)"></div>
+                <div class="mini-bar" style="height:8px;background:var(--color-warning-text)"></div>
+                <div class="mini-bar" style="height:11px;background:var(--color-info-text)"></div>
+                <div class="mini-bar" style="height:9px;background:var(--brand-500)"></div>
+                <div class="mini-bar" style="height:11px;background:var(--text-muted)"></div>
+              </div>
+              <span class="score-pill" style="background:var(--color-warning-bg);color:var(--color-warning-text)">67</span>
+            </div>
+
+            <div class="div-row" onclick="selectDiv(this,'dgkhan')">
+              <div class="div-rank bottom">9</div>
+              <div style="flex:1"><div style="font-weight:600">Dera Ghazi Khan</div><div class="text-muted text-sm">4 districts · 51 colleges</div></div>
+              <div class="mini-bars">
+                <div class="mini-bar" style="height:9px;background:var(--color-success-text)"></div>
+                <div class="mini-bar" style="height:7px;background:var(--color-warning-text)"></div>
+                <div class="mini-bar" style="height:10px;background:var(--color-info-text)"></div>
+                <div class="mini-bar" style="height:8px;background:var(--brand-500)"></div>
+                <div class="mini-bar" style="height:9px;background:var(--text-muted)"></div>
+              </div>
+              <span class="score-pill" style="background:var(--color-danger-bg);color:var(--color-danger-text)">64</span>
+            </div>
+          </div>
+
+          <!-- Division detail -->
+          <div class="card">
+            <div class="card-title mb-1" id="divTitle">Lahore Division</div>
+            <div class="text-muted text-sm mb-3" id="divSub">4 districts · 296 colleges · Score 91/100</div>
+
+            <div class="metric-line"><span class="lbl">Enrollment growth</span><div class="bar-track"><div class="progress-fill success" style="width:90%;height:100%"></div></div><span class="val" id="m1">+12%</span></div>
+            <div class="metric-line"><span class="lbl">Faculty vacancy</span><div class="bar-track"><div class="progress-fill warning" style="width:70%;height:100%"></div></div><span class="val" id="m2">22%</span></div>
+            <div class="metric-line"><span class="lbl">Fee collection</span><div class="bar-track"><div class="progress-fill info" style="width:95%;height:100%"></div></div><span class="val" id="m3">95%</span></div>
+            <div class="metric-line"><span class="lbl">Complaint SLA</span><div class="bar-track"><div class="progress-fill brand" style="width:85%;height:100%"></div></div><span class="val" id="m4">85%</span></div>
+            <div class="metric-line"><span class="lbl">Avg. attendance</span><div class="bar-track"><div class="progress-fill success" style="width:100%;height:100%"></div></div><span class="val" id="m5">100%</span></div>
+
+            <div class="divider"></div>
+            <div class="card-title mb-2">12-month trend</div>
+            <div class="chart-bar-group" id="divTrend">
+              <div class="chart-bar" style="background:var(--brand-400);height:60%"></div>
+              <div class="chart-bar" style="background:var(--brand-400);height:65%"></div>
+              <div class="chart-bar" style="background:var(--brand-400);height:68%"></div>
+              <div class="chart-bar" style="background:var(--brand-400);height:74%"></div>
+              <div class="chart-bar" style="background:var(--brand-400);height:80%"></div>
+              <div class="chart-bar" style="background:var(--brand-400);height:91%"></div>
+            </div>
+
+            <div class="divider"></div>
+            <button class="btn btn-secondary" style="width:100%" onclick="switchSTab('district', document.querySelector('[data-tab=district]'))">📍 View district breakdown</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== DISTRICT DRILL-DOWN ===================== -->
+      <div class="tab-panel" id="stab-district" style="display:none">
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="grid-toolbar">
+            <span class="filter-chip">Division: Lahore <span class="remove">×</span></span>
+            <div class="ml-auto"><button class="btn btn-secondary btn-sm">⬇ Export</button></div>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>District</th><th>Colleges</th><th>Enrollment growth</th><th>Faculty vacancy</th><th>Fee collection</th><th>Score</th></tr></thead>
+              <tbody>
+                <tr><td style="font-weight:500">Lahore</td><td>148</td><td style="color:var(--color-success-text)">+14%</td><td>19%</td><td>97%</td><td><span class="score-pill" style="background:var(--color-success-bg);color:var(--color-success-text)">93</span></td></tr>
+                <tr><td style="font-weight:500">Kasur</td><td>62</td><td style="color:var(--color-success-text)">+9%</td><td>26%</td><td>91%</td><td><span class="score-pill" style="background:var(--color-success-bg);color:var(--color-success-text)">86</span></td></tr>
+                <tr><td style="font-weight:500">Sheikhupura</td><td>54</td><td style="color:var(--color-success-text)">+8%</td><td>24%</td><td>93%</td><td><span class="score-pill" style="background:var(--color-success-bg);color:var(--color-success-text)">88</span></td></tr>
+                <tr><td style="font-weight:500">Nankana Sahib</td><td>32</td><td style="color:var(--color-success-text)">+11%</td><td>28%</td><td>89%</td><td><span class="score-pill" style="background:var(--color-info-bg);color:var(--color-info-text)">82</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="stub-note" style="margin:14px">Select a different division from the Division Scorecard tab to drill into its districts.</p>
+        </div>
+      </div>
+
+      <!-- ===================== COLLEGE RANKING ===================== -->
+      <div class="tab-panel" id="stab-college" style="display:none">
+        <div class="grid grid-2" style="gap:16px">
+          <div class="card">
+            <div class="card-title mb-3">🏆 Top 5 colleges, province-wide</div>
+            <table>
+              <thead><tr><th>#</th><th>College</th><th>District</th><th>Score</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>GC University, Lahore</td><td>Lahore</td><td><span class="score-pill" style="background:var(--color-success-bg);color:var(--color-success-text)">97</span></td></tr>
+                <tr><td>2</td><td>GC Township, Lahore</td><td>Lahore</td><td><span class="score-pill" style="background:var(--color-success-bg);color:var(--color-success-text)">95</span></td></tr>
+                <tr><td>3</td><td>GC Rawalpindi</td><td>Rawalpindi</td><td><span class="score-pill" style="background:var(--color-success-bg);color:var(--color-success-text)">94</span></td></tr>
+                <tr><td>4</td><td>GC Wahdat Road, Lahore</td><td>Lahore</td><td><span class="score-pill" style="background:var(--color-success-bg);color:var(--color-success-text)">93</span></td></tr>
+                <tr><td>5</td><td>GC Gujranwala</td><td>Gujranwala</td><td><span class="score-pill" style="background:var(--color-success-bg);color:var(--color-success-text)">92</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-title mb-3">⚠️ Bottom 5 colleges, province-wide</div>
+            <table>
+              <thead><tr><th>#</th><th>College</th><th>District</th><th>Score</th></tr></thead>
+              <tbody>
+                <tr><td>1,247</td><td>GC Taunsa Sharif</td><td>D.G. Khan</td><td><span class="score-pill" style="background:var(--color-danger-bg);color:var(--color-danger-text)">52</span></td></tr>
+                <tr><td>1,246</td><td>GC Kot Addu</td><td>Muzaffargarh</td><td><span class="score-pill" style="background:var(--color-danger-bg);color:var(--color-danger-text)">54</span></td></tr>
+                <tr><td>1,245</td><td>GC Jampur</td><td>Rajanpur</td><td><span class="score-pill" style="background:var(--color-danger-bg);color:var(--color-danger-text)">56</span></td></tr>
+                <tr><td>1,244</td><td>GC Karor Lal Esan</td><td>Layyah</td><td><span class="score-pill" style="background:var(--color-warning-bg);color:var(--color-warning-text)">58</span></td></tr>
+                <tr><td>1,243</td><td>GC Choti Zireen</td><td>D.G. Khan</td><td><span class="score-pill" style="background:var(--color-warning-bg);color:var(--color-warning-text)">59</span></td></tr>
+              </tbody>
+            </table>
+            <p class="stub-note mt-3">Bottom-ranked colleges are auto-flagged to their DDC for a support & improvement plan.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== SCORING METHODOLOGY ===================== -->
+      <div class="tab-panel" id="stab-methodology" style="display:none">
+        <div class="card">
+          <div class="card-title mb-3">Composite score weighting</div>
+          <table>
+            <thead><tr><th>Metric</th><th>Source</th><th>Weight</th><th>Direction</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:500">Enrollment growth (YoY)</td><td>Admissions & Registration</td><td>20%</td><td>Higher is better</td></tr>
+              <tr><td style="font-weight:500">Faculty vacancy rate</td><td>Faculty Posting & Transfer</td><td>20%</td><td>Lower is better</td></tr>
+              <tr><td style="font-weight:500">Fee collection rate</td><td>Fee Management</td><td>20%</td><td>Higher is better</td></tr>
+              <tr><td style="font-weight:500">Complaint resolution SLA</td><td>Complaints & Grievances</td><td>20%</td><td>Higher is better</td></tr>
+              <tr><td style="font-weight:500">Average attendance</td><td>Attendance Marking</td><td>20%</td><td>Higher is better</td></tr>
+            </tbody>
+          </table>
+          <p class="stub-note mt-4">Weights are configurable by HED Super Admin. Scores recompute nightly from source modules across the platform — no manual data entry.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  function switchSTab(name, el) {
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+    el.classList.add('active');
+    document.getElementById('stab-' + name).style.display = 'block';
+  }
+
+  const divData = {
+    lahore:      { title:'Lahore Division', sub:'4 districts · 296 colleges · Score 91/100', m:['+12%','22%','95%','85%','100%'], w:['90%','70%','95%','85%','100%'], trend:[60,65,68,74,80,91] },
+    rawalpindi:  { title:'Rawalpindi Division', sub:'5 districts · 184 colleges · Score 87/100', m:['+10%','24%','92%','82%','97%'], w:['85%','68%','92%','82%','97%'], trend:[58,62,66,71,78,87] },
+    gujranwala:  { title:'Gujranwala Division', sub:'6 districts · 211 colleges · Score 79/100', m:['+8%','29%','88%','77%','93%'], w:['76%','60%','88%','77%','93%'], trend:[55,58,61,68,73,79] },
+    faisalabad:  { title:'Faisalabad Division', sub:'4 districts · 178 colleges · Score 76/100', m:['+7%','31%','86%','75%','90%'], w:['72%','58%','86%','75%','90%'], trend:[52,55,58,64,70,76] },
+    sargodha:    { title:'Sargodha Division', sub:'5 districts · 142 colleges · Score 74/100', m:['+6%','33%','84%','73%','89%'], w:['68%','55%','84%','73%','89%'], trend:[50,53,56,62,68,74] },
+    sahiwal:     { title:'Sahiwal Division', sub:'3 districts · 96 colleges · Score 71/100', m:['+5%','35%','82%','70%','86%'], w:['64%','52%','82%','70%','86%'], trend:[48,50,54,59,65,71] },
+    multan:      { title:'Multan Division', sub:'6 districts · 203 colleges · Score 69/100', m:['+4%','37%','79%','68%','84%'], w:['60%','49%','79%','68%','84%'], trend:[46,48,51,57,63,69] },
+    bahawalpur:  { title:'Bahawalpur Division', sub:'3 districts · 88 colleges · Score 67/100', m:['+3%','39%','77%','65%','82%'], w:['57%','46%','77%','65%','82%'], trend:[44,46,49,54,60,67] },
+    dgkhan:      { title:'Dera Ghazi Khan Division', sub:'4 districts · 51 colleges · Score 64/100', m:['+2%','42%','73%','61%','79%'], w:['52%','42%','73%','61%','79%'], trend:[42,43,46,51,57,64] }
+  };
+
+  function selectDiv(row, key) {
+    document.querySelectorAll('#stab-division .div-row').forEach(r => r.classList.remove('selected'));
+    row.classList.add('selected');
+    const d = divData[key];
+    if (!d) return;
+    document.getElementById('divTitle').textContent = d.title;
+    document.getElementById('divSub').textContent = d.sub;
+    ['m1','m2','m3','m4','m5'].forEach((id, i) => document.getElementById(id).textContent = d.m[i]);
+    const lines = document.querySelectorAll('#stab-division .metric-line .progress-fill');
+    lines.forEach((el, i) => el.style.width = d.w[i]);
+    const bars = document.querySelectorAll('#divTrend .chart-bar');
+    bars.forEach((el, i) => el.style.height = d.trend[i] + '%');
+  }
+</script>
+
+</body>
+</html>
