@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Management — Super Admin — EduGov ERP</title>
+<style>
+/* ============================================================
+   EduGov ERP — Design System (embedded, unmodified tokens)
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg-page); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+
+:root {
+  --brand-50:  #EEEDFE;
+  --brand-100: #CECBF6;
+  --brand-200: #AFA9EC;
+  --brand-500: #6B63D4;
+  --brand-600: #534AB7;
+  --brand-700: #3C3489;
+  --brand-900: #26215C;
+
+  --gray-50:  #F8F8F7;
+  --gray-100: #F1F0EE;
+  --gray-200: #E4E2DC;
+  --gray-300: #C8C6BE;
+  --gray-400: #9C9A92;
+  --gray-500: #6F6D67;
+  --gray-600: #4A4945;
+  --gray-700: #333230;
+  --gray-900: #1A1917;
+
+  --color-success-bg:   #EAF3DE;
+  --color-success-text: #3B6D11;
+  --color-success-border: #97C459;
+  --color-warning-bg:   #FAEEDA;
+  --color-warning-text: #854F0B;
+  --color-warning-border: #EF9F27;
+  --color-danger-bg:    #FCEBEB;
+  --color-danger-text:  #A32D2D;
+  --color-danger-border:#E24B4A;
+  --color-info-bg:      #E6F1FB;
+  --color-info-text:    #185FA5;
+  --color-info-border:  #378ADD;
+
+  --bg-page:       #F4F3F1;
+  --bg-surface:    #FFFFFF;
+  --bg-secondary:  #F8F8F7;
+  --bg-tertiary:   #F1F0EE;
+
+  --text-primary:   #1A1917;
+  --text-secondary: #6F6D67;
+  --text-muted:     #9C9A92;
+  --text-inverse:   #FFFFFF;
+
+  --border-light:  rgba(0,0,0,0.07);
+  --border-medium: rgba(0,0,0,0.12);
+  --border-strong: rgba(0,0,0,0.20);
+
+  --sidebar-bg:     #26215C;
+  --sidebar-hover:  rgba(255,255,255,0.08);
+  --sidebar-active: rgba(255,255,255,0.15);
+  --sidebar-text:   rgba(255,255,255,0.75);
+  --sidebar-text-active: #FFFFFF;
+  --sidebar-section: rgba(255,255,255,0.35);
+
+  --topbar-bg: #FFFFFF;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.06);
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --sidebar-w: 264px;
+  --topbar-h: 56px;
+}
+
+h1 { font-size: 22px; font-weight: 600; line-height: 1.3; color: var(--text-primary); }
+h2 { font-size: 18px; font-weight: 600; line-height: 1.35; color: var(--text-primary); }
+h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+h4 { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+p  { font-size: 14px; color: var(--text-primary); }
+
+.text-xs  { font-size: 11px; }
+.text-sm  { font-size: 12px; }
+.text-base{ font-size: 14px; }
+.text-lg  { font-size: 16px; }
+.text-muted  { color: var(--text-secondary); }
+.text-micro  { color: var(--text-muted); }
+.text-success{ color: var(--color-success-text); }
+.text-warning{ color: var(--color-warning-text); }
+.text-danger { color: var(--color-danger-text); }
+.text-info   { color: var(--color-info-text); }
+.font-mono   { font-family: 'JetBrains Mono', monospace; }
+.font-500    { font-weight: 500; }
+.font-600    { font-weight: 600; }
+
+.app-shell { display: flex; height: 100vh; overflow: hidden; }
+
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.main-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.topbar {
+  height: var(--topbar-h);
+  background: var(--topbar-bg);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-5);
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.page-body { flex: 1; overflow-y: auto; padding: var(--space-6); background: var(--bg-page); }
+
+.sidebar-logo {
+  padding: var(--space-4) var(--space-4);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; gap: 10px;
+}
+.sidebar-logo-mark {
+  width: 32px; height: 32px; background: var(--brand-500); border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.sidebar-logo-text { font-size: 14px; font-weight: 600; color: #fff; }
+.sidebar-logo-sub  { font-size: 10px; color: rgba(255,255,255,0.45); }
+
+.sidebar-role-badge {
+  margin: var(--space-3) var(--space-3);
+  background: rgba(255,255,255,0.10);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+}
+.sidebar-role-badge .role-name { font-size: 12px; font-weight: 600; color: #fff; }
+.sidebar-role-badge .role-sub  { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+.sidebar-nav { flex: 1; padding: 0 var(--space-2) var(--space-3); }
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px; border-radius: var(--radius-md);
+  cursor: pointer; color: var(--sidebar-text);
+  font-size: 13px; font-weight: 400; text-decoration: none;
+  transition: background 0.15s; margin-bottom: 1px; white-space: nowrap;
+}
+.nav-item:hover  { background: var(--sidebar-hover); color: #fff; }
+.nav-item.active { background: var(--sidebar-active); color: var(--sidebar-text-active); font-weight: 500; }
+.nav-item .nav-icon { width: 18px; text-align: center; font-size: 15px; flex-shrink: 0; opacity: 0.8; }
+.nav-item.active .nav-icon { opacity: 1; }
+
+.sidebar-bottom { padding: var(--space-3) var(--space-2); border-top: 1px solid rgba(255,255,255,0.08); }
+.sidebar-user { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius-md); cursor: pointer; }
+.sidebar-user:hover { background: var(--sidebar-hover); }
+.avatar { width: 30px; height: 30px; border-radius: var(--radius-full); background: var(--brand-500); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0; }
+.avatar.sm { width: 26px; height: 26px; font-size: 10px; }
+
+.breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); }
+.breadcrumb .crumb-active { color: var(--text-primary); font-weight: 500; }
+.breadcrumb span { opacity: 0.4; }
+.topbar-actions { margin-left: auto; display: flex; align-items: center; gap: var(--space-2); }
+.icon-btn { width: 34px; height: 34px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); font-size: 17px; border: none; background: transparent; transition: background 0.15s; }
+.icon-btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
+
+.card { background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-lg); overflow: hidden; }
+.card-pad { padding: var(--space-5); }
+
+.badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: var(--radius-full); white-space: nowrap; }
+.badge-success { background: var(--color-success-bg); color: var(--color-success-text); }
+.badge-warning { background: var(--color-warning-bg); color: var(--color-warning-text); }
+.badge-danger  { background: var(--color-danger-bg);  color: var(--color-danger-text);  }
+.badge-info    { background: var(--color-info-bg);    color: var(--color-info-text);    }
+.badge-neutral { background: var(--bg-tertiary);      color: var(--text-secondary);     }
+.badge-brand   { background: var(--brand-50);         color: var(--brand-600);          }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; font-size: 13px; font-weight: 500;
+  border-radius: var(--radius-md); border: 1px solid transparent;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap; text-decoration: none;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--brand-600); color: #fff; border-color: var(--brand-700); }
+.btn-primary:hover { background: var(--brand-700); }
+.btn-secondary { background: var(--bg-surface); color: var(--text-primary); border-color: var(--border-medium); }
+.btn-secondary:hover { background: var(--bg-secondary); }
+.btn-danger { background: var(--color-danger-bg); color: var(--color-danger-text); border-color: var(--color-danger-border); }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-label { font-size: 12px; font-weight: 500; color: var(--text-secondary); }
+.form-label .required { color: var(--color-danger-text); margin-left: 2px; }
+.form-input, .form-select, .form-textarea {
+  width: 100%; padding: 8px 11px; font-size: 13px; font-family: inherit;
+  border: 1px solid var(--border-medium); border-radius: var(--radius-md);
+  background: var(--bg-surface); color: var(--text-primary);
+  transition: border-color 0.15s, box-shadow 0.15s; outline: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--brand-500); box-shadow: 0 0 0 3px rgba(107,99,212,0.12); }
+.form-hint  { font-size: 11px; color: var(--text-muted); }
+.form-error { font-size: 11px; color: var(--color-danger-text); }
+
+.alert { display: flex; align-items: flex-start; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); border: 1px solid; font-size: 13px; }
+.alert-info { background: var(--color-info-bg); border-color: var(--color-info-border); color: var(--color-info-text); }
+
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-5); flex-wrap: wrap; gap: var(--space-3); }
+.page-header-left h1 { margin-bottom: 4px; }
+.page-header-left p  { font-size: 13px; color: var(--text-muted); }
+
+.grid { display: grid; gap: var(--space-4); }
+.grid-2 { grid-template-columns: 1fr 1fr; }
+.grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.flex-center { display: flex; align-items: center; }
+.flex-between{ display: flex; align-items: center; justify-content: space-between; }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.ml-auto { margin-left: auto; }
+
+/* --- Tables --- */
+.table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead tr { background: var(--bg-secondary); }
+th { padding: 9px 12px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--border-light); white-space: nowrap; user-select: none; }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border-light); color: var(--text-primary); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg-secondary); }
+
+/* --- Toolbar (Data Grid) --- */
+.grid-toolbar { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border-light); flex-wrap: wrap; background: var(--bg-surface); }
+.toolbar-search { display: flex; align-items: center; gap: 8px; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 6px 10px; font-size: 13px; color: var(--text-muted); width: 260px; }
+.toolbar-search input { background: none; border: none; outline: none; font-size: 13px; color: var(--text-primary); width: 100%; }
+
+/* --- Row Actions --- */
+.row-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 0.15s; }
+tr:hover .row-actions { opacity: 1; }
+.row-action-btn { background: none; border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 3px 8px; font-size: 11px; font-weight: 500; cursor: pointer; color: var(--text-secondary); transition: all 0.15s; }
+.row-action-btn:hover { border-color: var(--border-medium); color: var(--text-primary); background: var(--bg-secondary); }
+.row-action-btn.primary { color: var(--brand-600); border-color: var(--brand-200); }
+.row-action-btn.primary:hover { background: var(--brand-50); }
+.row-action-btn.danger { color: var(--color-danger-text); border-color: var(--color-danger-border); }
+
+/* --- Pagination --- */
+.pagination { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-top: 1px solid var(--border-light); background: var(--bg-secondary); }
+.page-btn { min-width: 30px; height: 30px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; cursor: pointer; background: var(--bg-surface); border: 1px solid var(--border-light); color: var(--text-secondary); transition: all 0.15s; }
+.page-btn:hover { border-color: var(--border-medium); color: var(--text-primary); }
+.page-btn.active { background: var(--brand-600); color: #fff; border-color: var(--brand-700); }
+
+/* --- Empty State --- */
+.empty-state { display: flex; flex-direction: column; align-items: center; padding: var(--space-8) var(--space-6); text-align: center; color: var(--text-muted); }
+.empty-icon { font-size: 36px; margin-bottom: var(--space-3); }
+.empty-title { font-size: 15px; font-weight: 600; color: var(--text-secondary); margin-bottom: var(--space-2); }
+.empty-desc  { font-size: 13px; color: var(--text-muted); max-width: 360px; margin-bottom: var(--space-4); }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gray-300); }
+
+/* ============================================================
+   Page-specific additions (not part of core design system)
+   ============================================================ */
+
+/* --- Sidebar nested tree nav --- */
+.tree-group { margin-bottom: 1px; }
+.tree-group-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 10px; border-radius: var(--radius-md);
+  cursor: pointer; color: rgba(255,255,255,0.55);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+  transition: background 0.15s, color 0.15s;
+}
+.tree-group-header:hover { color: rgba(255,255,255,0.85); background: var(--sidebar-hover); }
+.tree-group-header .chevron { margin-left: auto; font-size: 10px; transition: transform 0.15s; opacity: 0.6; }
+.tree-group-header.collapsed .chevron { transform: rotate(-90deg); }
+.tree-group-items { padding-left: 4px; }
+.tree-group-items.collapsed { display: none; }
+.master-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px 7px 26px; border-radius: var(--radius-md);
+  cursor: pointer; color: var(--sidebar-text);
+  font-size: 12.5px; text-decoration: none;
+  position: relative; margin-bottom: 1px; white-space: nowrap;
+}
+.master-link::before {
+  content: ''; position: absolute; left: 12px; top: 50%;
+  width: 5px; height: 5px; border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+}
+.master-link:hover { background: var(--sidebar-hover); color: #fff; }
+.master-link.active { background: var(--sidebar-active); color: #fff; font-weight: 500; }
+.master-link.active::before { background: var(--brand-200); }
+
+/* --- Modal --- */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(26,25,23,0.45);
+  display: none; align-items: flex-start; justify-content: center;
+  padding: 6vh 16px; overflow-y: auto; z-index: 1000;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--bg-surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg); width: 100%; max-width: 520px;
+  overflow: hidden; animation: modalIn 0.15s ease;
+}
+@keyframes modalIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-light); }
+.modal-header h3 { font-size: 15px; }
+.modal-close { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text-muted); line-height: 1; padding: 4px; }
+.modal-close:hover { color: var(--text-primary); }
+.modal-body { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-4); max-height: 60vh; overflow-y: auto; }
+.modal-footer { display: flex; justify-content: flex-end; gap: var(--space-3); padding: var(--space-4) var(--space-5); border-top: 1px solid var(--border-light); background: var(--bg-secondary); }
+
+/* --- Delete confirm modal --- */
+.confirm-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--color-danger-bg); color: var(--color-danger-text);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; margin-bottom: var(--space-3);
+}
+
+.master-count { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+
+@media (max-width: 1280px) {
+  .sidebar { width: 64px; }
+  .sidebar-logo-text, .sidebar-logo-sub, .sidebar-role-badge,
+  .tree-group-header span:not(.chevron), .master-link span, .sidebar-user .user-info { display: none; }
+  .tree-group-header { justify-content: center; }
+  .master-link { justify-content: center; padding: 8px; }
+  .master-link::before { display: none; }
+  .sidebar-user { justify-content: center; }
+  .sidebar-logo { justify-content: center; padding: var(--space-3); }
+}
+@media (max-width: 768px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .page-body { padding: var(--space-4); }
+  .page-header { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">EG</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Super Admin</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">Master Management</div>
+      <div class="role-sub">HED Central — Super Admin</div>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">SA</div>
+        <div class="user-info">
+          <div style="font-size:12px; color:#fff; font-weight:500;">Super Admin</div>
+          <div style="font-size:10px; color:rgba(255,255,255,0.5);">admin@hed.punjab.gov.pk</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-area">
+    <div class="topbar">
+      <div class="breadcrumb" id="breadcrumb"></div>
+      <div class="topbar-actions">
+        <button class="icon-btn">🔔</button>
+        <div class="avatar sm">SA</div>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 id="panelTitle">—</h1>
+          <p id="panelSubtitle">—</p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-primary" id="addBtn">+ Add New</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="grid-toolbar">
+          <div class="toolbar-search">
+            <span>🔍</span>
+            <input type="text" id="searchInput" placeholder="Search...">
+          </div>
+          <span class="master-count" id="recordCount"></span>
+        </div>
+        <div class="table-wrapper">
+          <table id="dataTable">
+            <thead id="tableHead"></thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+        <div id="emptyState" class="empty-state" style="display:none;">
+          <div class="empty-icon">🗂️</div>
+          <div class="empty-title">No records found</div>
+          <div class="empty-desc">Try a different search term, or add a new record to get started.</div>
+        </div>
+        <div class="pagination">
+          <span class="text-xs text-muted" id="paginationInfo">Showing 0 of 0</span>
+          <div class="ml-auto flex-center gap-2">
+            <div class="page-btn">‹</div>
+            <div class="page-btn active">1</div>
+            <div class="page-btn">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add / Edit Modal -->
+<div class="modal-overlay" id="formModalOverlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="formModalTitle">Add Record</h3>
+      <button class="modal-close" onclick="closeFormModal()">✕</button>
+    </div>
+    <div class="modal-body" id="formModalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeFormModal()">Cancel</button>
+      <button class="btn btn-primary" id="formSaveBtn" onclick="saveRecord()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="deleteModalOverlay">
+  <div class="modal-box" style="max-width:400px;">
+    <div class="modal-body" style="align-items:center; text-align:center;">
+      <div class="confirm-icon">⚠</div>
+      <h3>Delete this record?</h3>
+      <p class="text-muted text-sm" id="deleteModalText">This action cannot be undone.</p>
+    </div>
+    <div class="modal-footer" style="justify-content:center;">
+      <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   MASTER DATA CONFIGURATION
+   Each master: { label, group, fields[], data[] }
+   field types: text | number | select(static options) | ref(to another master)
+   ============================================================ */
+let nextGlobalId = 1000;
+
+const masters = {
+
+  // --- Location Master ---
+  division: {
+    label: 'Division', group: 'Location Master', icon: '🗺️',
+    fields: [
+      { key: 'name', label: 'Division Name', type: 'text', required: true },
+      { key: 'code', label: 'Code', type: 'text' }
+    ],
+    data: [
+      { id: 1, name: 'Lahore', code: 'LHR' },
+      { id: 2, name: 'Rawalpindi', code: 'RWP' },
+      { id: 3, name: 'Multan', code: 'MUL' },
+      { id: 4, name: 'Faisalabad', code: 'FSD' }
+    ]
+  },
+  district: {
+    label: 'District', group: 'Location Master', icon: '📍',
+    fields: [
+      { key: 'name', label: 'District Name', type: 'text', required: true },
+      { key: 'code', label: 'Code', type: 'text' },
+      { key: 'division_id', label: 'Division', type: 'ref', ref: 'division', required: true }
+    ],
+    data: [
+      { id: 1, name: 'Lahore', code: 'LHR-D', division_id: 1 },
+      { id: 2, name: 'Sheikhupura', code: 'SKP', division_id: 1 },
+      { id: 3, name: 'Rawalpindi', code: 'RWP-D', division_id: 2 },
+      { id: 4, name: 'Multan', code: 'MUL-D', division_id: 3 }
+    ]
+  },
+  tehsil: {
+    label: 'Tehsil', group: 'Location Master', icon: '📌',
+    fields: [
+      { key: 'name', label: 'Tehsil Name', type: 'text', required: true },
+      { key: 'code', label: 'Code', type: 'text' },
+      { key: 'district_id', label: 'District', type: 'ref', ref: 'district', required: true }
+    ],
+    data: [
+      { id: 1, name: 'Model Town', code: 'MT', district_id: 1 },
+      { id: 2, name: 'Shalimar', code: 'SH', district_id: 1 },
+      { id: 3, name: 'Sheikhupura City', code: 'SKC', district_id: 2 }
+    ]
+  },
+
+  // --- Institute ---
+  institute_type: {
+    label: 'Institute Type', group: 'Institute', icon: '🏛️',
+    fields: [
+      { key: 'name', label: 'Type Name', type: 'text', required: true },
+      { key: 'code', label: 'Code', type: 'text' }
+    ],
+    data: [
+      { id: 1, name: 'Government College', code: 'GC' },
+      { id: 2, name: 'Government Degree College', code: 'GDC' },
+      { id: 3, name: 'University', code: 'UNI' }
+    ]
+  },
+  institute_level: {
+    label: 'Institute Level', group: 'Institute', icon: '🎓',
+    fields: [
+      { key: 'name', label: 'Level Name', type: 'text', required: true },
+      { key: 'code', label: 'Code', type: 'text' }
+    ],
+    data: [
+      { id: 1, name: 'Intermediate', code: 'INT' },
+      { id: 2, name: 'Degree', code: 'DEG' },
+      { id: 3, name: 'Postgraduate', code: 'PG' }
+    ]
+  },
+
+  // --- Program Master ---
+  program_level: {
+    label: 'Program Level', group: 'Program Master', icon: '📶',
+    fields: [
+      { key: 'name', label: 'Level Name', type: 'text', required: true },
+      { key: 'code', label: 'Code', type: 'text' }
+    ],
+    data: [
+      { id: 1, name: 'Intermediate', code: 'FA/FSC' },
+      { id: 2, name: 'Bachelors', code: 'BS' },
+      { id: 3, name: 'Masters', code: 'MS' }
+    ]
+  },
+  program_name: {
+    label: 'Program Name', group: 'Program Master', icon: '📘',
+    fields: [
+      { key: 'name', label: 'Program Name', type: 'text', required: true },
+      { key: 'program_level_id', label: 'Program Level', type: 'ref', ref: 'program_level', required: true }
+    ],
+    data: [
+      { id: 1, name: 'BS Computer Science', program_level_id: 2 },
+      { id: 2, name: 'FSc Pre-Medical', program_level_id: 1 },
+      { id: 3, name: 'MS Mathematics', program_level_id: 3 }
+    ]
+  },
+  session_type: {
+    label: 'Session Type', group: 'Program Master', icon: '🗓️',
+    fields: [ { key: 'name', label: 'Session Type', type: 'text', required: true } ],
+    data: [ { id: 1, name: 'Annual' }, { id: 2, name: 'Semester' } ]
+  },
+  subject: {
+    label: 'Subject', group: 'Program Master', icon: '📗',
+    fields: [
+      { key: 'name', label: 'Subject Name', type: 'text', required: true },
+      { key: 'code', label: 'Code', type: 'text' }
+    ],
+    data: [
+      { id: 1, name: 'Mathematics', code: 'MATH' },
+      { id: 2, name: 'Physics', code: 'PHY' },
+      { id: 3, name: 'English', code: 'ENG' },
+      { id: 4, name: 'Computer Science', code: 'CS' }
+    ]
+  },
+  affiliation_institute: {
+    label: 'Affiliation Institute', group: 'Program Master', icon: '🏫',
+    fields: [ { key: 'name', label: 'Institute Name', type: 'text', required: true } ],
+    data: [ { id: 1, name: 'University of the Punjab' }, { id: 2, name: 'BISE Lahore' } ]
+  },
+  affiliation_institute_type: {
+    label: 'Affiliation Institute Type', group: 'Program Master', icon: '🏷️',
+    fields: [ { key: 'name', label: 'Type Name', type: 'text', required: true } ],
+    data: [ { id: 1, name: 'Board' }, { id: 2, name: 'University' } ]
+  },
+
+  // --- Department Mapping ---
+  department: {
+    label: 'Department (Super Admin)', group: 'Department Mapping', icon: '🏢',
+    fields: [
+      { key: 'name', label: 'Department Name', type: 'text', required: true },
+      { key: 'code', label: 'Code', type: 'text' }
+    ],
+    data: [
+      { id: 1, name: 'Department of Mathematics', code: 'DOM' },
+      { id: 2, name: 'Department of Physics', code: 'DOP' },
+      { id: 3, name: 'Department of English', code: 'DOE' }
+    ]
+  },
+  subject_department_map: {
+    label: 'Subject ↔ Department (College)', group: 'Department Mapping', icon: '🔗',
+    fields: [
+      { key: 'subject_id', label: 'Subject', type: 'ref', ref: 'subject', required: true },
+      { key: 'department_id', label: 'Department', type: 'ref', ref: 'department', required: true },
+      { key: 'college', label: 'College', type: 'text', required: true }
+    ],
+    data: [
+      { id: 1, subject_id: 1, department_id: 1, college: 'Govt. College Lahore' },
+      { id: 2, subject_id: 2, department_id: 2, college: 'Govt. Degree College Multan' }
+    ]
+  },
+
+  // --- Staff Master ---
+  designation: {
+    label: 'Teacher/Staff Designation', group: 'Staff Master', icon: '🪪',
+    fields: [
+      { key: 'name', label: 'Designation', type: 'text', required: true },
+      { key: 'code', label: 'Code', type: 'text' }
+    ],
+    data: [ { id: 1, name: 'Lecturer', code: 'LEC' }, { id: 2, name: 'Assistant Professor', code: 'AP' } ]
+  },
+  cadre: {
+    label: 'Teacher/Staff Cadre', group: 'Staff Master', icon: '🧩',
+    fields: [ { key: 'name', label: 'Cadre Name', type: 'text', required: true } ],
+    data: [ { id: 1, name: 'General' }, { id: 2, name: 'Commerce' } ]
+  },
+  staff_grade: {
+    label: 'Teacher/Staff Grade', group: 'Staff Master', icon: '🎖️',
+    fields: [
+      { key: 'name', label: 'Grade Label', type: 'text', required: true },
+      { key: 'grade_no', label: 'Grade No (1–22)', type: 'number', min: 1, max: 22, required: true }
+    ],
+    data: [ { id: 1, name: 'BPS-17', grade_no: 17 }, { id: 2, name: 'BPS-18', grade_no: 18 } ]
+  },
+  teaching_subject: {
+    label: 'Teaching Subject', group: 'Staff Master', icon: '📖',
+    fields: [ { key: 'subject_id', label: 'Subject', type: 'ref', ref: 'subject', required: true } ],
+    data: [ { id: 1, subject_id: 1 }, { id: 2, subject_id: 4 } ]
+  },
+  post_type: {
+    label: 'Post Type', group: 'Staff Master', icon: '🧷',
+    fields: [ { key: 'name', label: 'Post Type', type: 'select', options: ['Admin', 'Teaching', 'Non-Teaching'], required: true } ],
+    data: [ { id: 1, name: 'Admin' }, { id: 2, name: 'Teaching' }, { id: 3, name: 'Non-Teaching' } ]
+  },
+  post_grade: {
+    label: 'Post Grade', group: 'Staff Master', icon: '🥇',
+    fields: [
+      { key: 'name', label: 'Grade Label', type: 'text', required: true },
+      { key: 'grade_no', label: 'Grade No (1–22)', type: 'number', min: 1, max: 22, required: true }
+    ],
+    data: [ { id: 1, name: 'BPS-16', grade_no: 16 }, { id: 2, name: 'BPS-11', grade_no: 11 } ]
+  },
+  post_designation: {
+    label: 'Post Designation', group: 'Staff Master', icon: '🧾',
+    fields: [
+      { key: 'name', label: 'Designation', type: 'text', required: true },
+      { key: 'post_type_id', label: 'Post Type', type: 'ref', ref: 'post_type', required: true }
+    ],
+    data: [ { id: 1, name: 'Superintendent', post_type_id: 1 }, { id: 2, name: 'Lecturer', post_type_id: 2 } ]
+  },
+  post_subject: {
+    label: 'Post Subject (Teaching Post)', group: 'Staff Master', icon: '📑',
+    fields: [
+      { key: 'post_designation_id', label: 'Post Designation', type: 'ref', ref: 'post_designation', required: true },
+      { key: 'subject_id', label: 'Subject', type: 'ref', ref: 'subject', required: true }
+    ],
+    data: [ { id: 1, post_designation_id: 2, subject_id: 1 } ]
+  }
+};
+
+// Group display order + which masters belong to it (Subject (Super Admin) reuses the
+// shared 'subject' master, since it is the same canonical subject list referenced
+// across Program Master, Department Mapping and Staff Master)
+const navGroups = [
+  { name: 'Location Master', items: ['division', 'district', 'tehsil'] },
+  { name: 'Institute', items: ['institute_type', 'institute_level'] },
+  { name: 'Program Master', items: ['program_level', 'program_name', 'session_type', 'subject', 'affiliation_institute', 'affiliation_institute_type'] },
+  { name: 'Department Mapping', items: ['department', 'subject_dept_alias', 'subject_department_map'] },
+  { name: 'Staff Master', items: ['designation', 'cadre', 'staff_grade', 'teaching_subject', 'post_type', 'post_grade', 'post_designation', 'post_subject'] }
+];
+// alias so "Subject (Super Admin)" nav entry points at the shared subject master
+masters['subject_dept_alias'] = masters['subject'];
+const masterNavLabel = { subject_dept_alias: 'Subject (Super Admin)' };
+// when listed under Program Master, "subject" keeps its own plain label
+masterNavLabel['subject'] = 'Subject';
+
+let currentMasterId = 'division';
+let editingId = null;
+let pendingDeleteId = null;
+let searchTerm = '';
+
+function getRefOptions(refId) {
+  return masters[refId].data;
+}
+function getRefLabel(refId, val) {
+  const rec = masters[refId].data.find(r => String(r.id) === String(val));
+  return rec ? rec.name : '<span class="text-muted">—</span>';
+}
+
+function buildSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  let html = '<div class="sidebar-section-label" style="padding:14px 10px 4px; font-size:9px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:rgba(255,255,255,.35);">Master Management</div>';
+  navGroups.forEach((group, gi) => {
+    html += `<div class="tree-group">
+      <div class="tree-group-header" onclick="toggleGroup(${gi})" id="groupHeader-${gi}">
+        <span>${group.name}</span><span class="chevron">▾</span>
+      </div>
+      <div class="tree-group-items" id="groupItems-${gi}">`;
+    group.items.forEach(masterId => {
+      const m = masters[masterId];
+      const label = masterNavLabel[masterId] || m.label;
+      html += `<a class="master-link" id="link-${masterId}" onclick="selectMaster('${masterId}')">
+        <span>${label}</span>
+      </a>`;
+    });
+    html += `</div></div>`;
+  });
+  nav.innerHTML = html;
+}
+
+function toggleGroup(gi) {
+  document.getElementById(`groupHeader-${gi}`).classList.toggle('collapsed');
+  document.getElementById(`groupItems-${gi}`).classList.toggle('collapsed');
+}
+
+function findGroupOf(masterId) {
+  return navGroups.find(g => g.items.includes(masterId));
+}
+
+function selectMaster(masterId) {
+  currentMasterId = masterId;
+  editingId = null;
+  searchTerm = '';
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.master-link').forEach(el => el.classList.remove('active'));
+  const link = document.getElementById('link-' + masterId);
+  if (link) link.classList.add('active');
+  renderPanel();
+}
+
+function renderPanel() {
+  const m = masters[currentMasterId];
+  const label = masterNavLabel[currentMasterId] || m.label;
+  const group = findGroupOf(currentMasterId);
+
+  document.getElementById('panelTitle').textContent = label;
+  document.getElementById('panelSubtitle').textContent = `Manage ${label.toLowerCase()} records used across EduGov ERP.`;
+  document.getElementById('breadcrumb').innerHTML =
+    `<span>Master Management</span><span>›</span><span>${group ? group.name : ''}</span><span>›</span><span class="crumb-active">${label}</span>`;
+
+  renderTable();
+}
+
+function getFilteredData() {
+  const m = masters[currentMasterId];
+  if (!searchTerm) return m.data;
+  const term = searchTerm.toLowerCase();
+  return m.data.filter(row => {
+    return m.fields.some(f => {
+      let val = row[f.key];
+      if (f.type === 'ref') val = getRefLabelText(f.ref, val);
+      return String(val ?? '').toLowerCase().includes(term);
+    });
+  });
+}
+function getRefLabelText(refId, val) {
+  const rec = masters[refId].data.find(r => String(r.id) === String(val));
+  return rec ? rec.name : '';
+}
+
+function renderTable() {
+  const m = masters[currentMasterId];
+  const rows = getFilteredData();
+  const thead = document.getElementById('tableHead');
+  const tbody = document.getElementById('tableBody');
+
+  thead.innerHTML = '<tr>' + m.fields.map(f => `<th>${f.label}</th>`).join('') + '<th style="width:120px;">Actions</th></tr>';
+
+  if (rows.length === 0) {
+    tbody.innerHTML = '';
+    document.getElementById('emptyState').style.display = 'flex';
+    document.getElementById('dataTable').style.display = 'none';
+  } else {
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('dataTable').style.display = 'table';
+    tbody.innerHTML = rows.map(row => {
+      const cells = m.fields.map(f => {
+        let val = row[f.key];
+        if (f.type === 'ref') val = getRefLabel(f.ref, val);
+        else if (val === undefined || val === '') val = '<span class="text-muted">—</span>';
+        return `<td>${val}</td>`;
+      }).join('');
+      return `<tr>${cells}<td>
+        <div class="row-actions">
+          <button class="row-action-btn primary" onclick="openFormModal('${currentMasterId}', ${row.id})">Edit</button>
+          <button class="row-action-btn danger" onclick="openDeleteModal(${row.id})">Delete</button>
+        </div>
+      </td></tr>`;
+    }).join('');
+  }
+
+  document.getElementById('recordCount').textContent = `${m.data.length} record${m.data.length === 1 ? '' : 's'}`;
+  document.getElementById('paginationInfo').textContent = `Showing ${rows.length} of ${m.data.length}`;
+}
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchTerm = e.target.value;
+  renderTable();
+});
+
+document.getElementById('addBtn').addEventListener('click', () => openFormModal(currentMasterId, null));
+
+/* ---------------- Add / Edit Modal ---------------- */
+function openFormModal(masterId, id) {
+  currentMasterId = masterId;
+  editingId = id;
+  const m = masters[masterId];
+  const label = masterNavLabel[masterId] || m.label;
+  const record = id ? m.data.find(r => r.id === id) : null;
+
+  document.getElementById('formModalTitle').textContent = (id ? 'Edit ' : 'Add New ') + label;
+
+  const body = document.getElementById('formModalBody');
+  body.innerHTML = m.fields.map(f => {
+    const val = record ? record[f.key] : '';
+    const reqMark = f.required ? '<span class="required">*</span>' : '';
+    if (f.type === 'ref') {
+      const opts = getRefOptions(f.ref).map(o => `<option value="${o.id}" ${String(val) === String(o.id) ? 'selected' : ''}>${o.name}</option>`).join('');
+      return `<div class="form-group">
+        <label class="form-label">${f.label}${reqMark}</label>
+        <select class="form-select" id="field-${f.key}" ${f.required ? 'required' : ''}>
+          <option value="">Select…</option>${opts}
+        </select>
+      </div>`;
+    }
+    if (f.type === 'select') {
+      const opts = f.options.map(o => `<option value="${o}" ${val === o ? 'selected' : ''}>${o}</option>`).join('');
+      return `<div class="form-group">
+        <label class="form-label">${f.label}${reqMark}</label>
+        <select class="form-select" id="field-${f.key}" ${f.required ? 'required' : ''}>
+          <option value="">Select…</option>${opts}
+        </select>
+      </div>`;
+    }
+    if (f.type === 'number') {
+      return `<div class="form-group">
+        <label class="form-label">${f.label}${reqMark}</label>
+        <input type="number" class="form-input" id="field-${f.key}" value="${val ?? ''}"
+          ${f.min !== undefined ? `min="${f.min}"` : ''} ${f.max !== undefined ? `max="${f.max}"` : ''}
+          ${f.required ? 'required' : ''}>
+      </div>`;
+    }
+    return `<div class="form-group">
+      <label class="form-label">${f.label}${reqMark}</label>
+      <input type="text" class="form-input" id="field-${f.key}" value="${val ?? ''}" ${f.required ? 'required' : ''}>
+    </div>`;
+  }).join('');
+
+  document.getElementById('formModalOverlay').classList.add('open');
+}
+
+function closeFormModal() {
+  document.getElementById('formModalOverlay').classList.remove('open');
+  editingId = null;
+}
+
+function saveRecord() {
+  const m = masters[currentMasterId];
+  const newRecord = { id: editingId || nextGlobalId++ };
+  let valid = true;
+
+  m.fields.forEach(f => {
+    const el = document.getElementById('field-' + f.key);
+    let val = el.value.trim();
+    if (f.required && !val) {
+      el.style.borderColor = 'var(--color-danger-border)';
+      valid = false;
+    } else {
+      el.style.borderColor = '';
+    }
+    if (f.type === 'number') val = val === '' ? '' : Number(val);
+    newRecord[f.key] = val;
+  });
+
+  if (!valid) return;
+
+  if (editingId) {
+    const idx = m.data.findIndex(r => r.id === editingId);
+    m.data[idx] = newRecord;
+  } else {
+    m.data.push(newRecord);
+  }
+
+  closeFormModal();
+  renderTable();
+}
+
+/* ---------------- Delete Modal ---------------- */
+function openDeleteModal(id) {
+  pendingDeleteId = id;
+  const m = masters[currentMasterId];
+  const record = m.data.find(r => r.id === id);
+  const label = masterNavLabel[currentMasterId] || m.label;
+  document.getElementById('deleteModalText').textContent =
+    `“${record ? record.name || ('Record #' + id) : 'this record'}” will be permanently removed from ${label}. This action cannot be undone.`;
+  document.getElementById('deleteModalOverlay').classList.add('open');
+}
+function closeDeleteModal() {
+  document.getElementById('deleteModalOverlay').classList.remove('open');
+  pendingDeleteId = null;
+}
+function confirmDelete() {
+  const m = masters[currentMasterId];
+  m.data = m.data.filter(r => r.id !== pendingDeleteId);
+  closeDeleteModal();
+  renderTable();
+}
+
+/* ---------------- Init ---------------- */
+buildSidebar();
+selectMaster('division');
+</script>
+</body>
+</html>
