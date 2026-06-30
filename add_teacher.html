@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Teacher — EduGov ERP</title>
+<style>
+/* ============================================================
+   EduGov ERP — Design System (embedded, unmodified tokens)
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg-page); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+
+:root {
+  --brand-50:  #EEEDFE;
+  --brand-100: #CECBF6;
+  --brand-200: #AFA9EC;
+  --brand-500: #6B63D4;
+  --brand-600: #534AB7;
+  --brand-700: #3C3489;
+  --brand-900: #26215C;
+
+  --gray-50:  #F8F8F7;
+  --gray-100: #F1F0EE;
+  --gray-200: #E4E2DC;
+  --gray-300: #C8C6BE;
+  --gray-400: #9C9A92;
+  --gray-500: #6F6D67;
+  --gray-600: #4A4945;
+  --gray-700: #333230;
+  --gray-900: #1A1917;
+
+  --color-success-bg:   #EAF3DE;
+  --color-success-text: #3B6D11;
+  --color-success-border: #97C459;
+  --color-warning-bg:   #FAEEDA;
+  --color-warning-text: #854F0B;
+  --color-warning-border: #EF9F27;
+  --color-danger-bg:    #FCEBEB;
+  --color-danger-text:  #A32D2D;
+  --color-danger-border:#E24B4A;
+  --color-info-bg:      #E6F1FB;
+  --color-info-text:    #185FA5;
+  --color-info-border:  #378ADD;
+
+  --bg-page:       #F4F3F1;
+  --bg-surface:    #FFFFFF;
+  --bg-secondary:  #F8F8F7;
+  --bg-tertiary:   #F1F0EE;
+
+  --text-primary:   #1A1917;
+  --text-secondary: #6F6D67;
+  --text-muted:     #9C9A92;
+  --text-inverse:   #FFFFFF;
+
+  --border-light:  rgba(0,0,0,0.07);
+  --border-medium: rgba(0,0,0,0.12);
+  --border-strong: rgba(0,0,0,0.20);
+
+  --sidebar-bg:     #26215C;
+  --sidebar-hover:  rgba(255,255,255,0.08);
+  --sidebar-active: rgba(255,255,255,0.15);
+  --sidebar-text:   rgba(255,255,255,0.75);
+  --sidebar-text-active: #FFFFFF;
+  --sidebar-section: rgba(255,255,255,0.35);
+
+  --topbar-bg: #FFFFFF;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.06);
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  --sidebar-w: 240px;
+  --topbar-h: 56px;
+}
+
+h1 { font-size: 22px; font-weight: 600; line-height: 1.3; color: var(--text-primary); }
+h2 { font-size: 18px; font-weight: 600; line-height: 1.35; color: var(--text-primary); }
+h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+h4 { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+p  { font-size: 14px; color: var(--text-primary); }
+
+.text-xs  { font-size: 11px; }
+.text-sm  { font-size: 12px; }
+.text-base{ font-size: 14px; }
+.text-lg  { font-size: 16px; }
+.text-muted  { color: var(--text-secondary); }
+.text-micro  { color: var(--text-muted); }
+.text-success{ color: var(--color-success-text); }
+.text-warning{ color: var(--color-warning-text); }
+.text-danger { color: var(--color-danger-text); }
+.text-info   { color: var(--color-info-text); }
+.font-mono   { font-family: 'JetBrains Mono', monospace; }
+.font-500    { font-weight: 500; }
+.font-600    { font-weight: 600; }
+.section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-muted); }
+
+.app-shell { display: flex; height: 100vh; overflow: hidden; }
+
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.topbar {
+  height: var(--topbar-h);
+  background: var(--topbar-bg);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-5);
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.page-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-6);
+  background: var(--bg-page);
+}
+
+.sidebar-logo {
+  padding: var(--space-4) var(--space-4);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sidebar-logo-mark {
+  width: 32px; height: 32px;
+  background: var(--brand-500);
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.sidebar-logo-text { font-size: 14px; font-weight: 600; color: #fff; }
+.sidebar-logo-sub  { font-size: 10px; color: rgba(255,255,255,0.45); }
+
+.sidebar-role-badge {
+  margin: var(--space-3) var(--space-3);
+  background: rgba(255,255,255,0.10);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+}
+.sidebar-role-badge .role-name { font-size: 12px; font-weight: 600; color: #fff; }
+.sidebar-role-badge .role-sub  { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+.sidebar-section-label {
+  padding: var(--space-4) var(--space-4) var(--space-1);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--sidebar-section);
+}
+
+.sidebar-nav { flex: 1; padding: 0 var(--space-2); }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--sidebar-text);
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: background 0.15s;
+  margin-bottom: 1px;
+  white-space: nowrap;
+}
+.nav-item:hover    { background: var(--sidebar-hover); color: #fff; }
+.nav-item.active   { background: var(--sidebar-active); color: var(--sidebar-text-active); font-weight: 500; }
+.nav-item .nav-icon { width: 18px; text-align: center; font-size: 15px; flex-shrink: 0; opacity: 0.8; }
+.nav-item.active .nav-icon { opacity: 1; }
+.nav-badge {
+  margin-left: auto;
+  background: #E24B4A;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  min-width: 18px;
+  text-align: center;
+}
+.nav-badge.warn { background: var(--color-warning-text); }
+.nav-badge.info { background: var(--brand-500); }
+
+.sidebar-bottom {
+  padding: var(--space-3) var(--space-2);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+.sidebar-user:hover { background: var(--sidebar-hover); }
+.avatar {
+  width: 30px; height: 30px;
+  border-radius: var(--radius-full);
+  background: var(--brand-500);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0;
+}
+.avatar.sm { width: 26px; height: 26px; font-size: 10px; }
+
+.topbar-search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  flex: 1;
+  max-width: 400px;
+  color: var(--text-muted);
+  font-size: 13px;
+  cursor: text;
+}
+.topbar-actions { margin-left: auto; display: flex; align-items: center; gap: var(--space-2); }
+.icon-btn {
+  width: 34px; height: 34px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 17px;
+  position: relative;
+  border: none; background: transparent;
+  transition: background 0.15s;
+}
+.icon-btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
+.breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text-muted);
+}
+.breadcrumb .crumb-active { color: var(--text-primary); font-weight: 500; }
+.breadcrumb span { opacity: 0.4; }
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+.card-sm { padding: var(--space-4); }
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+.card-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.card-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+.badge-success { background: var(--color-success-bg); color: var(--color-success-text); }
+.badge-warning { background: var(--color-warning-bg); color: var(--color-warning-text); }
+.badge-danger  { background: var(--color-danger-bg);  color: var(--color-danger-text);  }
+.badge-info    { background: var(--color-info-bg);    color: var(--color-info-text);    }
+.badge-neutral { background: var(--bg-tertiary);      color: var(--text-secondary);     }
+.badge-brand   { background: var(--brand-50);         color: var(--brand-600);          }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.btn:active { transform: scale(0.98); }
+.btn-primary { background: var(--brand-600); color: #fff; border-color: var(--brand-700); }
+.btn-primary:hover { background: var(--brand-700); }
+.btn-secondary { background: var(--bg-surface); color: var(--text-primary); border-color: var(--border-medium); }
+.btn-secondary:hover { background: var(--bg-secondary); }
+.btn-ghost { background: transparent; color: var(--text-secondary); border-color: transparent; }
+.btn-ghost:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+.btn-danger { background: var(--color-danger-bg); color: var(--color-danger-text); border-color: var(--color-danger-border); }
+.btn-success{ background: var(--color-success-bg); color: var(--color-success-text); border-color: var(--color-success-border); }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.btn-lg { padding: 10px 20px; font-size: 14px; }
+
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-label { font-size: 12px; font-weight: 500; color: var(--text-secondary); }
+.form-label .required { color: var(--color-danger-text); margin-left: 2px; }
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 8px 11px;
+  font-size: 13px;
+  font-family: inherit;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--brand-500);
+  box-shadow: 0 0 0 3px rgba(107,99,212,0.12);
+}
+.form-input.error  { border-color: var(--color-danger-border); }
+.form-input.error:focus { box-shadow: 0 0 0 3px rgba(226,75,74,0.12); }
+.form-input.valid  { border-color: var(--color-success-border); }
+.form-input:read-only { background: var(--bg-tertiary); color: var(--text-secondary); cursor: not-allowed; }
+.form-textarea { resize: vertical; min-height: 80px; }
+.form-hint  { font-size: 11px; color: var(--text-muted); }
+.form-error { font-size: 11px; color: var(--color-danger-text); }
+.form-valid { font-size: 11px; color: var(--color-success-text); }
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid;
+  font-size: 13px;
+}
+.alert-success { background: var(--color-success-bg); border-color: var(--color-success-border); color: var(--color-success-text); }
+.alert-warning { background: var(--color-warning-bg); border-color: var(--color-warning-border); color: var(--color-warning-text); }
+.alert-danger  { background: var(--color-danger-bg);  border-color: var(--color-danger-border);  color: var(--color-danger-text); }
+.alert-info    { background: var(--color-info-bg);    border-color: var(--color-info-border);    color: var(--color-info-text); }
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.page-header-left h1 { margin-bottom: 4px; }
+.page-header-left p  { font-size: 13px; color: var(--text-muted); }
+.page-header-actions { display: flex; gap: var(--space-2); align-items: center; }
+
+.grid { display: grid; gap: var(--space-4); }
+.grid-2 { grid-template-columns: 1fr 1fr; }
+.grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+.grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+.flex        { display: flex; }
+.flex-center { display: flex; align-items: center; }
+.flex-between{ display: flex; align-items: center; justify-content: space-between; }
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+.gap-5 { gap: var(--space-5); }
+.ml-auto { margin-left: auto; }
+
+.mb-1 { margin-bottom: var(--space-1); }
+.mb-2 { margin-bottom: var(--space-2); }
+.mb-3 { margin-bottom: var(--space-3); }
+.mb-4 { margin-bottom: var(--space-4); }
+.mb-6 { margin-bottom: var(--space-6); }
+.mt-2 { margin-top: var(--space-2); }
+.mt-3 { margin-top: var(--space-3); }
+.mt-4 { margin-top: var(--space-4); }
+
+.stepper { display: flex; align-items: center; gap: 0; }
+.step-item { display: flex; align-items: center; flex: 1; }
+.step-connector { flex: 1; height: 1.5px; background: var(--border-light); }
+.step-connector.done { background: var(--color-success-border); }
+.step-circle {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600;
+  flex-shrink: 0; transition: all 0.2s;
+}
+.step-circle.done    { background: var(--color-success-bg); color: var(--color-success-text); border: 1.5px solid var(--color-success-border); }
+.step-circle.active  { background: var(--brand-50); color: var(--brand-600); border: 2px solid var(--brand-500); }
+.step-circle.pending { background: var(--bg-tertiary); color: var(--text-muted); border: 1.5px solid var(--border-medium); }
+.step-label-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 0 8px; }
+.step-label { font-size: 11px; font-weight: 500; white-space: nowrap; }
+.step-label.active  { color: var(--brand-600); }
+.step-label.done    { color: var(--color-success-text); }
+.step-label.pending { color: var(--text-muted); }
+
+.divider { height: 1px; background: var(--border-light); margin: var(--space-4) 0; }
+.divider-label {
+  display: flex; align-items: center; gap: var(--space-3);
+  font-size: 11px; color: var(--text-muted);
+}
+.divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--border-light); }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gray-300); }
+
+@media (max-width: 1280px) {
+  .sidebar { width: 64px; }
+  .sidebar-logo-text, .sidebar-logo-sub, .sidebar-role-badge, .sidebar-section-label,
+  .nav-item span:not(.nav-icon), .nav-badge, .sidebar-user .user-info { display: none; }
+  .nav-item { justify-content: center; padding: 10px; }
+  .sidebar-user { justify-content: center; }
+  .sidebar-logo { justify-content: center; padding: var(--space-3); }
+}
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .page-body { padding: var(--space-4); }
+  .page-header { flex-direction: column; align-items: flex-start; }
+}
+
+/* ---- Form-page specific additions (not part of core design system) ---- */
+.form-section-card { margin-bottom: var(--space-5); }
+.form-section-title {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: var(--space-4);
+}
+.form-section-num {
+  width: 22px; height: 22px; border-radius: var(--radius-full);
+  background: var(--brand-50); color: var(--brand-600);
+  font-size: 11px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.radio-row { display: flex; gap: var(--space-5); align-items: center; padding-top: 6px; }
+.radio-option { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-primary); cursor: pointer; }
+.radio-option input[type="radio"] { accent-color: var(--brand-600); width: 15px; height: 15px; cursor: pointer; }
+.form-actions-bar {
+  position: sticky; bottom: 0;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-light);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  display: flex; justify-content: flex-end; gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+.field-select-wrap { position: relative; }
+.form-select { appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 30px; }
+.field-select-wrap::after {
+  content: '▾';
+  position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
+  font-size: 11px; color: var(--text-muted); pointer-events: none;
+}
+.conditional-field { display: none; }
+.conditional-field.visible { display: flex; }
+.conditional-wrap {
+  background: var(--bg-secondary);
+  border: 1px dashed var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-top: var(--space-3);
+}
+.conditional-wrap .grid { gap: var(--space-4); }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-mark">EG</div>
+      <div>
+        <div class="sidebar-logo-text">EduGov ERP</div>
+        <div class="sidebar-logo-sub">Higher Education Dept.</div>
+      </div>
+    </div>
+    <div class="sidebar-role-badge">
+      <div class="role-name">HR &amp; Establishment</div>
+      <div class="role-sub">HED Central</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Workforce</div>
+      <a class="nav-item" href="#"><span class="nav-icon">☰</span><span>Dashboard</span></a>
+      <a class="nav-item active" href="#"><span class="nav-icon">＋</span><span>Add Teacher</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">▤</span><span>Teacher Directory</span></a>
+      <a class="nav-item" href="#"><span class="nav-icon">⇄</span><span>Postings &amp; Transfers</span></a>
+      <div class="sidebar-section-label">Other</div>
+      <a class="nav-item" href="#"><span class="nav-icon">⚙</span><span>Settings</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="avatar sm">HQ</div>
+        <div class="user-info">
+          <div style="font-size:12px; color:#fff; font-weight:500;">HR Desk</div>
+          <div style="font-size:10px; color:rgba(255,255,255,0.5);">hr.desk@hed.punjab.gov.pk</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-area">
+    <div class="topbar">
+      <div class="breadcrumb">
+        <span>Workforce</span><span>›</span><span>Teaching Staff</span><span>›</span>
+        <span class="crumb-active">Add Teacher</span>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn">🔔</button>
+        <div class="avatar sm">HQ</div>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>Add Teacher</h1>
+          <p>Register a new teaching staff record into the HED establishment database.</p>
+        </div>
+        <div class="page-header-actions">
+          <span class="badge badge-neutral">Draft</span>
+          <button class="btn btn-secondary btn-sm">Save as Draft</button>
+        </div>
+      </div>
+
+      <form id="addTeacherForm">
+
+        <!-- Section 1: Personal Information -->
+        <div class="card form-section-card">
+          <div class="form-section-title">
+            <div class="form-section-num">1</div>
+            <div>
+              <h3>Personal Information</h3>
+              <p class="card-subtitle">Identity, contact and background details.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-3 mb-4">
+            <div class="form-group">
+              <label class="form-label">CNIC<span class="required">*</span></label>
+              <input type="text" class="form-input font-mono" placeholder="XXXXX-XXXXXXX-X" maxlength="15" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Name<span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="Full name as per CNIC" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Father Name<span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="Father's name" required>
+            </div>
+          </div>
+
+          <div class="grid grid-3 mb-4">
+            <div class="form-group">
+              <label class="form-label">Date of Birth<span class="required">*</span></label>
+              <input type="date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gender<span class="required">*</span></label>
+              <div class="field-select-wrap">
+                <select class="form-select" required onchange="toggleConditional('wearVeilField', this.value === 'Female')">
+                  <option value="">Select…</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Marital Status<span class="required">*</span></label>
+              <div class="field-select-wrap">
+                <select class="form-select" required>
+                  <option value="">Select…</option>
+                  <option>Single</option>
+                  <option>Married</option>
+                  <option>Divorced</option>
+                  <option>Widowed</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="conditional-wrap conditional-field" id="wearVeilField">
+            <div class="form-group">
+              <label class="form-label">Wear Veil</label>
+              <div class="radio-row">
+                <label class="radio-option"><input type="radio" name="wearVeil" value="Yes"> Yes</label>
+                <label class="radio-option"><input type="radio" name="wearVeil" value="No" checked> No</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-2 mb-4">
+            <div class="form-group">
+              <label class="form-label">Email Address<span class="required">*</span></label>
+              <input type="email" class="form-input" placeholder="name@hed.punjab.gov.pk" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact No<span class="required">*</span></label>
+              <input type="tel" class="form-input" placeholder="03XX-XXXXXXX" required>
+            </div>
+          </div>
+
+          <div class="form-group mb-4">
+            <label class="form-label">Residential Address<span class="required">*</span></label>
+            <textarea class="form-textarea" placeholder="House no., street, area, city" required></textarea>
+          </div>
+
+          <div class="grid grid-3 mb-4">
+            <div class="form-group">
+              <label class="form-label">Religion</label>
+              <div class="field-select-wrap">
+                <select class="form-select">
+                  <option value="">Select…</option>
+                  <option>Islam</option>
+                  <option>Christianity</option>
+                  <option>Hinduism</option>
+                  <option>Sikhism</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">District of Domicile<span class="required">*</span></label>
+              <div class="field-select-wrap">
+                <select class="form-select" required>
+                  <option value="">Select district…</option>
+                  <option>Lahore</option>
+                  <option>Faisalabad</option>
+                  <option>Multan</option>
+                  <option>Rawalpindi</option>
+                  <option>Gujranwala</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">COVID-19 Vaccination Status<span class="required">*</span></label>
+              <div class="field-select-wrap">
+                <select class="form-select" required>
+                  <option value="">Select…</option>
+                  <option>Fully Vaccinated</option>
+                  <option>Partially Vaccinated</option>
+                  <option>Not Vaccinated</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-label">Is Dual Nationality</label>
+            <div class="radio-row">
+              <label class="radio-option"><input type="radio" name="isDualNationality" value="Yes" onchange="toggleConditional('dualNationalityField', true)"> Yes</label>
+              <label class="radio-option"><input type="radio" name="isDualNationality" value="No" checked onchange="toggleConditional('dualNationalityField', false)"> No</label>
+            </div>
+          </div>
+
+          <div class="conditional-wrap conditional-field" id="dualNationalityField">
+            <div class="grid grid-3">
+              <div class="form-group">
+                <label class="form-label">Dual Nationality</label>
+                <div class="field-select-wrap">
+                  <select class="form-select">
+                    <option value="">Select country…</option>
+                    <option>United Kingdom</option>
+                    <option>United States</option>
+                    <option>Canada</option>
+                    <option>Australia</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="grid grid-3 mb-4">
+            <div class="form-group">
+              <label class="form-label">Transfer Status<span class="required">*</span></label>
+              <div class="field-select-wrap">
+                <select class="form-select" required>
+                  <option value="">Select…</option>
+                  <option>Not Applicable</option>
+                  <option>Requested</option>
+                  <option>In Process</option>
+                  <option>Completed</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Merit Number</label>
+              <input type="text" class="form-input" placeholder="Optional">
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="form-group">
+              <label class="form-label">On Present Grade<span class="required">*</span></label>
+              <div class="radio-row">
+                <label class="radio-option"><input type="radio" name="onPresentGrade" value="Selected" checked> Selected</label>
+                <label class="radio-option"><input type="radio" name="onPresentGrade" value="Promoted"> Promoted</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Selection Criteria<span class="required">*</span></label>
+              <div class="radio-row">
+                <label class="radio-option"><input type="radio" name="selectionCriteria" value="Open Merit"> Open Merit</label>
+                <label class="radio-option"><input type="radio" name="selectionCriteria" value="Disabled Quota"> Disabled Quota</label>
+                <label class="radio-option"><input type="radio" name="selectionCriteria" value="Minority Quota"> Minority Quota</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Service Information -->
+        <div class="card form-section-card">
+          <div class="form-section-title">
+            <div class="form-section-num">2</div>
+            <div>
+              <h3>Service Information</h3>
+              <p class="card-subtitle">Posting, designation and grade details.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-3 mb-4">
+            <div class="form-group">
+              <label class="form-label">Personnel No</label>
+              <input type="text" class="form-input font-mono" placeholder="Optional">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Teacher Type<span class="required">*</span></label>
+              <div class="field-select-wrap">
+                <select class="form-select" required>
+                  <option value="">Select…</option>
+                  <option>Regular</option>
+                  <option>Contract</option>
+                  <option>Visiting</option>
+                  <option>Adhoc</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Grade<span class="required">*</span></label>
+              <div class="field-select-wrap">
+                <select class="form-select" required>
+                  <option value="">Select grade…</option>
+                  <option>BPS-17</option>
+                  <option>BPS-18</option>
+                  <option>BPS-19</option>
+                  <option>BPS-20</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-3 mb-4">
+            <div class="form-group">
+              <label class="form-label">Designation<span class="required">*</span></label>
+              <div class="field-select-wrap">
+                <select class="form-select" required>
+                  <option value="">Select…</option>
+                  <option>Lecturer</option>
+                  <option>Assistant Professor</option>
+                  <option>Associate Professor</option>
+                  <option>Professor</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Designation Subject<span class="required">*</span></label>
+              <div class="field-select-wrap">
+                <select class="form-select" required>
+                  <option value="">Select subject…</option>
+                  <option>Mathematics</option>
+                  <option>Physics</option>
+                  <option>Chemistry</option>
+                  <option>English</option>
+                  <option>Computer Science</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Working as Head/Principal<span class="required">*</span></label>
+              <div class="radio-row">
+                <label class="radio-option"><input type="radio" name="isHeadPrincipal" value="Yes" onchange="toggleConditional('headPrincipalFields', true)"> Yes</label>
+                <label class="radio-option"><input type="radio" name="isHeadPrincipal" value="No" checked onchange="toggleConditional('headPrincipalFields', false)"> No</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="conditional-wrap conditional-field" id="headPrincipalFields">
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label class="form-label">Head/Principal Charge</label>
+                <div class="field-select-wrap">
+                  <select class="form-select">
+                    <option value="">Select…</option>
+                    <option>Regular Charge</option>
+                    <option>Additional Charge</option>
+                    <option>Look-after Charge</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date of Appointment as Principal</label>
+                <input type="date" class="form-input">
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="grid grid-3">
+            <div class="form-group">
+              <label class="form-label">Date of Joining HED<span class="required">*</span></label>
+              <input type="date" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date of Joining Current College</label>
+              <input type="date" class="form-input">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date of Joining (Present Post)</label>
+              <input type="date" class="form-input">
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Education Information -->
+        <div class="card form-section-card">
+          <div class="form-section-title">
+            <div class="form-section-num">3</div>
+            <div>
+              <h3>Education Information</h3>
+              <p class="card-subtitle">Highest qualification on record.</p>
+            </div>
+          </div>
+
+          <div class="grid grid-4">
+            <div class="form-group">
+              <label class="form-label">Latest Degree Level</label>
+              <div class="field-select-wrap">
+                <select class="form-select">
+                  <option value="">Select…</option>
+                  <option>Bachelors</option>
+                  <option>Masters</option>
+                  <option>MPhil</option>
+                  <option>PhD</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Latest Degree Completion Year</label>
+              <input type="number" class="form-input" placeholder="e.g. 2018" min="1960" max="2026">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Latest Degree Subject</label>
+              <div class="field-select-wrap">
+                <select class="form-select">
+                  <option value="">Select subject…</option>
+                  <option>Mathematics</option>
+                  <option>Physics</option>
+                  <option>Chemistry</option>
+                  <option>English</option>
+                  <option>Computer Science</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Institute Type</label>
+              <div class="field-select-wrap">
+                <select class="form-select">
+                  <option value="">Select…</option>
+                  <option>Public Sector</option>
+                  <option>Private Sector</option>
+                  <option>Foreign Institute</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-info mb-4">
+          <span>ℹ️</span>
+          <div>Fields marked <span class="required" style="color:var(--color-danger-text);">*</span> are mandatory. Conditional fields appear automatically based on related answers.</div>
+        </div>
+
+        <div class="form-actions-bar">
+          <button type="button" class="btn btn-secondary">Cancel</button>
+          <button type="button" class="btn btn-secondary">Save as Draft</button>
+          <button type="submit" class="btn btn-primary">Add Teacher</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleConditional(id, show) {
+  document.getElementById(id).classList.toggle('visible', show);
+}
+document.getElementById('addTeacherForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  alert('Mockup only — form submission is not wired to a backend.');
+});
+</script>
+</body>
+</html>
