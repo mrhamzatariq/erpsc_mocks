@@ -197,6 +197,82 @@
             height: 1px;
             background: var(--border-light);
         }
+
+        .detect-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+            min-height: 18px;
+            margin-top: 6px;
+        }
+
+        .detect-spinner {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid var(--border-light);
+            border-top-color: var(--brand-500);
+            animation: spin .7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .role-result {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--brand-500);
+            background: var(--brand-50);
+            margin-top: 6px;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: opacity .25s ease, transform .25s ease;
+        }
+
+        .role-result.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .role-result .role-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            background: #fff;
+        }
+
+        .role-result .role-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--brand-700);
+        }
+
+        .role-result .role-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        .role-result .badge {
+            margin-left: auto;
+        }
+
+        .form-input.cnic-input {
+            letter-spacing: .5px;
+        }
     </style>
 </head>
 
@@ -235,46 +311,22 @@
         <div class="login-right">
             <div style="margin-bottom:24px">
                 <h2 style="margin-bottom:4px">Sign in to ERPSC</h2>
-                <p style="font-size:13px;color:var(--text-muted)">Select your role and enter your credentials</p>
-            </div>
-            <!-- Role selector -->
-            <div style="margin-bottom:20px">
-                <div class="text-sm text-muted mb-2"
-                    style="font-weight:500;text-transform:uppercase;letter-spacing:.05em;font-size:10px">Your role</div>
-                <div class="role-card active" onclick="selectRole(this,'hed')">
-                    <div class="role-icon" style="background:var(--brand-50)">🏛️</div>
-                    <div>
-                        <div class="role-name" style="color:var(--brand-700)">HED / DPI / Directorate</div>
-                        <div class="role-desc">Provincial administration access</div>
-                    </div>
-                    <span class="badge badge-brand" style="margin-left:auto">Selected</span>
-                </div>
-                <div class="role-card" onclick="selectRole(this,'college')">
-                    <div class="role-icon" style="background:var(--color-success-bg)">🏫</div>
-                    <div>
-                        <div class="role-name">College staff</div>
-                        <div class="role-desc">Principal, admin, operators</div>
-                    </div>
-                </div>
-                <div class="role-card" onclick="selectRole(this,'faculty')">
-                    <div class="role-icon" style="background:var(--color-warning-bg)">👨‍🏫</div>
-                    <div>
-                        <div class="role-name">Faculty member</div>
-                        <div class="role-desc">Teaching staff portal</div>
-                    </div>
-                </div>
-                <div class="role-card" onclick="selectRole(this,'student')">
-                    <div class="role-icon" style="background:var(--bg-tertiary)">🎓</div>
-                    <div>
-                        <div class="role-name">Student / Parent</div>
-                        <div class="role-desc">Self-service portal</div>
-                    </div>
-                </div>
+                <p style="font-size:13px;color:var(--text-muted)">Enter your CNIC — your role is detected automatically</p>
             </div>
             <!-- Login form -->
             <div class="form-group mb-3">
                 <label class="form-label">CNIC</label>
-                <input class="form-input" type="email" placeholder="35202-0547896-3" value="35202-0547896-3" />
+                <input id="cnicInput" class="form-input cnic-input" type="text" inputmode="numeric" maxlength="15"
+                    placeholder="35202-0547896-3" oninput="handleCnicInput(this)" />
+                <div class="detect-status" id="detectStatus"></div>
+                <div class="role-result" id="roleResult">
+                    <div class="role-icon" id="roleResultIcon">🏛️</div>
+                    <div>
+                        <div class="role-name" id="roleResultName">HED / DPI / Directorate</div>
+                        <div class="role-desc" id="roleResultDesc">Provincial administration access</div>
+                    </div>
+                    <span class="badge badge-brand">Detected</span>
+                </div>
             </div>
             <div class="form-group mb-3">
                 <label class="form-label" style="display:flex;justify-content:space-between">
@@ -283,7 +335,7 @@
                         style="font-size:11px;color:var(--brand-600);font-weight:500;text-decoration:none">Forgot
                         password?</a>
                 </label>
-                <input class="form-input" type="password" value="••••••••••••" />
+                <input class="form-input" type="password" placeholder="Enter password" />
             </div>
             <!-- MFA note -->
             <div class="mfa-card">
@@ -302,27 +354,66 @@
         </div>
     </div>
     <script>
-        function selectRole(el, role) {
-            document.querySelectorAll('.role-card').forEach(c => {
-                c.classList.remove('active');
-                c.querySelector('.role-name').style.color = '';
-                const badge = c.querySelector('.badge');
-                if (badge) badge.remove();
-            });
-            el.classList.add('active');
-            const badge = document.createElement('span');
-            badge.className = 'badge badge-brand';
-            badge.style.marginLeft = 'auto';
-            badge.textContent = 'Selected';
-            el.appendChild(badge);
+        // Role reference data — in production this maps to a backend CNIC lookup
+        // against HRMIS / college / faculty / student records.
+        const ROLES = [
+            { key: 'hed', icon: '🏛️', bg: 'var(--brand-50)', name: 'HED / DPI / Directorate', desc: 'Provincial administration access' },
+            { key: 'college', icon: '🏫', bg: 'var(--color-success-bg)', name: 'College staff', desc: 'Principal, admin, operators' },
+            { key: 'faculty', icon: '👨‍🏫', bg: 'var(--color-warning-bg)', name: 'Faculty member', desc: 'Teaching staff portal' },
+            { key: 'student', icon: '🎓', bg: 'var(--bg-tertiary)', name: 'Student / Parent', desc: 'Self-service portal' }
+        ];
 
-            const placeholders = {
-                hed: 'name@hed.punjab.gov.pk',
-                college: 'principal@gcc.edu.pk',
-                faculty: 'faculty@gcc.edu.pk',
-                student: 'Roll number or CNIC'
-            };
-            document.querySelector('input[type="email"]').placeholder = placeholders[role] || '';
+        let detectTimer = null;
+
+        function formatCnic(raw) {
+            const digits = raw.replace(/\D/g, '').slice(0, 13);
+            let out = digits;
+            if (digits.length > 5) out = digits.slice(0, 5) + '-' + digits.slice(5);
+            if (digits.length > 12) out = out.slice(0, 13) + '-' + digits.slice(12);
+            return out;
+        }
+
+        function detectRoleFromCnic(digits) {
+            // Mock detection: a real system resolves this via CNIC lookup against
+            // HRMIS / student information records. Deterministic here for demo purposes.
+            const sum = digits.split('').reduce((a, b) => a + parseInt(b, 10), 0);
+            return ROLES[sum % ROLES.length];
+        }
+
+        function handleCnicInput(el) {
+            const caretWasAtEnd = el.selectionStart === el.value.length;
+            el.value = formatCnic(el.value);
+            if (caretWasAtEnd) el.setSelectionRange(el.value.length, el.value.length);
+
+            const digits = el.value.replace(/\D/g, '');
+            const statusEl = document.getElementById('detectStatus');
+            const resultEl = document.getElementById('roleResult');
+
+            clearTimeout(detectTimer);
+            resultEl.classList.remove('visible');
+
+            if (digits.length === 0) {
+                statusEl.innerHTML = '';
+                return;
+            }
+
+            if (digits.length < 13) {
+                statusEl.innerHTML = '<span>Enter your 13-digit CNIC to detect your role</span>';
+                return;
+            }
+
+            statusEl.innerHTML = '<div class="detect-spinner"></div><span>Detecting role…</span>';
+
+            detectTimer = setTimeout(() => {
+                const role = detectRoleFromCnic(digits);
+                statusEl.innerHTML = '<span>✓ Role verified against CNIC record</span>';
+
+                document.getElementById('roleResultIcon').textContent = role.icon;
+                document.getElementById('roleResultIcon').style.background = role.bg;
+                document.getElementById('roleResultName').textContent = role.name;
+                document.getElementById('roleResultDesc').textContent = role.desc;
+                resultEl.classList.add('visible');
+            }, 600);
         }
     </script>
 </body>
