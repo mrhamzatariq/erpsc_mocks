@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Infrastructure (Unit-wise) — EduGov ERP</title>
+<link rel="stylesheet" href="design-system.css"/>
+<style>
+/* ── Wizard (reused pattern) ── */
+.wizard-steps { display:flex; align-items:center; gap:0; }
+.ws-item { display:flex; align-items:center; flex:1; }
+.ws-connector { flex:1; height:2px; background:var(--border-light); margin:0 4px; }
+.ws-connector.done { background:var(--color-success-border); }
+.ws-node { display:flex; flex-direction:column; align-items:center; gap:5px; cursor:pointer; }
+.ws-circle { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; transition:all .2s; }
+.ws-circle.done   { background:var(--color-success-bg); color:var(--color-success-text); border:2px solid var(--color-success-border); }
+.ws-circle.active { background:var(--brand-600); color:#fff; border:2px solid var(--brand-700); }
+.ws-circle.pending{ background:var(--bg-tertiary); color:var(--text-muted); border:2px solid var(--border-light); }
+.ws-label { font-size:11px; font-weight:500; white-space:nowrap; text-align:center; }
+.ws-label.done   { color:var(--color-success-text); }
+.ws-label.active { color:var(--brand-600); font-weight:600; }
+.ws-label.pending{ color:var(--text-muted); }
+
+/* ── Progress strip ── */
+.progress-strip {
+  background:var(--bg-secondary); border:1px solid var(--border-light);
+  border-radius:var(--radius-md); padding:var(--space-3) var(--space-4);
+  display:flex; align-items:center; gap:var(--space-4); margin-bottom:var(--space-4);
+}
+
+/* ── Collapse bar ── */
+.collapse-all-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:var(--space-2) var(--space-4);
+  background:var(--bg-secondary);
+  border:1px solid var(--border-light);
+  border-radius:var(--radius-md);
+  margin-bottom:var(--space-3);
+}
+.collapse-all-bar span { font-size:12px; color:var(--text-muted); }
+
+/* ── Unit card (one row per Unit Name entry) ── */
+.unit-card {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: var(--space-3);
+  background: var(--bg-surface);
+}
+.unit-card.collapsed .unit-body { display:none; }
+.unit-card.is-new { border:1.5px dashed var(--brand-400); }
+
+.unit-head {
+  display:flex; align-items:center; gap:var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-surface);
+  cursor:pointer;
+  border-bottom: 1px solid var(--border-light);
+}
+.unit-card.collapsed .unit-head { border-bottom:none; }
+.unit-head:hover { background: var(--bg-secondary); }
+.unit-icon {
+  width:32px; height:32px; border-radius:var(--radius-md);
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; flex-shrink:0;
+}
+.unit-name { font-size:13px; font-weight:600; }
+.unit-sub { font-size:11px; color:var(--text-muted); }
+.unit-avail-badge { font-size:11px; padding:3px 9px; border-radius:var(--radius-full); font-weight:500; }
+.avail-yes { background:var(--color-success-bg); color:var(--color-success-text); border:1px solid var(--color-success-border); }
+.avail-no  { background:var(--color-danger-bg);  color:var(--color-danger-text);  border:1px solid var(--color-danger-border); }
+.avail-na  { background:var(--bg-tertiary); color:var(--text-muted); border:1px solid var(--border-light); }
+.unit-flags { display:flex; gap:6px; align-items:center; }
+.flag-chip { font-size:10px; font-weight:600; padding:2px 7px; border-radius:var(--radius-full); white-space:nowrap; }
+.flag-danger { background:var(--color-danger-bg); color:var(--color-danger-text); border:1px solid var(--color-danger-border); }
+.flag-warn   { background:var(--color-warning-bg); color:var(--color-warning-text); border:1px solid var(--color-warning-border); }
+
+.unit-body { padding: var(--space-4) var(--space-5); }
+
+/* ── Field number tag (traceability to New_Fields.csv) ── */
+.f-num { font-size:9px; font-weight:700; color:var(--brand-500); background:var(--brand-50); border-radius:4px; padding:1px 5px; margin-right:6px; vertical-align:middle; }
+
+/* ── Unit name row ── */
+.unit-name-row { display:grid; grid-template-columns: 2fr 1.2fr; gap: var(--space-4); align-items:end; margin-bottom: var(--space-4); padding-bottom: var(--space-4); border-bottom:1px solid var(--border-light); }
+
+/* ── Available toggle ── */
+.avail-toggle { display:flex; gap:var(--space-2); }
+.avail-btn {
+  flex:1; padding:var(--space-3);
+  border:2px solid var(--border-medium); border-radius:var(--radius-md);
+  text-align:center; cursor:pointer; transition:all .15s; font-size:13px; font-weight:600;
+  background: var(--bg-surface);
+}
+.avail-btn input[type=radio] { display:none; }
+.avail-btn.yes:has(input:checked) { border-color:var(--color-success-border); background:var(--color-success-bg); color:var(--color-success-text); }
+.avail-btn.no:has(input:checked)  { border-color:var(--color-danger-border);  background:var(--color-danger-bg);  color:var(--color-danger-text); }
+
+/* ── Hierarchical sections ── */
+.hier-section { margin-bottom: var(--space-4); padding: var(--space-4); background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: var(--radius-md); }
+.hier-section-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom: var(--space-3); display:flex; align-items:center; gap:6px; }
+.hier-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3) var(--space-4); }
+.hier-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+/* ── Calculated (read-only) field ── */
+.calc-field-wrap { display:flex; flex-direction:column; gap:5px; }
+.calc-field {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:7px 10px; border-radius:var(--radius-md);
+  background: var(--brand-50); border: 1.5px solid var(--brand-200);
+  font-size:14px; font-weight:700; color:var(--brand-700);
+}
+.calc-formula { font-size:10px; color:var(--text-muted); font-weight:500; }
+
+/* ── Validation message ── */
+.validation-msg { font-size:11px; padding:6px 10px; border-radius:var(--radius-md); margin-top:var(--space-2); display:none; align-items:center; gap:6px; }
+.validation-msg.show { display:flex; }
+.validation-msg.ok  { background:var(--color-success-bg); color:var(--color-success-text); }
+.validation-msg.err { background:var(--color-danger-bg);  color:var(--color-danger-text); }
+
+/* ── Reveal-on-condition blocks ── */
+.reveal-block { margin-top: var(--space-3); }
+
+/* ── Yes/No pill group ── */
+.yn-group { display:flex; gap:var(--space-2); }
+.yn-label {
+  display:flex; align-items:center; gap:5px;
+  padding:5px 12px; border-radius:var(--radius-full);
+  border:1.5px solid var(--border-medium);
+  font-size:12px; font-weight:500;
+  cursor:pointer; color:var(--text-secondary);
+  transition:all .15s;
+}
+.yn-label input[type=radio] { display:none; }
+.yn-label.yes:has(input:checked) { border-color:var(--color-success-border); background:var(--color-success-bg); color:var(--color-success-text); }
+.yn-label.no:has(input:checked)  { border-color:var(--color-danger-border);  background:var(--color-danger-bg);  color:var(--color-danger-text); }
+
+/* ── Remarks section ── */
+.remarks-section { padding-top: var(--space-3); border-top: 1px dashed var(--border-light); }
+
+/* ── Save bar ── */
+.save-bar {
+  position:sticky; bottom:0;
+  background:var(--bg-surface);
+  border-top:1px solid var(--border-light);
+  padding:var(--space-4) var(--space-6);
+  display:flex; align-items:center; gap:var(--space-3);
+  box-shadow:0 -4px 16px rgba(0,0,0,.06);
+  z-index:10;
+}
+.autosave-dot { width:7px; height:7px; border-radius:50%; background:var(--color-success-text); }
+
+/* ── Add unit dropzone button ── */
+.add-unit-bar {
+  display:flex; align-items:center; justify-content:center;
+  padding: var(--space-4);
+  border: 2px dashed var(--border-medium);
+  border-radius: var(--radius-lg);
+  color: var(--brand-600); font-size:13px; font-weight:600;
+  cursor:pointer; margin-bottom: var(--space-4);
+  transition: all .15s;
+}
+.add-unit-bar:hover { background: var(--brand-50); border-color: var(--brand-400); }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-mark">E</div>
+    <div><div class="sidebar-logo-text">EduGov ERP</div><div class="sidebar-logo-sub">Punjab HED</div></div>
+  </div>
+  <div class="sidebar-role-badge">
+    <div class="role-name">College Administration</div>
+    <div class="role-sub">GC Faisalabad</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="sidebar-section-label">Overview</div>
+    <a class="nav-item" href="09-college-admin-dashboard.html"><span class="nav-icon">⊞</span><span>Dashboard</span></a>
+    <div class="sidebar-section-label">College Setup</div>
+    <a class="nav-item" href="form-01-college-profile.html"><span class="nav-icon">🏛️</span><span>College Profile</span></a>
+    <a class="nav-item active" href="form-02-infrastructure-v2.html"><span class="nav-icon">🏗️</span><span>Infrastructure</span><span class="nav-badge warn">4</span></a>
+    <a class="nav-item" href="form-03-sports.html"><span class="nav-icon">⚽</span><span>Sports</span></a>
+    <a class="nav-item" href="form-04-security-facilities.html"><span class="nav-icon">🔒</span><span>Security &amp; Facilities</span></a>
+    <a class="nav-item" href="form-05-monitoring.html"><span class="nav-icon">📋</span><span>Monitoring</span><span class="nav-badge">110</span></a>
+    <div class="sidebar-section-label">Admissions</div>
+    <a class="nav-item" href="#"><span class="nav-icon">🎓</span><span>Applications</span><span class="nav-badge">47</span></a>
+    <div class="sidebar-section-label">Students</div>
+    <a class="nav-item" href="#"><span class="nav-icon">👥</span><span>Student List</span></a>
+    <div class="sidebar-section-label">Finance</div>
+    <a class="nav-item" href="#"><span class="nav-icon">💳</span><span>Fee Collection</span></a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="sidebar-user">
+      <div class="avatar sm">MK</div>
+      <div class="user-info">
+        <div style="font-size:12px;font-weight:500;color:#fff;">Muhammad Kamran</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.45)">Admin Officer</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-area">
+  <header class="topbar">
+    <div class="breadcrumb">
+      <a href="09-college-admin-dashboard.html">GC Faisalabad</a>
+      <span>›</span>
+      <a href="form-01-college-profile.html">College Setup</a>
+      <span>›</span>
+      <span class="crumb-active">Infrastructure</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-secondary btn-sm">📤 Export</button>
+      <button class="btn btn-ghost btn-sm">❓ Help</button>
+    </div>
+  </header>
+
+  <main class="page-body">
+
+    <div class="page-header">
+      <div class="page-header-left">
+        <h1>Physical Infrastructure — Unit-wise</h1>
+        <p>Step 2 of 5 · Add each infrastructure unit individually · 15 fields per unit</p>
+      </div>
+      <div class="page-header-actions">
+        <span class="badge badge-warning">4 units added</span>
+        <button class="btn btn-primary">Save &amp; Continue →</button>
+      </div>
+    </div>
+
+    <!-- Wizard Steps -->
+    <div class="card" style="padding:var(--space-4) var(--space-5);margin-bottom:var(--space-4)">
+      <div class="wizard-steps">
+        <div class="ws-item"><div class="ws-node"><div class="ws-circle done">✓</div><div class="ws-label done">College Profile</div></div></div>
+        <div class="ws-connector done"></div>
+        <div class="ws-item"><div class="ws-node"><div class="ws-circle active">2</div><div class="ws-label active">Infrastructure</div></div></div>
+        <div class="ws-connector"></div>
+        <div class="ws-item"><div class="ws-node"><div class="ws-circle pending">3</div><div class="ws-label pending">Sports</div></div></div>
+        <div class="ws-connector"></div>
+        <div class="ws-item"><div class="ws-node"><div class="ws-circle pending">4</div><div class="ws-label pending">Security &amp; Facilities</div></div></div>
+        <div class="ws-connector"></div>
+        <div class="ws-item"><div class="ws-node"><div class="ws-circle pending">5</div><div class="ws-label pending">Monitoring</div></div></div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-strip">
+      <span style="font-size:12px;color:var(--text-muted);white-space:nowrap">Overall infrastructure progress</span>
+      <div style="flex:1"><div class="progress-bar"><div class="progress-fill warning" style="width:40%"></div></div></div>
+      <span style="font-size:12px;font-weight:600;color:var(--color-warning-text);white-space:nowrap">4 / ~10 expected units added</span>
+    </div>
+
+    <!-- How-to tip -->
+    <div class="alert alert-info" style="margin-bottom:var(--space-4)">
+      <span style="font-size:16px">ℹ️</span>
+      <div>
+        <div style="font-weight:600;margin-bottom:2px">New unit-wise entry format</div>
+        Click <strong>“+ Add Infrastructure Unit”</strong>, pick the unit from the dropdown, mark <strong>Available</strong>, then break the total down by condition. <strong>Functional Count</strong> is calculated automatically as Good + Satisfactory + Unsatisfactory — it is not editable. Reason fields only appear when they're required by your entries.
+      </div>
+    </div>
+
+    <div class="collapse-all-bar">
+      <span>4 units added · Click any row to expand</span>
+      <div style="display:flex;gap:var(--space-2)">
+        <button class="btn btn-ghost btn-sm" onclick="collapseAll()">Collapse All</button>
+        <button class="btn btn-ghost btn-sm" onclick="expandAll()">Expand All</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ADD NEW UNIT (always-open template card)
+    ═══════════════════════════════════════════ -->
+    <div class="unit-card is-new" id="unit-new">
+      <div class="unit-head" onclick="toggleUnit('unit-new')">
+        <div class="unit-icon" style="background:var(--brand-50)">➕</div>
+        <div style="flex:1">
+          <div class="unit-name">Add Infrastructure Unit</div>
+          <div class="unit-sub">Select a unit type to begin a new entry</div>
+        </div>
+        <span style="color:var(--text-muted);font-size:16px">▼</span>
+      </div>
+      <div class="unit-body">
+
+        <!-- 1. Unit Name -->
+        <div class="unit-name-row">
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#1</span>Unit Name <span class="required">*</span></label>
+            <select class="form-select" name="new_unit_name">
+              <option value="">— Select building unit —</option>
+              <option>Class Room</option>
+              <option>Laboratory</option>
+              <option>Library</option>
+              <option>Office</option>
+              <option>Washroom</option>
+              <option>Store Room</option>
+              <option>Auditorium / Hall</option>
+              <option>Hostel</option>
+              <option>Boundary Wall</option>
+              <option>Other (specify in remarks)</option>
+            </select>
+            <div class="form-hint">e.g. Classroom, Laboratory, Library, etc.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#2</span>Available <span class="required">*</span></label>
+            <div class="avail-toggle">
+              <label class="avail-btn yes"><input type="radio" name="new_available" value="Yes" data-target="new-availbody" data-show-on="Yes" onchange="toggleByRadio(this)"/>✓ Available</label>
+              <label class="avail-btn no"><input type="radio" name="new_available" value="No" data-target="new-availbody" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>✗ Not Available</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Everything below only applies if Available = Yes -->
+        <div id="new-availbody" style="display:none">
+
+          <!-- 2.1 Total + 2.2 Functional (calc) -->
+          <div class="hier-section">
+            <div class="hier-section-title">📦 Unit Count</div>
+            <div class="hier-grid cols-2">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.1</span>Total Count <span class="required">*</span></label>
+                <input class="form-input" type="number" min="0" name="new_total_count" placeholder="0" oninput="validateUnit('new')"/>
+                <div class="form-hint">Required since Available = Yes</div>
+              </div>
+              <div class="calc-field-wrap">
+                <label class="form-label"><span class="f-num">#2.2</span>Functional Count</label>
+                <div class="calc-field"><span id="new-functional">0</span><span class="calc-formula">Good + Satisfactory + Unsatisfactory</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2.2.1 - 2.2.3 Condition breakdown -->
+          <div class="hier-section">
+            <div class="hier-section-title">🩺 Condition Breakdown</div>
+            <div class="hier-grid">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.2.1</span>Good Count</label>
+                <input class="form-input cond-input" type="number" min="0" name="new_good_count" placeholder="0" oninput="calcFunctional('new')"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.2.2</span>Satisfactory Count</label>
+                <input class="form-input cond-input" type="number" min="0" name="new_satisfactory_count" placeholder="0" oninput="calcFunctional('new')"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.2.3</span>Unsatisfactory Count</label>
+                <input class="form-input cond-input" type="number" min="0" name="new_unsatisfactory_count" placeholder="0" oninput="calcFunctional('new')"/>
+              </div>
+            </div>
+            <div class="validation-msg" id="new-validation-total"></div>
+          </div>
+
+          <!-- 2.3.1 - 2.3.3 Utilization -->
+          <div class="hier-section">
+            <div class="hier-section-title">🔧 Utilization of Functional Units</div>
+            <div class="hier-grid cols-2">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.3.1</span>Utilized Count</label>
+                <input class="form-input" type="number" min="0" name="new_utilized_count" placeholder="0" oninput="validateUnit('new')"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.3.2</span>Not Utilized Count</label>
+                <input class="form-input" type="number" min="0" name="new_not_utilized_count" placeholder="0" oninput="toggleByNumber(this,'new-notutil-reason'); validateUnit('new')"/>
+              </div>
+            </div>
+            <div class="validation-msg" id="new-validation-util"></div>
+            <div class="reveal-block" id="new-notutil-reason" style="display:none">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.3.3</span>Reason for Not Utilization <span class="required">*</span></label>
+                <textarea class="form-textarea" name="new_notutil_reason" placeholder="Required because Not Utilized Count > 0"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2.4.1 - 2.4.2 Non-Functional -->
+          <div class="hier-section">
+            <div class="hier-section-title">⚠️ Non-Functional Units</div>
+            <div class="form-group">
+              <label class="form-label"><span class="f-num">#2.4.1</span>Non-Functional Count</label>
+              <input class="form-input" type="number" min="0" name="new_nonfunctional_count" placeholder="0" oninput="toggleByNumber(this,'new-nonfunc-reason'); validateUnit('new')"/>
+            </div>
+            <div class="reveal-block" id="new-nonfunc-reason" style="display:none">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.4.2</span>Reason for Non-Functionality <span class="required">*</span></label>
+                <textarea class="form-textarea" name="new_nonfunc_reason" placeholder="Required because Non-Functional Count > 0"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2.5.1 - 2.5.3 Dangerous -->
+          <div class="hier-section">
+            <div class="hier-section-title">🚧 Dangerous Declaration</div>
+            <div class="form-group">
+              <label class="form-label"><span class="f-num">#2.5.1</span>Dangerous Declared?</label>
+              <div class="yn-group">
+                <label class="yn-label yes"><input type="radio" name="new_dangerous_declared" value="Yes" data-target="new-dangerous-body" data-show-on="Yes" onchange="toggleByRadio(this)"/>Yes</label>
+                <label class="yn-label no"><input type="radio" name="new_dangerous_declared" value="No" data-target="new-dangerous-body" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>No</label>
+              </div>
+            </div>
+            <div class="reveal-block" id="new-dangerous-body" style="display:none">
+              <div class="hier-grid cols-2">
+                <div class="form-group">
+                  <label class="form-label"><span class="f-num">#2.5.2</span>Dangerous Count <span class="required">*</span></label>
+                  <input class="form-input" type="number" min="0" name="new_dangerous_count" placeholder="0"/>
+                </div>
+              </div>
+              <div class="form-group" style="margin-top:var(--space-3)">
+                <label class="form-label"><span class="f-num">#2.5.3</span>Reason for Dangerous Declaration <span class="required">*</span></label>
+                <textarea class="form-textarea" name="new_dangerous_reason" placeholder="Required because Dangerous Declared = Yes"></textarea>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end new-availbody -->
+
+        <!-- 3, 3.1, 3.2 Additional Units Required (independent of Available) -->
+        <div class="hier-section">
+          <div class="hier-section-title">➕ Additional Units Required</div>
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#3</span>Additional Units Required?</label>
+            <div class="yn-group">
+              <label class="yn-label yes"><input type="radio" name="new_additional_required" value="Yes" data-target="new-additional-body" data-show-on="Yes" onchange="toggleByRadio(this)"/>Yes</label>
+              <label class="yn-label no"><input type="radio" name="new_additional_required" value="No" data-target="new-additional-body" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>No</label>
+            </div>
+          </div>
+          <div class="reveal-block" id="new-additional-body" style="display:none">
+            <div class="hier-grid cols-2">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#3.1</span>Additional Required Count <span class="required">*</span></label>
+                <input class="form-input" type="number" min="0" name="new_additional_count" placeholder="0"/>
+              </div>
+            </div>
+            <div class="form-group" style="margin-top:var(--space-3)">
+              <label class="form-label"><span class="f-num">#3.2</span>Reason for Additional Requirement <span class="required">*</span></label>
+              <textarea class="form-textarea" name="new_additional_reason" placeholder="Required because Additional Units Required = Yes"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Description / Remarks -->
+        <div class="remarks-section">
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#4</span>Description / Remarks</label>
+            <textarea class="form-textarea" name="new_remarks" placeholder="Optional remarks or observations"></textarea>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:var(--space-2);margin-top:var(--space-4);padding-top:var(--space-4);border-top:1px solid var(--border-light)">
+          <button class="btn btn-ghost">Clear</button>
+          <button class="btn btn-primary">✓ Save Unit</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         SAVED UNITS
+    ═══════════════════════════════════════════ -->
+
+    <!-- Class Room — fully filled, valid -->
+    <div class="unit-card collapsed" id="unit-classroom">
+      <div class="unit-head" onclick="toggleUnit('unit-classroom')">
+        <div class="unit-icon" style="background:#E6F1FB">🏫</div>
+        <div style="flex:1">
+          <div class="unit-name">Class Room</div>
+          <div class="unit-sub">Total 24 · Functional 22 · Utilized 20</div>
+        </div>
+        <span class="unit-avail-badge avail-yes">✓ Available</span>
+        <span style="margin-left:8px;color:var(--text-muted);font-size:16px">▶</span>
+      </div>
+      <div class="unit-body">
+        <div class="unit-name-row">
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#1</span>Unit Name <span class="required">*</span></label>
+            <select class="form-select" name="classroom_unit_name"><option selected>Class Room</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#2</span>Available <span class="required">*</span></label>
+            <div class="avail-toggle">
+              <label class="avail-btn yes"><input type="radio" name="classroom_available" value="Yes" data-target="classroom-availbody" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>✓ Available</label>
+              <label class="avail-btn no"><input type="radio" name="classroom_available" value="No" data-target="classroom-availbody" data-show-on="Yes" onchange="toggleByRadio(this)"/>✗ Not Available</label>
+            </div>
+          </div>
+        </div>
+
+        <div id="classroom-availbody">
+          <div class="hier-section">
+            <div class="hier-section-title">📦 Unit Count</div>
+            <div class="hier-grid cols-2">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.1</span>Total Count <span class="required">*</span></label>
+                <input class="form-input" type="number" min="0" name="classroom_total_count" value="24" oninput="validateUnit('classroom')"/>
+              </div>
+              <div class="calc-field-wrap">
+                <label class="form-label"><span class="f-num">#2.2</span>Functional Count</label>
+                <div class="calc-field"><span id="classroom-functional">22</span><span class="calc-formula">Good + Satisfactory + Unsatisfactory</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hier-section">
+            <div class="hier-section-title">🩺 Condition Breakdown</div>
+            <div class="hier-grid">
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.2.1</span>Good Count</label><input class="form-input cond-input" type="number" min="0" name="classroom_good_count" value="15" oninput="calcFunctional('classroom')"/></div>
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.2.2</span>Satisfactory Count</label><input class="form-input cond-input" type="number" min="0" name="classroom_satisfactory_count" value="6" oninput="calcFunctional('classroom')"/></div>
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.2.3</span>Unsatisfactory Count</label><input class="form-input cond-input" type="number" min="0" name="classroom_unsatisfactory_count" value="1" oninput="calcFunctional('classroom')"/></div>
+            </div>
+            <div class="validation-msg ok show" id="classroom-validation-total">✓ Total Count (24) = Functional (22) + Non-Functional (2)</div>
+          </div>
+
+          <div class="hier-section">
+            <div class="hier-section-title">🔧 Utilization of Functional Units</div>
+            <div class="hier-grid cols-2">
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.3.1</span>Utilized Count</label><input class="form-input" type="number" min="0" name="classroom_utilized_count" value="20" oninput="validateUnit('classroom')"/></div>
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.3.2</span>Not Utilized Count</label><input class="form-input" type="number" min="0" name="classroom_not_utilized_count" value="2" oninput="toggleByNumber(this,'classroom-notutil-reason'); validateUnit('classroom')"/></div>
+            </div>
+            <div class="validation-msg ok show" id="classroom-validation-util">✓ Utilized (20) + Not Utilized (2) = Functional (22)</div>
+            <div class="reveal-block" id="classroom-notutil-reason">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.3.3</span>Reason for Not Utilization <span class="required">*</span></label>
+                <textarea class="form-textarea" name="classroom_notutil_reason">2 rooms reserved for upcoming semester's additional sections, currently kept vacant.</textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="hier-section">
+            <div class="hier-section-title">⚠️ Non-Functional Units</div>
+            <div class="form-group"><label class="form-label"><span class="f-num">#2.4.1</span>Non-Functional Count</label><input class="form-input" type="number" min="0" name="classroom_nonfunctional_count" value="2" oninput="toggleByNumber(this,'classroom-nonfunc-reason'); validateUnit('classroom')"/></div>
+            <div class="reveal-block" id="classroom-nonfunc-reason">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.4.2</span>Reason for Non-Functionality <span class="required">*</span></label>
+                <textarea class="form-textarea" name="classroom_nonfunc_reason">Roof leakage during monsoon; awaiting C&W repair approval.</textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="hier-section">
+            <div class="hier-section-title">🚧 Dangerous Declaration</div>
+            <div class="form-group">
+              <label class="form-label"><span class="f-num">#2.5.1</span>Dangerous Declared?</label>
+              <div class="yn-group">
+                <label class="yn-label yes"><input type="radio" name="classroom_dangerous_declared" value="Yes" data-target="classroom-dangerous-body" data-show-on="Yes" onchange="toggleByRadio(this)"/>Yes</label>
+                <label class="yn-label no"><input type="radio" name="classroom_dangerous_declared" value="No" data-target="classroom-dangerous-body" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>No</label>
+              </div>
+            </div>
+            <div class="reveal-block" id="classroom-dangerous-body" style="display:none"></div>
+          </div>
+        </div>
+
+        <div class="hier-section">
+          <div class="hier-section-title">➕ Additional Units Required</div>
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#3</span>Additional Units Required?</label>
+            <div class="yn-group">
+              <label class="yn-label yes"><input type="radio" name="classroom_additional_required" value="Yes" data-target="classroom-additional-body" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>Yes</label>
+              <label class="yn-label no"><input type="radio" name="classroom_additional_required" value="No" data-target="classroom-additional-body" data-show-on="Yes" onchange="toggleByRadio(this)"/>No</label>
+            </div>
+          </div>
+          <div class="reveal-block" id="classroom-additional-body">
+            <div class="hier-grid cols-2">
+              <div class="form-group"><label class="form-label"><span class="f-num">#3.1</span>Additional Required Count <span class="required">*</span></label><input class="form-input" type="number" min="0" name="classroom_additional_count" value="4"/></div>
+            </div>
+            <div class="form-group" style="margin-top:var(--space-3)">
+              <label class="form-label"><span class="f-num">#3.2</span>Reason for Additional Requirement <span class="required">*</span></label>
+              <textarea class="form-textarea" name="classroom_additional_reason">Enrollment growth of 18% this year requires 4 more sections.</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="remarks-section">
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#4</span>Description / Remarks</label>
+            <textarea class="form-textarea" name="classroom_remarks">2 rooms under repair, expected completion next quarter.</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Laboratory — deliberate validation mismatch demo -->
+    <div class="unit-card collapsed" id="unit-lab">
+      <div class="unit-head" onclick="toggleUnit('unit-lab')">
+        <div class="unit-icon" style="background:#FDECEC">🧪</div>
+        <div style="flex:1">
+          <div class="unit-name">Laboratory</div>
+          <div class="unit-sub">Total 10 · Functional 7 · count mismatch flagged</div>
+        </div>
+        <div class="unit-flags"><span class="flag-chip flag-warn">⚠ Check counts</span></div>
+        <span class="unit-avail-badge avail-yes">✓ Available</span>
+        <span style="margin-left:8px;color:var(--text-muted);font-size:16px">▶</span>
+      </div>
+      <div class="unit-body">
+        <div class="unit-name-row">
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#1</span>Unit Name <span class="required">*</span></label>
+            <select class="form-select" name="lab_unit_name"><option selected>Laboratory</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#2</span>Available <span class="required">*</span></label>
+            <div class="avail-toggle">
+              <label class="avail-btn yes"><input type="radio" name="lab_available" value="Yes" data-target="lab-availbody" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>✓ Available</label>
+              <label class="avail-btn no"><input type="radio" name="lab_available" value="No" data-target="lab-availbody" data-show-on="Yes" onchange="toggleByRadio(this)"/>✗ Not Available</label>
+            </div>
+          </div>
+        </div>
+
+        <div id="lab-availbody">
+          <div class="hier-section">
+            <div class="hier-section-title">📦 Unit Count</div>
+            <div class="hier-grid cols-2">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.1</span>Total Count <span class="required">*</span></label>
+                <input class="form-input" type="number" min="0" name="lab_total_count" value="10" oninput="validateUnit('lab')"/>
+              </div>
+              <div class="calc-field-wrap">
+                <label class="form-label"><span class="f-num">#2.2</span>Functional Count</label>
+                <div class="calc-field"><span id="lab-functional">7</span><span class="calc-formula">Good + Satisfactory + Unsatisfactory</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hier-section">
+            <div class="hier-section-title">🩺 Condition Breakdown</div>
+            <div class="hier-grid">
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.2.1</span>Good Count</label><input class="form-input cond-input" type="number" min="0" name="lab_good_count" value="5" oninput="calcFunctional('lab')"/></div>
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.2.2</span>Satisfactory Count</label><input class="form-input cond-input" type="number" min="0" name="lab_satisfactory_count" value="2" oninput="calcFunctional('lab')"/></div>
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.2.3</span>Unsatisfactory Count</label><input class="form-input cond-input" type="number" min="0" name="lab_unsatisfactory_count" value="0" oninput="calcFunctional('lab')"/></div>
+            </div>
+            <div class="validation-msg err show" id="lab-validation-total">✗ Total Count (10) does not equal Functional (7) + Non-Functional (1) — 2 units unaccounted for. Please recheck.</div>
+          </div>
+
+          <div class="hier-section">
+            <div class="hier-section-title">🔧 Utilization of Functional Units</div>
+            <div class="hier-grid cols-2">
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.3.1</span>Utilized Count</label><input class="form-input" type="number" min="0" name="lab_utilized_count" value="6" oninput="validateUnit('lab')"/></div>
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.3.2</span>Not Utilized Count</label><input class="form-input" type="number" min="0" name="lab_not_utilized_count" value="1" oninput="toggleByNumber(this,'lab-notutil-reason'); validateUnit('lab')"/></div>
+            </div>
+            <div class="validation-msg ok show" id="lab-validation-util">✓ Utilized (6) + Not Utilized (1) = Functional (7)</div>
+            <div class="reveal-block" id="lab-notutil-reason">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.3.3</span>Reason for Not Utilization <span class="required">*</span></label>
+                <textarea class="form-textarea" name="lab_notutil_reason">Chemistry lab bench awaiting fume hood replacement.</textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="hier-section">
+            <div class="hier-section-title">⚠️ Non-Functional Units</div>
+            <div class="form-group"><label class="form-label"><span class="f-num">#2.4.1</span>Non-Functional Count</label><input class="form-input" type="number" min="0" name="lab_nonfunctional_count" value="1" oninput="toggleByNumber(this,'lab-nonfunc-reason'); validateUnit('lab')"/></div>
+            <div class="reveal-block" id="lab-nonfunc-reason">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.4.2</span>Reason for Non-Functionality <span class="required">*</span></label>
+                <textarea class="form-textarea" name="lab_nonfunc_reason">Physics lab gas lines condemned by safety inspection.</textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="hier-section">
+            <div class="hier-section-title">🚧 Dangerous Declaration</div>
+            <div class="form-group">
+              <label class="form-label"><span class="f-num">#2.5.1</span>Dangerous Declared?</label>
+              <div class="yn-group">
+                <label class="yn-label yes"><input type="radio" name="lab_dangerous_declared" value="Yes" data-target="lab-dangerous-body" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>Yes</label>
+                <label class="yn-label no"><input type="radio" name="lab_dangerous_declared" value="No" data-target="lab-dangerous-body" data-show-on="Yes" onchange="toggleByRadio(this)"/>No</label>
+              </div>
+            </div>
+            <div class="reveal-block" id="lab-dangerous-body">
+              <div class="hier-grid cols-2">
+                <div class="form-group"><label class="form-label"><span class="f-num">#2.5.2</span>Dangerous Count <span class="required">*</span></label><input class="form-input" type="number" min="0" name="lab_dangerous_count" value="1"/></div>
+              </div>
+              <div class="form-group" style="margin-top:var(--space-3)">
+                <label class="form-label"><span class="f-num">#2.5.3</span>Reason for Dangerous Declaration <span class="required">*</span></label>
+                <textarea class="form-textarea" name="lab_dangerous_reason">Physics lab gas lines pose fire hazard; sealed off pending C&W action.</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hier-section">
+          <div class="hier-section-title">➕ Additional Units Required</div>
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#3</span>Additional Units Required?</label>
+            <div class="yn-group">
+              <label class="yn-label yes"><input type="radio" name="lab_additional_required" value="Yes" data-target="lab-additional-body" data-show-on="Yes" onchange="toggleByRadio(this)"/>Yes</label>
+              <label class="yn-label no"><input type="radio" name="lab_additional_required" value="No" data-target="lab-additional-body" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>No</label>
+            </div>
+          </div>
+          <div class="reveal-block" id="lab-additional-body" style="display:none"></div>
+        </div>
+
+        <div class="remarks-section">
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#4</span>Description / Remarks</label>
+            <textarea class="form-textarea" name="lab_remarks">Counts need re-verification with lab in-charge before final submission.</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Library — Not Available, additional required -->
+    <div class="unit-card collapsed" id="unit-library">
+      <div class="unit-head" onclick="toggleUnit('unit-library')">
+        <div class="unit-icon" style="background:#EAF3DE">📚</div>
+        <div style="flex:1">
+          <div class="unit-name">Library</div>
+          <div class="unit-sub">Not available on campus · Additional requirement raised</div>
+        </div>
+        <span class="unit-avail-badge avail-no">✗ Not Available</span>
+        <span style="margin-left:8px;color:var(--text-muted);font-size:16px">▶</span>
+      </div>
+      <div class="unit-body">
+        <div class="unit-name-row">
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#1</span>Unit Name <span class="required">*</span></label>
+            <select class="form-select" name="library_unit_name"><option selected>Library</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#2</span>Available <span class="required">*</span></label>
+            <div class="avail-toggle">
+              <label class="avail-btn yes"><input type="radio" name="library_available" value="Yes" data-target="library-availbody" data-show-on="Yes" onchange="toggleByRadio(this)"/>✓ Available</label>
+              <label class="avail-btn no"><input type="radio" name="library_available" value="No" data-target="library-availbody" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>✗ Not Available</label>
+            </div>
+          </div>
+        </div>
+
+        <div id="library-availbody" style="display:none"></div>
+
+        <div class="hier-section">
+          <div class="hier-section-title">➕ Additional Units Required</div>
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#3</span>Additional Units Required?</label>
+            <div class="yn-group">
+              <label class="yn-label yes"><input type="radio" name="library_additional_required" value="Yes" data-target="library-additional-body" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>Yes</label>
+              <label class="yn-label no"><input type="radio" name="library_additional_required" value="No" data-target="library-additional-body" data-show-on="Yes" onchange="toggleByRadio(this)"/>No</label>
+            </div>
+          </div>
+          <div class="reveal-block" id="library-additional-body">
+            <div class="hier-grid cols-2">
+              <div class="form-group"><label class="form-label"><span class="f-num">#3.1</span>Additional Required Count <span class="required">*</span></label><input class="form-input" type="number" min="0" name="library_additional_count" value="1"/></div>
+            </div>
+            <div class="form-group" style="margin-top:var(--space-3)">
+              <label class="form-label"><span class="f-num">#3.2</span>Reason for Additional Requirement <span class="required">*</span></label>
+              <textarea class="form-textarea" name="library_additional_reason">College currently has no dedicated library building; students use a converted classroom.</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="remarks-section">
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#4</span>Description / Remarks</label>
+            <textarea class="form-textarea" name="library_remarks">PC&amp;SIU proposal for a new library block submitted in FY24-25 ADP.</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Store Room — simple, no issues, no additional needed -->
+    <div class="unit-card collapsed" id="unit-store">
+      <div class="unit-head" onclick="toggleUnit('unit-store')">
+        <div class="unit-icon" style="background:#FAEEDA">📦</div>
+        <div style="flex:1">
+          <div class="unit-name">Store Room</div>
+          <div class="unit-sub">Total 2 · Functional 2 · Utilized 2</div>
+        </div>
+        <span class="unit-avail-badge avail-yes">✓ Available</span>
+        <span style="margin-left:8px;color:var(--text-muted);font-size:16px">▶</span>
+      </div>
+      <div class="unit-body">
+        <div class="unit-name-row">
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#1</span>Unit Name <span class="required">*</span></label>
+            <select class="form-select" name="store_unit_name"><option selected>Store Room</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#2</span>Available <span class="required">*</span></label>
+            <div class="avail-toggle">
+              <label class="avail-btn yes"><input type="radio" name="store_available" value="Yes" data-target="store-availbody" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>✓ Available</label>
+              <label class="avail-btn no"><input type="radio" name="store_available" value="No" data-target="store-availbody" data-show-on="Yes" onchange="toggleByRadio(this)"/>✗ Not Available</label>
+            </div>
+          </div>
+        </div>
+
+        <div id="store-availbody">
+          <div class="hier-section">
+            <div class="hier-section-title">📦 Unit Count</div>
+            <div class="hier-grid cols-2">
+              <div class="form-group">
+                <label class="form-label"><span class="f-num">#2.1</span>Total Count <span class="required">*</span></label>
+                <input class="form-input" type="number" min="0" name="store_total_count" value="2" oninput="validateUnit('store')"/>
+              </div>
+              <div class="calc-field-wrap">
+                <label class="form-label"><span class="f-num">#2.2</span>Functional Count</label>
+                <div class="calc-field"><span id="store-functional">2</span><span class="calc-formula">Good + Satisfactory + Unsatisfactory</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hier-section">
+            <div class="hier-section-title">🩺 Condition Breakdown</div>
+            <div class="hier-grid">
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.2.1</span>Good Count</label><input class="form-input cond-input" type="number" min="0" name="store_good_count" value="2" oninput="calcFunctional('store')"/></div>
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.2.2</span>Satisfactory Count</label><input class="form-input cond-input" type="number" min="0" name="store_satisfactory_count" value="0" oninput="calcFunctional('store')"/></div>
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.2.3</span>Unsatisfactory Count</label><input class="form-input cond-input" type="number" min="0" name="store_unsatisfactory_count" value="0" oninput="calcFunctional('store')"/></div>
+            </div>
+            <div class="validation-msg ok show" id="store-validation-total">✓ Total Count (2) = Functional (2) + Non-Functional (0)</div>
+          </div>
+
+          <div class="hier-section">
+            <div class="hier-section-title">🔧 Utilization of Functional Units</div>
+            <div class="hier-grid cols-2">
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.3.1</span>Utilized Count</label><input class="form-input" type="number" min="0" name="store_utilized_count" value="2" oninput="validateUnit('store')"/></div>
+              <div class="form-group"><label class="form-label"><span class="f-num">#2.3.2</span>Not Utilized Count</label><input class="form-input" type="number" min="0" name="store_not_utilized_count" value="0" oninput="toggleByNumber(this,'store-notutil-reason'); validateUnit('store')"/></div>
+            </div>
+            <div class="validation-msg ok show" id="store-validation-util">✓ Utilized (2) + Not Utilized (0) = Functional (2)</div>
+            <div class="reveal-block" id="store-notutil-reason" style="display:none"></div>
+          </div>
+
+          <div class="hier-section">
+            <div class="hier-section-title">⚠️ Non-Functional Units</div>
+            <div class="form-group"><label class="form-label"><span class="f-num">#2.4.1</span>Non-Functional Count</label><input class="form-input" type="number" min="0" name="store_nonfunctional_count" value="0" oninput="toggleByNumber(this,'store-nonfunc-reason'); validateUnit('store')"/></div>
+            <div class="reveal-block" id="store-nonfunc-reason" style="display:none"></div>
+          </div>
+
+          <div class="hier-section">
+            <div class="hier-section-title">🚧 Dangerous Declaration</div>
+            <div class="form-group">
+              <label class="form-label"><span class="f-num">#2.5.1</span>Dangerous Declared?</label>
+              <div class="yn-group">
+                <label class="yn-label yes"><input type="radio" name="store_dangerous_declared" value="Yes" data-target="store-dangerous-body" data-show-on="Yes" onchange="toggleByRadio(this)"/>Yes</label>
+                <label class="yn-label no"><input type="radio" name="store_dangerous_declared" value="No" data-target="store-dangerous-body" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>No</label>
+              </div>
+            </div>
+            <div class="reveal-block" id="store-dangerous-body" style="display:none"></div>
+          </div>
+        </div>
+
+        <div class="hier-section">
+          <div class="hier-section-title">➕ Additional Units Required</div>
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#3</span>Additional Units Required?</label>
+            <div class="yn-group">
+              <label class="yn-label yes"><input type="radio" name="store_additional_required" value="Yes" data-target="store-additional-body" data-show-on="Yes" onchange="toggleByRadio(this)"/>Yes</label>
+              <label class="yn-label no"><input type="radio" name="store_additional_required" value="No" data-target="store-additional-body" data-show-on="Yes" onchange="toggleByRadio(this)" checked/>No</label>
+            </div>
+          </div>
+          <div class="reveal-block" id="store-additional-body" style="display:none"></div>
+        </div>
+
+        <div class="remarks-section">
+          <div class="form-group">
+            <label class="form-label"><span class="f-num">#4</span>Description / Remarks</label>
+            <textarea class="form-textarea" name="store_remarks" placeholder="Optional remarks or observations"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Bar -->
+    <div class="save-bar">
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)">
+        <div class="autosave-dot"></div>
+        Auto-saved · 4 units added
+      </div>
+      <div style="margin-left:auto;display:flex;gap:var(--space-2)">
+        <a href="form-01-college-profile.html" class="btn btn-secondary">← College Profile</a>
+        <button class="btn btn-ghost">Save Draft</button>
+        <a href="form-03-sports.html" class="btn btn-primary">Save &amp; Continue to Sports →</a>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<script>
+function toggleUnit(id) {
+  const block = document.getElementById(id);
+  block.classList.toggle('collapsed');
+  const head = block.querySelector('.unit-head');
+  const arrow = head.querySelector('span:last-child');
+  if (block.classList.contains('collapsed')) {
+    arrow.textContent = '▶';
+  } else {
+    arrow.textContent = '▼';
+  }
+}
+function collapseAll() {
+  document.querySelectorAll('.unit-card:not(.is-new)').forEach(b => {
+    b.classList.add('collapsed');
+    const arrow = b.querySelector('.unit-head span:last-child');
+    if(arrow) arrow.textContent = '▶';
+  });
+}
+function expandAll() {
+  document.querySelectorAll('.unit-card:not(.is-new)').forEach(b => {
+    b.classList.remove('collapsed');
+    const arrow = b.querySelector('.unit-head span:last-child');
+    if(arrow) arrow.textContent = '▼';
+  });
+}
+
+// Show/hide a target block based on a radio's value matching data-show-on
+function toggleByRadio(radio) {
+  const targetId = radio.dataset.target;
+  const showOn = radio.dataset.showOn;
+  const target = document.getElementById(targetId);
+  if (!target) return;
+  target.style.display = (radio.value === showOn) ? '' : 'none';
+}
+
+// Show/hide a target block based on a number input being > 0
+function toggleByNumber(input, targetId) {
+  const target = document.getElementById(targetId);
+  if (!target) return;
+  const v = parseInt(input.value || '0', 10);
+  target.style.display = v > 0 ? '' : 'none';
+}
+
+// Recalculate Functional Count = Good + Satisfactory + Unsatisfactory
+function calcFunctional(prefix) {
+  const g = parseInt((document.getElementsByName(prefix + '_good_count')[0] || {}).value || '0', 10);
+  const s = parseInt((document.getElementsByName(prefix + '_satisfactory_count')[0] || {}).value || '0', 10);
+  const u = parseInt((document.getElementsByName(prefix + '_unsatisfactory_count')[0] || {}).value || '0', 10);
+  const func = g + s + u;
+  const field = document.getElementById(prefix + '-functional');
+  if (field) field.textContent = func;
+  validateUnit(prefix);
+}
+
+// Cross-check Total = Functional + Non-Functional, and Utilized + Not Utilized = Functional
+function validateUnit(prefix) {
+  const val = (name) => parseInt((document.getElementsByName(prefix + '_' + name)[0] || {}).value || '0', 10);
+  const funcField = document.getElementById(prefix + '-functional');
+  const functional = funcField ? parseInt(funcField.textContent || '0', 10) : 0;
+  const total = val('total_count');
+  const nonFunctional = val('nonfunctional_count');
+  const utilized = val('utilized_count');
+  const notUtilized = val('not_utilized_count');
+
+  const totalMsg = document.getElementById(prefix + '-validation-total');
+  if (totalMsg) {
+    totalMsg.classList.add('show');
+    if (total === functional + nonFunctional) {
+      totalMsg.classList.remove('err'); totalMsg.classList.add('ok');
+      totalMsg.textContent = '✓ Total Count (' + total + ') = Functional (' + functional + ') + Non-Functional (' + nonFunctional + ')';
+    } else {
+      totalMsg.classList.remove('ok'); totalMsg.classList.add('err');
+      const diff = total - (functional + nonFunctional);
+      totalMsg.textContent = '✗ Total Count (' + total + ') does not equal Functional (' + functional + ') + Non-Functional (' + nonFunctional + ') — ' + Math.abs(diff) + ' unit(s) unaccounted for. Please recheck.';
+    }
+  }
+
+  const utilMsg = document.getElementById(prefix + '-validation-util');
+  if (utilMsg) {
+    utilMsg.classList.add('show');
+    if (utilized + notUtilized === functional) {
+      utilMsg.classList.remove('err'); utilMsg.classList.add('ok');
+      utilMsg.textContent = '✓ Utilized (' + utilized + ') + Not Utilized (' + notUtilized + ') = Functional (' + functional + ')';
+    } else {
+      utilMsg.classList.remove('ok'); utilMsg.classList.add('err');
+      utilMsg.textContent = '✗ Utilized (' + utilized + ') + Not Utilized (' + notUtilized + ') should equal Functional (' + functional + '). Please recheck.';
+    }
+  }
+}
+</script>
+</body>
+</html>
