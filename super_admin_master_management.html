@@ -1207,17 +1207,32 @@
     const masters = {
 
       // --- Location Master ---
+      province: {
+        label: 'Province', group: 'Location Master', icon: '🌐',
+        fields: [
+          { key: 'name', label: 'Province Name', type: 'text', required: true },
+          { key: 'code', label: 'Code', type: 'text' }
+        ],
+        data: [
+          { id: 1, name: 'Punjab', code: 'PB' },
+          { id: 2, name: 'Sindh', code: 'SD' },
+          { id: 3, name: 'Khyber Pakhtunkhwa', code: 'KP' },
+          { id: 4, name: 'Balochistan', code: 'BA' },
+          { id: 5, name: 'Islamabad Capital Territory', code: 'ICT' }
+        ]
+      },
       division: {
         label: 'Division', group: 'Location Master', icon: '🗺️',
         fields: [
           { key: 'name', label: 'Division Name', type: 'text', required: true },
-          { key: 'code', label: 'Code', type: 'text' }
+          { key: 'code', label: 'Code', type: 'text' },
+          { key: 'province_id', label: 'Province', type: 'ref', ref: 'province', required: true }
         ],
         data: [
-          { id: 1, name: 'Lahore', code: 'LHR' },
-          { id: 2, name: 'Rawalpindi', code: 'RWP' },
-          { id: 3, name: 'Multan', code: 'MUL' },
-          { id: 4, name: 'Faisalabad', code: 'FSD' }
+          { id: 1, name: 'Lahore', code: 'LHR', province_id: 1 },
+          { id: 2, name: 'Rawalpindi', code: 'RWP', province_id: 1 },
+          { id: 3, name: 'Multan', code: 'MUL', province_id: 1 },
+          { id: 4, name: 'Faisalabad', code: 'FSD', province_id: 1 }
         ]
       },
       district: {
@@ -1319,15 +1334,21 @@
           { id: 4, name: 'Computer Science', code: 'CS' }
         ]
       },
-      affiliation_institute: {
-        label: 'Affiliation Institute', group: 'Program Master', icon: '🏫',
-        fields: [{ key: 'name', label: 'Institute Name', type: 'text', required: true }],
-        data: [{ id: 1, name: 'University of the Punjab' }, { id: 2, name: 'BISE Lahore' }]
-      },
       affiliation_institute_type: {
         label: 'Affiliation Institute Type', group: 'Program Master', icon: '🏷️',
         fields: [{ key: 'name', label: 'Type Name', type: 'text', required: true }],
         data: [{ id: 1, name: 'Board' }, { id: 2, name: 'University' }]
+      },
+      affiliation_institute: {
+        label: 'Affiliation Institute', group: 'Program Master', icon: '🏫',
+        fields: [
+          { key: 'name', label: 'Institute Name', type: 'text', required: true },
+          { key: 'affiliation_institute_type_id', label: 'Affiliation Institute Type', type: 'ref', ref: 'affiliation_institute_type', required: true }
+        ],
+        data: [
+          { id: 1, name: 'University of the Punjab', affiliation_institute_type_id: 2 },
+          { id: 2, name: 'BISE Lahore', affiliation_institute_type_id: 1 }
+        ]
       },
 
       // --- Department Mapping ---
@@ -1357,44 +1378,70 @@
       },
 
       // --- Staff Master ---
-      designation: {
-        label: 'Teacher/Staff Designation', group: 'Staff Master', icon: '🪪',
+      staff_type: {
+        label: 'Staff Type', group: 'Staff Master', icon: '🧷',
+        fields: [{ key: 'name', label: 'Staff Type', type: 'text', required: true }],
+        data: [{ id: 1, name: 'Teaching' }, { id: 2, name: 'Non-Teaching' }]
+      },
+      staff_designation: {
+        label: 'Staff Designation', group: 'Staff Master', icon: '🪪',
         fields: [
           { key: 'name', label: 'Designation', type: 'text', required: true },
-          { key: 'code', label: 'Code', type: 'text' }
+          { key: 'staff_type_id', label: 'Staff Type', type: 'ref', ref: 'staff_type', required: true }
         ],
-        data: [{ id: 1, name: 'Lecturer', code: 'LEC' }, { id: 2, name: 'Assistant Professor', code: 'AP' }]
+        data: [
+          { id: 1, name: 'Lecturer', staff_type_id: 1 },
+          { id: 2, name: 'Assistant Professor', staff_type_id: 1 },
+          { id: 3, name: 'Superintendent', staff_type_id: 2 },
+          { id: 4, name: 'Clerk', staff_type_id: 2 }
+        ]
       },
-      cadre: {
-        label: 'Teacher/Staff Cadre', group: 'Staff Master', icon: '🧩',
+      service_cadre: {
+        label: 'Service Cadre', group: 'Staff Master', icon: '🧩',
         fields: [{ key: 'name', label: 'Cadre Name', type: 'text', required: true }],
-        data: [{ id: 1, name: 'General' }, { id: 2, name: 'Commerce' }]
+        data: [{ id: 1, name: 'Contract' }, { id: 2, name: 'Regular' }]
       },
-      staff_grade: {
-        label: 'Teacher/Staff Grade', group: 'Staff Master', icon: '🎖️',
+      teaching_cadre: {
+        label: 'Teaching Cadre', group: 'Staff Master', icon: '🎓',
+        fields: [{ key: 'name', label: 'Cadre Name', type: 'text', required: true }],
+        data: [{ id: 1, name: 'Commerce' }, { id: 2, name: 'General' }]
+      },
+      batch_no: {
+        label: 'Batch No.', group: 'Staff Master', icon: '🔢',
+        fields: [{ key: 'name', label: 'Batch No.', type: 'text', required: true }],
+        data: [{ id: 1, name: 'Batch 2021' }, { id: 2, name: 'Batch 2022' }, { id: 3, name: 'Batch 2023' }]
+      },
+      employee_cadre: {
+        label: 'Employee Cadre', group: 'Staff Master', icon: '🎖️',
+        fields: [{ key: 'name', label: 'Cadre Name', type: 'text', required: true }],
+        data: [{ id: 1, name: 'PST' }, { id: 2, name: 'SST' }, { id: 3, name: 'Ministerial' }]
+      },
+      post_teacher_subject: {
+        label: 'Post/Teacher Subject', group: 'Staff Master', icon: '📑',
         fields: [
-          { key: 'name', label: 'Grade Label', type: 'text', required: true },
-          { key: 'grade_no', label: 'Grade No (1–22)', type: 'number', min: 1, max: 22, required: true }
+          { key: 'subject_id', label: 'Subject', type: 'ref', ref: 'subject', required: true }
         ],
-        data: [{ id: 1, name: 'BPS-17', grade_no: 17 }, { id: 2, name: 'BPS-18', grade_no: 18 }]
-      },
-      teaching_subject: {
-        label: 'Teaching Subject', group: 'Staff Master', icon: '📖',
-        fields: [{ key: 'subject_id', label: 'Subject', type: 'ref', ref: 'subject', required: true }],
-        data: [{ id: 1, subject_id: 1 }, { id: 2, subject_id: 4 }]
-      },
-      post_type: {
-        label: 'Post Type', group: 'Staff Master', icon: '🧷',
-        fields: [{ key: 'name', label: 'Post Type', type: 'select', options: ['Admin', 'Teaching', 'Non-Teaching'], required: true }],
-        data: [{ id: 1, name: 'Admin' }, { id: 2, name: 'Teaching' }, { id: 3, name: 'Non-Teaching' }]
+        data: [
+          { id: 1, subject_id: 1 },
+          { id: 2, subject_id: 4 }
+        ]
       },
       post_grade: {
         label: 'Post Grade', group: 'Staff Master', icon: '🥇',
         fields: [
           { key: 'name', label: 'Grade Label', type: 'text', required: true },
-          { key: 'grade_no', label: 'Grade No (1–22)', type: 'number', min: 1, max: 22, required: true }
+          { key: 'grade_no', label: 'Grade No (BPS 1–22)', type: 'number', min: 1, max: 22, required: true }
         ],
-        data: [{ id: 1, name: 'BPS-16', grade_no: 16 }, { id: 2, name: 'BPS-11', grade_no: 11 }]
+        data: [
+          { id: 1, name: 'BPS-16', grade_no: 16 },
+          { id: 2, name: 'BPS-17', grade_no: 17 },
+          { id: 3, name: 'BPS-18', grade_no: 18 }
+        ]
+      },
+      post_type: {
+        label: 'Post Type', group: 'Staff Master', icon: '🧷',
+        fields: [{ key: 'name', label: 'Post Type', type: 'select', options: ['Teaching', 'Non-Teaching', 'Admin'], required: true }],
+        data: [{ id: 1, name: 'Teaching' }, { id: 2, name: 'Non-Teaching' }, { id: 3, name: 'Admin' }]
       },
       post_designation: {
         label: 'Post Designation', group: 'Staff Master', icon: '🧾',
@@ -1402,15 +1449,10 @@
           { key: 'name', label: 'Designation', type: 'text', required: true },
           { key: 'post_type_id', label: 'Post Type', type: 'ref', ref: 'post_type', required: true }
         ],
-        data: [{ id: 1, name: 'Superintendent', post_type_id: 1 }, { id: 2, name: 'Lecturer', post_type_id: 2 }]
-      },
-      post_subject: {
-        label: 'Post Subject (Teaching Post)', group: 'Staff Master', icon: '📑',
-        fields: [
-          { key: 'post_designation_id', label: 'Post Designation', type: 'ref', ref: 'post_designation', required: true },
-          { key: 'subject_id', label: 'Subject', type: 'ref', ref: 'subject', required: true }
-        ],
-        data: [{ id: 1, post_designation_id: 2, subject_id: 1 }]
+        data: [
+          { id: 1, name: 'Lecturer', post_type_id: 1 },
+          { id: 2, name: 'Superintendent', post_type_id: 3 }
+        ]
       }
     };
 
@@ -1418,11 +1460,11 @@
     // shared 'subject' master, since it is the same canonical subject list referenced
     // across Program Master, Department Mapping and Staff Master)
     const navGroups = [
-      { name: 'Location Master', items: ['division', 'district', 'tehsil'] },
+      { name: 'Location Master', items: ['province', 'division', 'district', 'tehsil'] },
       { name: 'Institute', items: ['institute_type', 'institute_level'] },
-      { name: 'Program Master', items: ['program_level', 'program_name', 'session_type', 'subject', 'affiliation_institute', 'affiliation_institute_type'] },
+      { name: 'Program Master', items: ['program_level', 'program_name', 'session_type', 'subject', 'affiliation_institute_type', 'affiliation_institute'] },
       { name: 'Department Mapping', items: ['department', 'subject_dept_alias', 'subject_department_map'] },
-      { name: 'Staff Master', items: ['designation', 'cadre', 'staff_grade', 'teaching_subject', 'post_type', 'post_grade', 'post_designation', 'post_subject'] }
+      { name: 'Staff Master', items: ['staff_type', 'staff_designation', 'service_cadre', 'teaching_cadre', 'batch_no', 'employee_cadre', 'post_teacher_subject', 'post_grade', 'post_type', 'post_designation'] }
     ];
     // alias so "Subject (Super Admin)" nav entry points at the shared subject master
     masters['subject_dept_alias'] = masters['subject'];
