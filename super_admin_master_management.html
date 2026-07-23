@@ -1457,12 +1457,11 @@
         label: 'Subject ↔ Department (College)', group: 'Department Mapping', icon: '🔗',
         fields: [
           { key: 'subject_id', label: 'Subject', type: 'ref', ref: 'subject', required: true },
-          { key: 'department_id', label: 'Department', type: 'ref', ref: 'department', required: true },
-          { key: 'college', label: 'College', type: 'text', required: true }
+          { key: 'department_id', label: 'Department', type: 'ref', ref: 'department', required: true }
         ],
         data: [
-          { id: 1, subject_id: 1, department_id: 1, college: 'Govt. College Lahore' },
-          { id: 2, subject_id: 2, department_id: 2, college: 'Govt. Degree College Multan' }
+          { id: 1, subject_id: 1, department_id: 1 },
+          { id: 2, subject_id: 2, department_id: 2 }
         ]
       },
 
@@ -1508,11 +1507,11 @@
       post_teacher_subject: {
         label: 'Post/Teacher Subject', group: 'Staff Master', icon: '📑',
         fields: [
-          { key: 'subject_id', label: 'Subject', type: 'ref', ref: 'subject', required: true }
+          { key: 'subject', label: 'Subject', type: 'text', required: true }
         ],
         data: [
-          { id: 1, subject_id: 1 },
-          { id: 2, subject_id: 4 }
+          { id: 1, subject: 'Mathematics' },
+          { id: 2, subject: 'Computer Science' }
         ]
       },
       post_grade: {
